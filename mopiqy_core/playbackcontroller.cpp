@@ -333,7 +333,7 @@ void PlaybackController::processJsonResponse(const int &id, const QJsonValue &jo
             break;
 
         case PC_GETSTATE:
-            emit onGetState((Mopidy::Core::PlaybackController::PlaybackState)jo.toDouble());
+            emit onGetState((Mopidy::Core::PlaybackState)jo.toDouble());
             break;
 
         case PC_GETTIMEPOSITION:

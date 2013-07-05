@@ -247,6 +247,13 @@ QString Mopidy::Parser::toMopidyDate(const QDate &date)
     return date.toString(MOPIDY_LONG_DATE);
 }
 
+Mopidy::Core::PlaybackState Mopidy::Parser::getState(const QString &stateStr)
+{
+    if(stateStr.toLower() == "paused") return Mopidy::Core::PAUSED;
+    if(stateStr.toLower() == "playing") return Mopidy::Core::PLAYING;
+    if(stateStr.toLower() == "stopped") return Mopidy::Core::STOPPED;
+    return Mopidy::Core::STOPPED;
+}
 
 QJsonObject Mopidy::Parser::toJsonDict(const Dict &d)
 {

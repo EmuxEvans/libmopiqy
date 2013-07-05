@@ -33,7 +33,7 @@ void CoreListener::processJsonMessage(const QByteArray &rawMsg)
     {
         QString os = rootObject.value("old_state").toString();
         QString ns = rootObject.value("new_state").toString();
-        emit playback_state_changed(os, ns);
+        emit playback_state_changed(Mopidy::Parser::getState(os), Mopidy::Parser::getState(ns));
     }
     else if(evtName == "playlist_changed")
     {

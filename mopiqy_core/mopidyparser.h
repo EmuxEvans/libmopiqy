@@ -48,6 +48,9 @@ namespace Mopidy {
         QDate getMopidyDate(const QString &);
         QString toMopidyDate(const QDate &);
 
+        // state
+        Mopidy::Core::PlaybackState getState(const QString &);
+
         // dict
         QJsonObject toJsonDict(const Dict &);
     }

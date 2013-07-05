@@ -27,7 +27,7 @@ namespace Mopidy {
 
         signals:
             void options_changed();
-            void playback_state_changed(const QString &oldState, const QString &newState);
+            void playback_state_changed(const Mopidy::Core::PlaybackState &oldState, const Mopidy::Core::PlaybackState &newState);
             void playlist_changed(const Mopidy::Models::Playlist &playlist);
             void playlists_loaded();
             void seeked(const int &time_position);

@@ -15,12 +15,6 @@ namespace Mopidy {
 
         public:
 
-            enum PlaybackState {
-                PAUSED,
-                PLAYING,
-                STOPPED
-            };
-
             PlaybackController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
             ~PlaybackController();
 
@@ -74,7 +68,7 @@ namespace Mopidy {
             void onGetRepeat(const bool &);
             void onSeek(const bool &);
             void onGetSingle(const bool &);
-            void onGetState(const PlaybackController::PlaybackState &);
+            void onGetState(const Core::PlaybackState &);
             void onGetTimePosition(const int &);
             void onGetTlTrackAtEot(const Mopidy::Models::TlTrack &);
             void onGetTlTrackAtNext(const Mopidy::Models::TlTrack &);

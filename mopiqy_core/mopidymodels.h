@@ -13,6 +13,14 @@ typedef QHash<QString, QStringList> Dict;
 
 namespace Mopidy {
 
+    namespace Core {
+        enum PlaybackState {
+            PAUSED,
+            PLAYING,
+            STOPPED
+        };
+    }
+
     namespace Models {
 
         struct MOPIQY_CORE_EXPORT Artist
