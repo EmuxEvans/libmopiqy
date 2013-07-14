@@ -15,7 +15,14 @@ LibraryController::~LibraryController()
 
 void LibraryController::find_exact(const Dict &query, const QStringList &uris)
 {
-    // TODO: implement LibraryController::find_exact
+    // build request
+    QJsonObject jso = Mopidy::Parser::searchLikeEncode("core.library.find_exact", query, uris);
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, LC_SEARCH);
 }
 
 void LibraryController::lookup(const QString &uri)
@@ -80,7 +87,7 @@ void LibraryController::processJsonResponse(const int &id, const QJsonValue &jv)
         case LC_SEARCH:
             {
                 Mopidy::Models::SearchResult sr;
-                Mopidy::Parser::parseSingleObject(jv.toObject(), sr);
+                Mopidy::Parser::parseSingleObject(jv.toArray().at(0).toObject(), sr);
                 emit onSearch(sr);
             }
             break;

@@ -71,8 +71,8 @@ QJsonObject Mopidy::Parser::searchLikeEncode(const QString &method, const Dict &
     else
     {
         QJsonObject jsoParams;
-        if(!query.isEmpty()) jso.insert("query", toJsonDict(query));
-        if(!uris.isEmpty()) jso.insert("uris", QJsonArray::fromStringList(uris));
+        if(!query.isEmpty()) jsoParams.insert("query", toJsonDict(query));
+        if(!uris.isEmpty()) jsoParams.insert("uris", QJsonArray::fromStringList(uris));
         jso.insert("params", jsoParams);
 
         return jso;
