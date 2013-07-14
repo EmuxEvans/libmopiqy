@@ -9,7 +9,7 @@
 #include "mopiqy_export.h"
 
 // just because 'Dict' is shorter
-typedef QHash<QString, QStringList> Dict;
+typedef QHash<QString, QString> Dict;
 
 namespace Mopidy {
 

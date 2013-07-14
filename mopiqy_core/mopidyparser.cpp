@@ -220,7 +220,7 @@ QJsonObject Mopidy::Parser::toJsonDict(const Dict &d)
     QJsonObject jo;
 
     for(Dict::const_iterator it = d.begin(); it != d.end(); ++it)
-        jo.insert(it.key(), QJsonArray::fromStringList(it.value()));
+        jo.insert(it.key(), it.value());
 
     return jo;
 }

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QFuture>
 
+// FIXME: Replace POCO Websocket with something more portable
+
 #include <Poco/Net/WebSocket.h>
 #include <Poco/Net/HTTPClientSession.h>
 

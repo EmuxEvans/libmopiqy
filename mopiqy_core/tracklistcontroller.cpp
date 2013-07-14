@@ -54,7 +54,16 @@ void TracklistController::clear()
 
 void TracklistController::filter(const Dict &criteria)
 {
-    // TODO: implement TracklistController::filter
+    // // TODO: implemented but not tested
+    QJsonObject vparams;
+    vparams.insert("criteria", Mopidy::Parser::toJsonDict(criteria));
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.filter", vparams);
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_FILTER);
 }
 
 void TracklistController::index(const Mopidy::Models::TlTrack &tl)
@@ -98,7 +107,16 @@ void TracklistController::move(const int &start, const int &end, const int &to_p
 
 void TracklistController::remove(const Dict &criteria)
 {
-    // TODO: implement TracklistController::remove
+    // TODO: implemented but not tested
+    QJsonObject vparams;
+    vparams.insert("criteria", Mopidy::Parser::toJsonDict(criteria));
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.index", vparams);
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_REMOVE);
 }
 
 void TracklistController::shuffle(const int &start, const int &end)

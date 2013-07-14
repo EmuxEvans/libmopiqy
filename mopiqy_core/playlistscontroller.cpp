@@ -40,7 +40,16 @@ void PlaylistsController::deletePl(const QString &uri)
 
 void PlaylistsController::filter(const Dict &criteria)
 {
-    // TODO: implement PlaylistsController::filter
+    // TODO: implemented but not tested
+    QJsonObject vparams;
+    vparams.insert("criteria", Mopidy::Parser::toJsonDict(criteria));
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.filter", vparams);
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, PLS_FILTER);
 }
 
 void PlaylistsController::lookup(const QString &uri)
