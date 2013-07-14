@@ -34,6 +34,11 @@ MopidyClient::~MopidyClient()
     delete m_jwSocket;
 }
 
+QString MopidyClient::clientVersion() const
+{
+    return MOPIQY_CORE_VERSION;
+}
+
 bool MopidyClient::connectTo(const QString &host, const qint16 &port, const QString &path)
 {
     if(m_jwSocket->openSocket(host, port, path))

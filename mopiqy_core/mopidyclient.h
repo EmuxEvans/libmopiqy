@@ -32,6 +32,8 @@ namespace Mopidy {
         MopidyClient(QObject *parent = 0);
         ~MopidyClient();
 
+        QString clientVersion() const;
+
         /*
          * Connection handling
          */

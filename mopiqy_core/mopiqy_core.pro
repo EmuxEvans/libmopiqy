@@ -38,6 +38,8 @@ HEADERS += \
 #
 unix {
     LIBS += -lPocoNet -lPocoFoundation
+    VERSION = $$system(git describe --tags)
+    DEFINES += MOPIQY_CORE_VERSION=\\\"$${VERSION}\\\"
 }
 
 win32 {
