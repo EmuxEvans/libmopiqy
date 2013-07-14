@@ -28,7 +28,7 @@ void LibraryController::find_exact(const Dict &query, const QStringList &uris)
 void LibraryController::lookup(const QString &uri)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("uri", uri);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.library.lookup", vparams);
 
@@ -42,7 +42,7 @@ void LibraryController::lookup(const QString &uri)
 void LibraryController::refresh(const QString &uri)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     if(!uri.isEmpty()) vparams.insert("uri", uri);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.library.refresh", vparams);
 

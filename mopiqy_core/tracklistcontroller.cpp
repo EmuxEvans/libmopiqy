@@ -16,7 +16,7 @@ TracklistController::~TracklistController()
 void TracklistController::add(const Mopidy::Models::Tracks &tracks, const int &at_position)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("tracks", Mopidy::Parser::encodeArrayOf<Mopidy::Models::Track>(tracks));
     if(at_position > -1) vparams.insert("at_position", at_position);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.add", vparams);
@@ -31,7 +31,7 @@ void TracklistController::add(const Mopidy::Models::Tracks &tracks, const int &a
 void TracklistController::add(const QString &uri, const int &at_position)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("uri", uri);
     if(at_position > -1) vparams.insert("at_position", at_position);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.add", vparams);
@@ -60,7 +60,7 @@ void TracklistController::filter(const Dict &criteria)
 void TracklistController::index(const Mopidy::Models::TlTrack &tl)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("tl_track", Mopidy::Parser::encodeModel(tl));
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.index", vparams);
 
@@ -86,7 +86,7 @@ void TracklistController::get_length()
 void TracklistController::move(const int &start, const int &end, const int &to_position)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("start", start);
     vparams.insert("end", end);
     vparams.insert("to_position", to_position);
@@ -104,7 +104,7 @@ void TracklistController::remove(const Dict &criteria)
 void TracklistController::shuffle(const int &start, const int &end)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     if(start > -1) vparams.insert("start", start);
     if(end > -1) vparams.insert("end", end);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.shuffle", vparams);
@@ -116,7 +116,7 @@ void TracklistController::shuffle(const int &start, const int &end)
 void TracklistController::slice(const int &start, const int &end)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("start", start);
     vparams.insert("end", end);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.slice", vparams);

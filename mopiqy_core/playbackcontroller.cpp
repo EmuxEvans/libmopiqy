@@ -16,7 +16,7 @@ PlaybackController::~PlaybackController()
 void PlaybackController::change_track(const Mopidy::Models::TlTrack &track, const int &on_error_step)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("track", Mopidy::Parser::encodeModel(track));
     vparams.insert("on_error_step", on_error_step);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.change_track", vparams);
@@ -40,7 +40,7 @@ void PlaybackController::get_consume()
 void PlaybackController::set_consume(const bool &v)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("value", v);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_consume", vparams);
 
@@ -93,7 +93,7 @@ void PlaybackController::pause()
 void PlaybackController::play(const Mopidy::Models::TlTrack &tltrack, const int &on_error_step)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     if(!tltrack.track.uri.isEmpty()) vparams.insert("tl_track", Mopidy::Parser::encodeModel(tltrack));
     vparams.insert("on_error_step", on_error_step);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.play", vparams);
@@ -117,7 +117,7 @@ void PlaybackController::get_random()
 void PlaybackController::set_random(const bool &v)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("value", v);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_random", vparams);
 
@@ -140,7 +140,7 @@ void PlaybackController::get_repeat()
 void PlaybackController::set_repeat(const bool &v)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("value", v);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_repeat", vparams);
 
@@ -160,7 +160,7 @@ void PlaybackController::resume()
 void PlaybackController::seek(const int &time_position)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("time_position", time_position);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.seek", vparams);
 
@@ -186,7 +186,7 @@ void PlaybackController::get_single()
 void PlaybackController::set_single(const bool &v)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("value", v);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_single", vparams);
 
@@ -209,7 +209,7 @@ void PlaybackController::get_state()
 void PlaybackController::stop(const bool &clear_current_track)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("clear_current_track", clear_current_track);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.stop", vparams);
 

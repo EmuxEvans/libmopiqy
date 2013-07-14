@@ -11,51 +11,11 @@
 /*
  * Encoder
  */
-QJsonObject Mopidy::Parser::rpcEncode(const QString &method, const QVariantMap &params)
+QJsonObject Mopidy::Parser::rpcEncode(const QString &method, const QJsonValue &params)
 {
     QJsonObject jso;
     jso.insert("method", method);
-
-    if(!params.isEmpty())
-    {
-        QJsonObject jsoParams;
-        for(QVariantMap::const_iterator it = params.begin(); it != params.end(); ++it)
-        {
-            switch(it.value().type())
-            {
-            case QVariant::Bool:
-                jsoParams.insert(it.key(), it.value().toBool());
-                break;
-
-            case QVariant::Int:
-                jsoParams.insert(it.key(), it.value().toInt());
-                break;
-
-            case QVariant::Double:
-                jsoParams.insert(it.key(), it.value().toDouble());
-                break;
-
-            case QVariant::String:
-                jsoParams.insert(it.key(), it.value().toString());
-                break;
-
-            case QVariant::List:
-                jsoParams.insert(it.key(), it.value().toJsonArray());
-                break;
-
-            case QVariant::Map:
-            case QVariant::Hash:
-                jsoParams.insert(it.key(), it.value().toJsonObject());
-                break;
-
-            default:
-                break;
-            }
-        }
-
-        jso.insert("params", jsoParams);
-    }
-
+    if(!params.isNull()) jso.insert("params", params);
     return jso;
 }
 

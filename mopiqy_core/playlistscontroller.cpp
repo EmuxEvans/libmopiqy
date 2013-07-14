@@ -15,7 +15,7 @@ PlaylistsController::~PlaylistsController()
 void PlaylistsController::create(const QString &name, const QString &uri_scheme)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("name", name);
     if(!uri_scheme.isEmpty()) vparams.insert("uri_scheme", uri_scheme);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.create", vparams);
@@ -30,7 +30,7 @@ void PlaylistsController::create(const QString &name, const QString &uri_scheme)
 void PlaylistsController::deletePl(const QString &uri)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("uri", uri);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.delete", vparams);
 
@@ -46,7 +46,7 @@ void PlaylistsController::filter(const Dict &criteria)
 void PlaylistsController::lookup(const QString &uri)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("uri", uri);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.lookup", vparams);
 
@@ -60,7 +60,7 @@ void PlaylistsController::lookup(const QString &uri)
 void PlaylistsController::get_playlists()
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("include_tracks", true);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.get_playlists", vparams);
 
@@ -74,7 +74,7 @@ void PlaylistsController::get_playlists()
 void PlaylistsController::refresh(const QString &uri)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     if(!uri.isEmpty()) vparams.insert("uri_scheme", uri);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.refresh", vparams);
 
@@ -85,7 +85,7 @@ void PlaylistsController::refresh(const QString &uri)
 void PlaylistsController::save(const Mopidy::Models::Playlist &pl)
 {
     // build request
-    QVariantMap vparams;
+    QJsonObject vparams;
     vparams.insert("playlist", Mopidy::Parser::encodeModel(pl));
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.save", vparams);
 

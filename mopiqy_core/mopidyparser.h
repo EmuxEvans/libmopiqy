@@ -18,7 +18,7 @@ namespace Mopidy {
         /*
          * Encoders
          */
-        QJsonObject rpcEncode(const QString &method, const QVariantMap &params = QVariantMap());
+        QJsonObject rpcEncode(const QString &method, const QJsonValue &params = QJsonValue::Null);
         QJsonObject searchLikeEncode(const QString &method, const Dict &query, const QStringList &uris);
 
         QJsonObject encodeModel(const Mopidy::Models::Artist &artist);
