@@ -17,15 +17,15 @@ SOURCES = \
     src/librarycontroller.cpp
 
 PUBLIC_HEADERS += \
-    include/mopidyclient.h \
-    include/mopidymodels.h \
-    include/mopiqy_export.h \
-    include/corelistener.h \
-    include/playbackcontroller.h \
-    include/playlistscontroller.h \
-    include/tracklistcontroller.h \
-    include/librarycontroller.h \
-    include/controllerinterface.h
+    include/mopiqy_core/mopidyclient.h \
+    include/mopiqy_core/mopidymodels.h \
+    include/mopiqy_core/mopiqy_export.h \
+    include/mopiqy_core/corelistener.h \
+    include/mopiqy_core/playbackcontroller.h \
+    include/mopiqy_core/playlistscontroller.h \
+    include/mopiqy_core/tracklistcontroller.h \
+    include/mopiqy_core/librarycontroller.h \
+    include/mopiqy_core/controllerinterface.h
 
 HEADERS += \
     src/jsonwebsocket.h \
@@ -33,6 +33,7 @@ HEADERS += \
     src/mopidyparser.h \
     $${PUBLIC_HEADERS}
 
+INCLUDEPATH += include/mopiqy_core
 
 #
 # Platform dependant config
