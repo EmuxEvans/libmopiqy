@@ -1,4 +1,4 @@
-#include "librarycontroller.h"
+#include "include/librarycontroller.h"
 #include "jsonrpchandler.h"
 #include "mopidyparser.h"
 

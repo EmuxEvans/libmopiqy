@@ -1,4 +1,4 @@
-#include "tracklistcontroller.h"
+#include "include/tracklistcontroller.h"
 #include "jsonrpchandler.h"
 #include "mopidyparser.h"
 

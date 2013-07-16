@@ -1,4 +1,4 @@
-#include "corelistener.h"
+#include "include/corelistener.h"
 #include "mopidyparser.h"
 #include "jsonwebsocket.h"
 

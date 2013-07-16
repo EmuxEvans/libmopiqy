@@ -1,4 +1,4 @@
-#include "mopidyclient.h"
+#include "include/mopidyclient.h"
 
 #include "jsonwebsocket.h"
 #include "jsonrpchandler.h"

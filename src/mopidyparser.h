@@ -10,7 +10,7 @@
 #include <QStringList>
 #include <QString>
 
-#include "mopidymodels.h"
+#include "include/mopidymodels.h"
 
 namespace Mopidy {
     namespace Parser {

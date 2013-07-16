@@ -1,4 +1,4 @@
-#include "controllerinterface.h"
+#include "include/controllerinterface.h"
 
 using namespace Mopidy::Core;
 

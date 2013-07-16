@@ -1,4 +1,4 @@
-#include "playbackcontroller.h"
+#include "include/playbackcontroller.h"
 #include "jsonrpchandler.h"
 #include "mopidyparser.h"
 

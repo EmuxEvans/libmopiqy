@@ -5,7 +5,7 @@
 #include <QMap>
 #include <QJsonObject>
 
-#include "controllerinterface.h"
+#include "include/controllerinterface.h"
 
 namespace Mopidy {
     namespace Internal {
