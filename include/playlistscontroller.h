@@ -25,9 +25,11 @@ namespace Mopidy {
             void deletePl(const QString &uri);
             void filter(const Dict &criteria);
             void lookup(const QString &uri);
-            void get_playlists();
             void refresh(const QString &uri = "");
             void save(const Mopidy::Models::Playlist &pl);
+
+        public slots:
+            void get_playlists();
 
         signals:
             void onCreate(const Mopidy::Models::Playlist &pl);

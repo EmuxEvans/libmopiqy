@@ -70,7 +70,7 @@ void PlaylistsController::get_playlists()
 {
     // build request
     QJsonObject vparams;
-    vparams.insert("include_tracks", true);
+    vparams.insert("include_tracks", false);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.get_playlists", vparams);
 
     // send it
