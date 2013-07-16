@@ -1,4 +1,4 @@
-INCLUDEPATH += $$PWD/include
+INCLUDEPATH += $$PWD/../mopiqy_core/include
 
 # core itself
 unix {
