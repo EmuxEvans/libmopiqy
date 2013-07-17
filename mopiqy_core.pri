@@ -2,7 +2,7 @@ INCLUDEPATH += $$PWD/include
 
 # core itself
 unix {
-    LIBS += -L../mopiqy_core/mopiqy_core -lmopiqy_core
+    LIBS += -L../mopiqy_core -lmopiqy_core
 }
 win32 {
     LIBS += -L../mopiqy_core/bin
