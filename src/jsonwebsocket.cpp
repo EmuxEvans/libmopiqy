@@ -1,39 +1,35 @@
 #include "jsonwebsocket.h"
 
-#include <QDebug>
-#include <QStringList>
-#include <QtConcurrent/QtConcurrentRun>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
-#include <QThread>
-
-#include <Poco/Net/HTTPRequest.h>
-#include <Poco/Net/HTTPResponse.h>
-#include <Poco/Net/NetException.h>
 
 #include <limits>
+#include <QUrl>
 
 using namespace Mopidy::Internal;
-
-class Sleeper : public QThread
-{
-public:
-    static void msleep(unsigned long t)
-    {
-        QThread::msleep(t);
-    }
-};
 
 JsonWebSocket::JsonWebSocket(QObject *parent) : QObject(parent)
 {
     m_lastId = 0;
-    m_ws = 0;
+
+    // Initialize the Asio transport policy
+    m_wsclient.init_asio();
+
+    // remove logging things
+    m_wsclient.clear_access_channels(websocketpp::log::alevel::all);
+    m_wsclient.clear_error_channels(websocketpp::log::elevel::all);
+
+    using websocketpp::lib::placeholders::_1;
+    using websocketpp::lib::placeholders::_2;
+    using websocketpp::lib::bind;
+    m_wsclient.set_open_handler(bind(&JsonWebSocket::ws_on_open, this, ::_1));
+    m_wsclient.set_close_handler(bind(&JsonWebSocket::ws_on_close, this, ::_1));
+    m_wsclient.set_message_handler(bind(&JsonWebSocket::ws_on_message, this, ::_1, ::_2));
 }
 
 bool JsonWebSocket::isConnected() const
 {
-    return m_http_session.connected();
+    return m_wsthread.joinable();
 }
 
 int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
@@ -55,8 +51,8 @@ int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
      * Send to socket
      */
     QJsonDocument jsDoc(request);
-    QByteArray ba2Send = jsDoc.toJson();
-    m_ws->sendFrame(ba2Send.data(), ba2Send.size() * sizeof(char));
+    QString st2Send = jsDoc.toJson(QJsonDocument::Compact);
+    m_wsclient.send(m_wshandle, st2Send.toStdString(), websocketpp::frame::opcode::text);
 
     // ...
     return id;
@@ -67,98 +63,36 @@ bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QS
     // just in case...
     if(isConnected()) closeSocket();
 
-    // set session params
-    m_http_session.setHost(host.toStdString());
-    m_http_session.setPort(port);
-    m_http_session.setTimeout(Poco::Timespan(10, 0));
+    QUrl url;
+    url.setScheme("http");
+    url.setHost(host);
+    url.setPort(port);
+    url.setPath(path);
 
-    try
-    {
-        // request new session
-        Poco::Net::HTTPRequest request("GET", path.toStdString());
-        request.add("Upgrade", "websocket");
-        Poco::Net::HTTPResponse resp;
-
-        // let's go
-        m_ws = new Poco::Net::WebSocket(m_http_session, request, resp);
-
-        // we have websocket !
-        if(resp.getStatus() == Poco::Net::HTTPResponse::HTTP_SWITCHING_PROTOCOLS)
-        {
-            m_stopRequest = false;
-            m_futureSocketWatcher = QtConcurrent::run(this, &JsonWebSocket::socketDataWatcher);
-            return true;
-        }
-        else
-        {
-            emit socketError(resp.getStatus(), QString(resp.getReason().c_str()));
-            return false;
-        }
-    }
-    catch(Poco::Exception &ex)
-    {
-        emit socketError(ex.code(), QString(ex.displayText().c_str()));
+    // create connection
+    websocketpp::lib::error_code ec;
+    wsclient::connection_ptr con = m_wsclient.get_connection(url.toString().toStdString().c_str(), ec);
+    if (ec) {
+        emit socketError(ec.value(), QString::fromStdString(ec.message()));
         return false;
     }
 
-    // should never arrive here...
-    return false;
+    // get handle to be able to send message, good idea, isn't it ?
+    m_wshandle = con->get_handle();
+
+    // connect then run in thread
+    m_wsclient.connect(con);
+    m_wsthread = websocketpp::lib::thread(&wsclient::run, &m_wsclient);
+
+    return true;
 }
 
 void JsonWebSocket::closeSocket()
 {
-    m_stopRequest = true;
-    m_futureSocketWatcher.waitForFinished();
-
-    if(m_ws)
-    {
-        m_ws->shutdown();
-        delete m_ws;
-        m_ws = 0;
-    }
+    m_wsclient.stop();
+    m_wsthread.join();
 
     emit socketDisconnected();
-}
-
-void JsonWebSocket::socketDataWatcher()
-{
-    QByteArray baBuf;
-    int flags = 0;
-    int recvSize = 0;
-    const int READ_BUFFER_SIZE = m_ws->getReceiveBufferSize() * sizeof(wchar_t);
-
-    while(!m_stopRequest)
-    {
-        try
-        {
-            char res[READ_BUFFER_SIZE];
-            while(m_ws->available())
-            {
-                recvSize = m_ws->receiveFrame(res, READ_BUFFER_SIZE, flags);
-                baBuf += QByteArray::fromRawData(res, recvSize);
-            }
-
-            if(baBuf.size() > 0)
-            {
-                parseRawDdata(baBuf);
-                baBuf.clear();
-            }
-
-            // take a break
-            Sleeper::msleep(250);
-        }
-        catch(Poco::TimeoutException &tex)
-        {
-            // just a timeout, continue
-            // ...
-        }
-        catch(Poco::Exception &ex)
-        {
-            // something else..., continue anyway, but log it
-            // TODO: log it
-            // ...
-        }
-    }
 }
 
 void JsonWebSocket::parseRawDdata(const QByteArray &rawData)
@@ -186,7 +120,7 @@ void JsonWebSocket::parseRawDdata(const QByteArray &rawData)
             // we only use int id
             if(rootObject.value("id").type() == QJsonValue::String) return;
 
-            int id = rootObject.value("id").toVariant().toInt();
+            int id = rootObject.value("id").toDouble();
 
             // error ?
             if(rootObject.contains("error"))
@@ -200,7 +134,7 @@ void JsonWebSocket::parseRawDdata(const QByteArray &rawData)
                 if(errObj.contains("message"))
                     errStr += ", message: " + errObj.value("message").toString();
 
-                emit responseError(errObj.value("code").toVariant().toInt(), errStr);
+                emit responseError(errObj.value("code").toDouble(), errStr);
                 return;
             }
             else
@@ -214,4 +148,22 @@ void JsonWebSocket::parseRawDdata(const QByteArray &rawData)
             return;
         }
     }
+}
+
+void JsonWebSocket::ws_on_open(websocketpp::connection_hdl hdl)
+{
+    Q_UNUSED(hdl)
+    emit socketConnected();
+}
+
+void JsonWebSocket::ws_on_close(websocketpp::connection_hdl hdl)
+{
+    Q_UNUSED(hdl)
+    emit socketDisconnected();
+}
+
+void JsonWebSocket::ws_on_message(websocketpp::connection_hdl hdl, message_ptr msg)
+{
+    Q_UNUSED(hdl)
+    parseRawDdata(msg->get_raw_payload().c_str());
 }

@@ -36,20 +36,28 @@ HEADERS += \
 INCLUDEPATH += include/mopiqy_core
 
 #
+# websocketpp
+#
+INCLUDEPATH += ./websocketpp
+
+#
 # Platform dependant config
 #
 unix {
-    LIBS += -lPocoFoundation -lPocoNet
     VERSION = $$system(git describe --tags)
-    DEFINES += MOPIQY_CORE_VERSION=\\\"$${VERSION}\\\"
+    LIBS += -lboost_system -lboost_random -lboost_thread
 }
 
 win32 {
+    VERSION = 1.0
     DEFINES += MOPIQY_CORE_SHARED
-
     CONFIG(debug, debug|release) {
-        LIBS += -lPocoNetd -lPocoFoundationd
         TARGET = $$join(TARGET,,,d)
+        LIBS += -lboost_system-mt-d -lboost_random-mt-d -lboost_thread-mt-d -lws2_32
     }
-    CONFIG(release, debug|release): LIBS += -lPocoNet -lPocoFoundation
+    CONFIG(release, debug|release) {
+        LIBS += -lboost_system-mt -lboost_random-mt -lboost_thread-mt -lws2_32
+    }
+    DESTDIR = ../bin
 }
+DEFINES += MOPIQY_CORE_VERSION=\\\"$${VERSION}\\\"
