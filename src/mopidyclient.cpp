@@ -18,6 +18,7 @@ MopidyClient::MopidyClient(QObject *parent) : QObject(parent)
     connect(m_jwSocket, &Internal::JsonWebSocket::socketError, this, &MopidyClient::connectionError);
     connect(m_jwSocket, &Internal::JsonWebSocket::responseError, this, &MopidyClient::messageError);
     connect(m_jwSocket, &Internal::JsonWebSocket::socketDisconnected, this, &MopidyClient::disconnected);
+    connect(m_jwSocket, &Internal::JsonWebSocket::socketConnected, this, &MopidyClient::connected);
 }
 
 MopidyClient::~MopidyClient()
@@ -40,12 +41,7 @@ QString MopidyClient::clientVersion() const
 
 bool MopidyClient::connectTo(const QString &host, const qint16 &port, const QString &path)
 {
-    if(m_jwSocket->openSocket(host, port, path))
-    {
-        emit connected();
-        return true;
-    }
-    return false;
+    return m_jwSocket->openSocket(host, port, path);
 }
 
 void MopidyClient::disconnectClient()
