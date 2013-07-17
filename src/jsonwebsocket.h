@@ -2,15 +2,16 @@
 #define JSONWEBSOCKET_H
 
 #include <QObject>
-#include <QFuture>
 
-// FIXME: Replace POCO Websocket with something more portable
-
-#include <Poco/Net/WebSocket.h>
-#include <Poco/Net/HTTPClientSession.h>
+#include <websocketpp/config/asio_no_tls_client.hpp>
+#include <websocketpp/client.hpp>
+#include <websocketpp/common/thread.hpp>
 
 namespace Mopidy {
     namespace Internal {
+
+        typedef websocketpp::client<websocketpp::config::asio_client> wsclient;
+        typedef websocketpp::config::asio_client::message_type::ptr message_ptr;
 
         /*
          * WebSocket to mopidy server
@@ -40,20 +41,20 @@ namespace Mopidy {
             void socketDisconnected();
             void socketError(const int &code, const QString &message);
 
-        private slots:
-            void socketDataWatcher();
-
         private:
             // Json
             void parseRawDdata(const QByteArray &rawData);
 
-        private:
-            bool m_stopRequest;
-            QFuture<void> m_futureSocketWatcher;
+            // websocketpp handlers
+            void ws_on_open(websocketpp::connection_hdl hdl);
+            void ws_on_close(websocketpp::connection_hdl hdl);
+            void ws_on_message(websocketpp::connection_hdl hdl, message_ptr msg);
 
+        private:
             // WebSocket
-            Poco::Net::HTTPClientSession m_http_session;
-            Poco::Net::WebSocket *m_ws;
+            wsclient m_wsclient;
+            websocketpp::lib::thread m_wsthread;
+            websocketpp::connection_hdl m_wshandle;
 
             // IDs
             int m_lastId;
