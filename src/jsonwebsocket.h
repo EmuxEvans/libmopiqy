@@ -3,9 +3,12 @@
 
 #include <QObject>
 
+// See https://bugreports.qt-project.org/browse/QTBUG-29331
+#ifndef Q_MOC_RUN
 #include <websocketpp/config/asio_no_tls_client.hpp>
 #include <websocketpp/client.hpp>
 #include <websocketpp/common/thread.hpp>
+#endif //Q_MOC_RUN
 
 namespace Mopidy {
     namespace Internal {
@@ -48,6 +51,7 @@ namespace Mopidy {
             // websocketpp handlers
             void ws_on_open(websocketpp::connection_hdl hdl);
             void ws_on_close(websocketpp::connection_hdl hdl);
+            void ws_on_fail(websocketpp::connection_hdl hdl);
             void ws_on_message(websocketpp::connection_hdl hdl, message_ptr msg);
 
         private:
@@ -55,6 +59,7 @@ namespace Mopidy {
             wsclient m_wsclient;
             websocketpp::lib::thread m_wsthread;
             websocketpp::connection_hdl m_wshandle;
+            bool m_connected;
 
             // IDs
             int m_lastId;

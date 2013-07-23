@@ -5,11 +5,13 @@
 
 #include <limits>
 #include <QUrl>
+#include <QDebug>
 
 using namespace Mopidy::Internal;
 
 JsonWebSocket::JsonWebSocket(QObject *parent) : QObject(parent)
 {
+    m_connected = false;
     m_lastId = 0;
 
     // Initialize the Asio transport policy
@@ -24,12 +26,13 @@ JsonWebSocket::JsonWebSocket(QObject *parent) : QObject(parent)
     using websocketpp::lib::bind;
     m_wsclient.set_open_handler(bind(&JsonWebSocket::ws_on_open, this, ::_1));
     m_wsclient.set_close_handler(bind(&JsonWebSocket::ws_on_close, this, ::_1));
+    m_wsclient.set_fail_handler(bind(&JsonWebSocket::ws_on_fail, this, ::_1));
     m_wsclient.set_message_handler(bind(&JsonWebSocket::ws_on_message, this, ::_1, ::_2));
 }
 
 bool JsonWebSocket::isConnected() const
 {
-    return m_wsthread.joinable();
+    return m_connected;
 }
 
 int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
@@ -89,8 +92,14 @@ bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QS
 
 void JsonWebSocket::closeSocket()
 {
-    m_wsclient.stop();
+    websocketpp::lib::error_code ec;
+    m_wsclient.close(m_wshandle, websocketpp::close::status::normal, "goodbye", ec);
+    if(ec) {
+        emit socketError(ec.value(), QString::fromStdString(ec.message()));
+        return;
+    }
     m_wsthread.join();
+    m_connected = false;
 
     emit socketDisconnected();
 }
@@ -153,13 +162,22 @@ void JsonWebSocket::parseRawDdata(const QByteArray &rawData)
 void JsonWebSocket::ws_on_open(websocketpp::connection_hdl hdl)
 {
     Q_UNUSED(hdl)
+    m_connected = true;
     emit socketConnected();
 }
 
 void JsonWebSocket::ws_on_close(websocketpp::connection_hdl hdl)
 {
     Q_UNUSED(hdl)
+    m_connected = false;
     emit socketDisconnected();
+}
+
+void JsonWebSocket::ws_on_fail(websocketpp::connection_hdl hdl)
+{
+    Q_UNUSED(hdl)
+    m_connected = false;
+    emit socketError(0, "Websocket connection fail");
 }
 
 void JsonWebSocket::ws_on_message(websocketpp::connection_hdl hdl, message_ptr msg)
