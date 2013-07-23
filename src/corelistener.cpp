@@ -7,7 +7,7 @@
 
 using namespace Mopidy::Core;
 
-CoreListener::CoreListener(Internal::JsonWebSocket *jws, QObject *parent) : QObject(parent)
+CoreListener::CoreListener(Mopidy::Internal::JsonWebSocket *jws, QObject *parent) : QObject(parent)
 {
     connect(jws, &Mopidy::Internal::JsonWebSocket::eventReceived, this, &CoreListener::processJsonMessage);
 }

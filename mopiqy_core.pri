@@ -6,7 +6,7 @@ unix {
 }
 win32 {
     LIBS += -L../bin
-    CONFIG(debug, debug|release): LIBS += -lmopiqy_core1d
+    CONFIG(debug, debug|release): LIBS += -lmopiqy_cored1
     CONFIG(release, debug|release): LIBS += -lmopiqy_core1
     DESTDIR = ../bin
 }
