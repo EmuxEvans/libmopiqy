@@ -64,7 +64,11 @@ int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
 bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QString &path)
 {
     // just in case...
-    if(isConnected()) closeSocket();
+    if(isConnected())
+    {
+        closeSocket();
+        m_wsthread.join();
+    }
 
     QUrl url;
     url.setScheme("http");
@@ -98,7 +102,6 @@ void JsonWebSocket::closeSocket()
         emit socketError(ec.value(), QString::fromStdString(ec.message()));
         return;
     }
-    m_wsthread.join();
     m_connected = false;
 
     emit socketDisconnected();
