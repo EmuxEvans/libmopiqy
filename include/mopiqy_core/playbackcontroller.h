@@ -58,6 +58,7 @@ namespace Mopidy {
 
             void get_tracklist_position();
 
+            void set_volume(const int &volume);
             void get_volume();
 
         signals:

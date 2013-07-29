@@ -277,6 +277,17 @@ void PlaybackController::get_tracklist_position()
     m_idQuery.insert(id, PC_GETTRACKLISTPOSITION);
 }
 
+void PlaybackController::set_volume(const int &volume)
+{
+    // build request
+    QJsonObject vparams;
+    vparams.insert("volume", volume);
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_volume", vparams);
+
+    // send it
+    m_jrHandler->sendMessage(this, jso, true);
+}
+
 void PlaybackController::get_volume()
 {
     // build request
