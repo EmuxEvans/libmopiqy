@@ -6,9 +6,12 @@ using namespace Mopidy::Core;
 
 JsonRpcHandler::JsonRpcHandler(JsonWebSocket *socket, QObject *parent) : QObject(parent)
 {
-    m_socket = socket;
-    connect(m_socket, &JsonWebSocket::responseReceived, this, &JsonRpcHandler::onResponse);
-    connect(m_socket, &JsonWebSocket::socketDisconnected, this, &JsonRpcHandler::onSocketDisconnected);
+    if(socket)
+    {
+        m_socket = socket;
+        connect(m_socket, &JsonWebSocket::responseReceived, this, &JsonRpcHandler::onResponse);
+        connect(m_socket, &JsonWebSocket::socketDisconnected, this, &JsonRpcHandler::onSocketDisconnected);
+    }
 }
 
 JsonRpcHandler::~JsonRpcHandler()
@@ -17,12 +20,16 @@ JsonRpcHandler::~JsonRpcHandler()
 
 int JsonRpcHandler::sendMessage(ControllerInterface *ci, const QJsonObject &msg, bool notification)
 {
-    int id = m_socket->sendRequest(msg, notification);
-    if(id != 0)
+    if(m_socket)
     {
-        m_mapMsg.insert(id, ci);
+        int id = m_socket->sendRequest(msg, notification);
+        if(id != 0)
+        {
+            m_mapMsg.insert(id, ci);
+        }
+        return id;
     }
-    return id;
+    return -1;
 }
 
 void JsonRpcHandler::onResponse(const int &id, const QJsonValue &v)

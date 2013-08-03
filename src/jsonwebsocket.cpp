@@ -55,7 +55,12 @@ int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
      */
     QJsonDocument jsDoc(request);
     QString st2Send = jsDoc.toJson(QJsonDocument::Compact);
-    m_wsclient.send(m_wshandle, st2Send.toStdString(), websocketpp::frame::opcode::text);
+
+    try {
+        m_wsclient.send(m_wshandle, st2Send.toStdString(), websocketpp::frame::opcode::text);
+    } catch (boost::system::error_code &ex) {
+        emit socketError(-1, QString::fromStdString(ex.message()));
+    }
 
     // ...
     return id;

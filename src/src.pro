@@ -40,6 +40,7 @@ HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
 # websocketpp
 #
 INCLUDEPATH += $$PWD/3rdparty/websocketpp $${LIBMOPIQY_INC_ROOT}
+QMAKE_CXXFLAGS += -Wno-unused-parameter
 
 #
 # Platform dependant config

@@ -23,6 +23,7 @@ namespace Mopidy {
             JsonRpcHandler(JsonWebSocket *socket, QObject *parent = 0);
             ~JsonRpcHandler();
 
+            // return message id for a notification, else 0. if error, return -1
             int sendMessage(Mopidy::Core::ControllerInterface *ci, const QJsonObject &msg, bool notification = false);
 
         private slots:
