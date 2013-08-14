@@ -6,16 +6,21 @@ using namespace Mopidy::Core;
 
 JsonRpcHandler::JsonRpcHandler(JsonWebSocket *socket, QObject *parent) : QObject(parent)
 {
-    if(socket)
-    {
-        m_socket = socket;
-        connect(m_socket, &JsonWebSocket::responseReceived, this, &JsonRpcHandler::onResponse);
-        connect(m_socket, &JsonWebSocket::socketDisconnected, this, &JsonRpcHandler::onSocketDisconnected);
-    }
+    setJsonWebSocket(socket);
 }
 
 JsonRpcHandler::~JsonRpcHandler()
 {
+}
+
+void JsonRpcHandler::setJsonWebSocket(JsonWebSocket *socket)
+{
+    m_socket = socket;
+    if(socket)
+    {
+        connect(m_socket, &JsonWebSocket::responseReceived, this, &JsonRpcHandler::onResponse);
+        connect(m_socket, &JsonWebSocket::socketDisconnected, this, &JsonRpcHandler::onSocketDisconnected);
+    }
 }
 
 int JsonRpcHandler::sendMessage(ControllerInterface *ci, const QJsonObject &msg, bool notification)

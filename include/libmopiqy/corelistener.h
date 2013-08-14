@@ -25,6 +25,8 @@ namespace Mopidy {
             CoreListener(Internal::JsonWebSocket *jws, QObject *parent = 0);
             ~CoreListener();
 
+            void setJsonWebSocket(Internal::JsonWebSocket *jws);
+
         signals:
             void options_changed();
             void playback_state_changed(const Mopidy::Core::PlaybackState &oldState, const Mopidy::Core::PlaybackState &newState);

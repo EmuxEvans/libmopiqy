@@ -57,6 +57,14 @@ namespace Mopidy {
         void connectionError(const int &code, const QString &message);
         void messageError(const int &code, const QString &message);
 
+    private slots:
+        void onJwsConnected();
+        void onJwsDisconnected();
+
+    private:
+        void deleteAll();
+        void createAll();
+
     private:
         Mopidy::Internal::JsonWebSocket *m_jwSocket;
         Mopidy::Internal::JsonRpcHandler *m_jrHandler;

@@ -9,12 +9,20 @@ using namespace Mopidy::Core;
 
 CoreListener::CoreListener(Mopidy::Internal::JsonWebSocket *jws, QObject *parent) : QObject(parent)
 {
-    connect(jws, &Mopidy::Internal::JsonWebSocket::eventReceived, this, &CoreListener::processJsonMessage);
+    setJsonWebSocket(jws);
 }
 
 CoreListener::~CoreListener()
 {
 
+}
+
+void CoreListener::setJsonWebSocket(Mopidy::Internal::JsonWebSocket *jws)
+{
+    if(jws)
+    {
+        connect(jws, &Mopidy::Internal::JsonWebSocket::eventReceived, this, &CoreListener::processJsonMessage);
+    }
 }
 
 void CoreListener::processJsonMessage(const QByteArray &rawMsg)
