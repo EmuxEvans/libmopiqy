@@ -81,6 +81,8 @@ bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QS
     url.setPort(port);
     url.setPath(path);
 
+    if(!url.isValid()) return false;
+
     // create connection
     websocketpp::lib::error_code ec;
     wsclient::connection_ptr con = m_wsclient.get_connection(url.toString().toStdString().c_str(), ec);

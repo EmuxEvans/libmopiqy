@@ -7,12 +7,14 @@ SOURCES += main.cpp
 
 # Tests cases
 HEADERS += \
-    testmopidyparser.h \
-    testjsonrpchandler.h
+    testjsonwebsocket.h \
+    testjsonrpchandler.h \
+    testmopidyparser.h
 
 SOURCES += \
-    testmopidyparser.cpp \
-    testjsonrpchandler.cpp
+    testjsonwebsocket.cpp \
+    testjsonrpchandler.cpp \
+    testmopidyparser.cpp
 
 # Lib
 INCLUDEPATH += ../src ../include/libmopiqy

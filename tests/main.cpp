@@ -1,8 +1,9 @@
 #include <QCoreApplication>
 #include <QtTest/QtTest>
 
-#include "testmopidyparser.h"
+#include "testjsonwebsocket.h"
 #include "testjsonrpchandler.h"
+#include "testmopidyparser.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,9 @@ int main(int argc, char *argv[])
     /*
      * run tests
      */
+    TestJsonWebSocket tJsonWebSocket;
+    QTest::qExec(&tJsonWebSocket);
+
     TestJsonRpcHandler tJsonRpcHandler;
     QTest::qExec(&tJsonRpcHandler);
 
