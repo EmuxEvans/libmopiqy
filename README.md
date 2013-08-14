@@ -1,9 +1,8 @@
-# Mopiqy Core : Core Qt client for Mopidy #
+# libmopiqy : Qt client library for Mopidy #
 
 This library handle connection to mopidy server through websocket and implement its core API functions.
 
-It is intended to be use directly inside GUI project sources.
-
+It is used in [Mopiqy Desktop](https://github.com/AlexandreP2101/mopiqy_desktop) and aims to used in mobile project.
 
 ## Dependencies ##
 
