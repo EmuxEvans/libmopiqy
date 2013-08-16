@@ -31,7 +31,7 @@ MopidyClient::~MopidyClient()
 
 QString MopidyClient::clientVersion() const
 {
-    return MOPIQY_CORE_VERSION;
+    return LIBMOPIQY_VERSION;
 }
 
 bool MopidyClient::connectTo(const QString &host, const qint16 &port, const QString &path)

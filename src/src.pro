@@ -37,7 +37,6 @@ PRIVATE_HEADERS += \
     websocketutility.h \
 
 HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
-INCLUDEPATH += $$LIBMOPIQY_INC_ROOT
 
 #
 # Platform dependant config
@@ -51,7 +50,7 @@ win32 {
     DEFINES += MOPIQY_CORE_SHARED
 }
 
-DEFINES += MOPIQY_CORE_VERSION=\\\"$${VERSION}\\\"
+DEFINES += LIBMOPIQY_VERSION=\\\"$${VERSION}\\\"
 
 #
 # Install
