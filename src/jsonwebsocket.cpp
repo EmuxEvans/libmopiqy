@@ -1,46 +1,42 @@
 #include "jsonwebsocket.h"
+#include "qwebsocketclient.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QDebug>
 
 #include <limits>
-#include <QUrl>
-#include <QDebug>
 
 using namespace Mopidy::Internal;
 
 JsonWebSocket::JsonWebSocket(QObject *parent) : QObject(parent)
 {
-    m_connected = false;
     m_lastId = 0;
+    m_wsclient = new QWebSocketClient(this);
 
-    // Initialize the Asio transport policy
-    m_wsclient.init_asio();
+    connect(m_wsclient, &QWebSocketClient::connected, this, &JsonWebSocket::socketConnected);
+    connect(m_wsclient, &QWebSocketClient::disconnected, this, &JsonWebSocket::socketDisconnected);
+    connect(m_wsclient, &QWebSocketClient::textMessageReceived, this, &JsonWebSocket::parseRawDdata);
+    //connect(m_wsclient, SIGNAL(frameReceived(QString)), this, SLOT(parseRawDdata(QString)));
+    connect(m_wsclient, SIGNAL(error(int,QString)), this, SIGNAL(socketError(int,QString)));
+}
 
-    // remove logging things
-    m_wsclient.clear_access_channels(websocketpp::log::alevel::all);
-    m_wsclient.clear_error_channels(websocketpp::log::elevel::all);
-
-    using websocketpp::lib::placeholders::_1;
-    using websocketpp::lib::placeholders::_2;
-    using websocketpp::lib::bind;
-    m_wsclient.set_open_handler(bind(&JsonWebSocket::ws_on_open, this, ::_1));
-    m_wsclient.set_close_handler(bind(&JsonWebSocket::ws_on_close, this, ::_1));
-    m_wsclient.set_fail_handler(bind(&JsonWebSocket::ws_on_fail, this, ::_1));
-    m_wsclient.set_message_handler(bind(&JsonWebSocket::ws_on_message, this, ::_1, ::_2));
+JsonWebSocket::~JsonWebSocket()
+{
+    closeSocket();
 }
 
 bool JsonWebSocket::isConnected() const
 {
-    return m_connected;
+    return m_wsclient->isConnected();
 }
 
 int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
 {
+    int id = 0;
     // update to JsonRpc
     request.insert("jsonrpc", QString("2.0"));
 
-    int id = 0;
     if(!notification)
     {
         id = ++m_lastId;
@@ -56,11 +52,7 @@ int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
     QJsonDocument jsDoc(request);
     QString st2Send = jsDoc.toJson(QJsonDocument::Compact);
 
-    try {
-        m_wsclient.send(m_wshandle, st2Send.toStdString(), websocketpp::frame::opcode::text);
-    } catch (boost::system::error_code &ex) {
-        emit socketError(-1, QString::fromStdString(ex.message()));
-    }
+    m_wsclient->writeTextMessage(st2Send);
 
     // ...
     return id;
@@ -69,56 +61,24 @@ int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
 bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QString &path)
 {
     // just in case...
-    if(isConnected())
-    {
-        closeSocket();
-        m_wsthread.join();
-    }
-
-    QUrl url;
-    url.setScheme("http");
-    url.setHost(host);
-    url.setPort(port);
-    url.setPath(path);
-
-    if(!url.isValid()) return false;
+    if(isConnected()) closeSocket();
 
     // create connection
-    websocketpp::lib::error_code ec;
-    wsclient::connection_ptr con = m_wsclient.get_connection(url.toString().toStdString().c_str(), ec);
-    if (ec) {
-        emit socketError(ec.value(), QString::fromStdString(ec.message()));
-        return false;
-    }
-
-    // get handle to be able to send message, good idea, isn't it ?
-    m_wshandle = con->get_handle();
-
-    // connect then run in thread
-    m_wsclient.connect(con);
-    m_wsthread = websocketpp::lib::thread(&wsclient::run, &m_wsclient);
+    m_wsclient->connectToHost(host, port, path);
 
     return true;
 }
 
 void JsonWebSocket::closeSocket()
 {
-    websocketpp::lib::error_code ec;
-    m_wsclient.close(m_wshandle, websocketpp::close::status::normal, "goodbye", ec);
-    if(ec) {
-        emit socketError(ec.value(), QString::fromStdString(ec.message()));
-        return;
-    }
-    m_connected = false;
-
-    emit socketDisconnected();
+    m_wsclient->disconnectFromHost();
 }
 
-void JsonWebSocket::parseRawDdata(const QByteArray &rawData)
+void JsonWebSocket::parseRawDdata(const QString &rawData)
 {
     // try to read json document
     QJsonParseError jpError;
-    QJsonDocument jdoc = QJsonDocument::fromJson(rawData, &jpError);
+    QJsonDocument jdoc = QJsonDocument::fromJson(rawData.toLatin1(), &jpError);
     if(jpError.error != QJsonParseError::NoError)
     {
         emit responseError(jpError.error, jpError.errorString());
@@ -130,7 +90,7 @@ void JsonWebSocket::parseRawDdata(const QByteArray &rawData)
     // event or answer to request ?
     if(rootObject.contains("event"))
     {
-        emit eventReceived(rawData);
+        emit eventReceived(rawData.toLatin1());
     }
     else
     {
@@ -167,31 +127,4 @@ void JsonWebSocket::parseRawDdata(const QByteArray &rawData)
             return;
         }
     }
-}
-
-void JsonWebSocket::ws_on_open(websocketpp::connection_hdl hdl)
-{
-    Q_UNUSED(hdl)
-    m_connected = true;
-    emit socketConnected();
-}
-
-void JsonWebSocket::ws_on_close(websocketpp::connection_hdl hdl)
-{
-    Q_UNUSED(hdl)
-    m_connected = false;
-    emit socketDisconnected();
-}
-
-void JsonWebSocket::ws_on_fail(websocketpp::connection_hdl hdl)
-{
-    Q_UNUSED(hdl)
-    m_connected = false;
-    emit socketError(0, "Websocket connection fail");
-}
-
-void JsonWebSocket::ws_on_message(websocketpp::connection_hdl hdl, message_ptr msg)
-{
-    Q_UNUSED(hdl)
-    parseRawDdata(msg->get_raw_payload().c_str());
 }

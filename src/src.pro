@@ -1,6 +1,5 @@
 TEMPLATE = lib
-QT = core
-CONFIG += exceptions
+QT = core network
 
 TARGET = mopiqy
 CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
@@ -15,46 +14,43 @@ SOURCES = \
     playbackcontroller.cpp \
     playlistscontroller.cpp \
     tracklistcontroller.cpp \
-    librarycontroller.cpp
+    librarycontroller.cpp \
+    qwebsocketclient.cpp \
+    websocketutility.cpp \
 
-LIBMOPIQY_INC_ROOT = $$PWD/../include/libmopiqy
 PUBLIC_HEADERS += \
-    $${LIBMOPIQY_INC_ROOT}/mopidyclient.h \
-    $${LIBMOPIQY_INC_ROOT}/mopidymodels.h \
-    $${LIBMOPIQY_INC_ROOT}/mopiqy_export.h \
-    $${LIBMOPIQY_INC_ROOT}/corelistener.h \
-    $${LIBMOPIQY_INC_ROOT}/playbackcontroller.h \
-    $${LIBMOPIQY_INC_ROOT}/playlistscontroller.h \
-    $${LIBMOPIQY_INC_ROOT}/tracklistcontroller.h \
-    $${LIBMOPIQY_INC_ROOT}/librarycontroller.h \
-    $${LIBMOPIQY_INC_ROOT}/controllerinterface.h
+    mopidyclient.h \
+    mopidymodels.h \
+    mopiqy_export.h \
+    corelistener.h \
+    playbackcontroller.h \
+    playlistscontroller.h \
+    tracklistcontroller.h \
+    librarycontroller.h \
+    controllerinterface.h
 
 PRIVATE_HEADERS += \
     jsonwebsocket.h \
     jsonrpchandler.h \
-    mopidyparser.h
+    mopidyparser.h \
+    qwebsocketclient.h \
+    websocketutility.h \
 
 HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
-
-#
-# websocketpp
-#
-INCLUDEPATH += $$PWD/3rdparty/websocketpp $${LIBMOPIQY_INC_ROOT}
-QMAKE_CXXFLAGS += -Wno-unused-parameter
+INCLUDEPATH += $$LIBMOPIQY_INC_ROOT
 
 #
 # Platform dependant config
 #
 unix {
     VERSION = $$system(git describe --tags)
-    LIBS += -lboost_system -lboost_random -lboost_thread
 }
 
 win32 {
     VERSION = 1.0
     DEFINES += MOPIQY_CORE_SHARED
-    include(find_boost.pri)
 }
+
 DEFINES += MOPIQY_CORE_VERSION=\\\"$${VERSION}\\\"
 
 #

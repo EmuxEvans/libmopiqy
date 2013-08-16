@@ -1,5 +1,5 @@
 TEMPLATE = app
-QT = core testlib
+QT = core network testlib
 TARGET = tests
 INCLUDEPATH += .
 

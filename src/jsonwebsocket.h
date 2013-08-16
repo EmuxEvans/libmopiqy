@@ -2,19 +2,13 @@
 #define JSONWEBSOCKET_H
 
 #include <QObject>
+#include <QAbstractSocket>
 
-// See https://bugreports.qt-project.org/browse/QTBUG-29331
-#ifndef Q_MOC_RUN
-#include <websocketpp/config/asio_no_tls_client.hpp>
-#include <websocketpp/client.hpp>
-#include <websocketpp/common/thread.hpp>
-#endif //Q_MOC_RUN
 
 namespace Mopidy {
     namespace Internal {
 
-        typedef websocketpp::client<websocketpp::config::asio_client> wsclient;
-        typedef websocketpp::config::asio_client::message_type::ptr message_ptr;
+        class QWebSocketClient;
 
         /*
          * WebSocket to mopidy server
@@ -25,6 +19,7 @@ namespace Mopidy {
 
         public:
             JsonWebSocket(QObject *parent = 0);
+            ~JsonWebSocket();
 
             bool isConnected() const;
 
@@ -44,22 +39,13 @@ namespace Mopidy {
             void socketDisconnected();
             void socketError(const int &code, const QString &message);
 
-        private:
+        private slots:
             // Json
-            void parseRawDdata(const QByteArray &rawData);
-
-            // websocketpp handlers
-            void ws_on_open(websocketpp::connection_hdl hdl);
-            void ws_on_close(websocketpp::connection_hdl hdl);
-            void ws_on_fail(websocketpp::connection_hdl hdl);
-            void ws_on_message(websocketpp::connection_hdl hdl, message_ptr msg);
+            void parseRawDdata(const QString &rawData);
 
         private:
             // WebSocket
-            wsclient m_wsclient;
-            websocketpp::lib::thread m_wsthread;
-            websocketpp::connection_hdl m_wshandle;
-            bool m_connected;
+            QWebSocketClient *m_wsclient;
 
             // IDs
             int m_lastId;
