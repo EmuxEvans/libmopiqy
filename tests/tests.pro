@@ -1,7 +1,6 @@
 TEMPLATE = app
 QT = core network testlib
 TARGET = tests
-INCLUDEPATH += .
 
 SOURCES += main.cpp
 
@@ -17,9 +16,9 @@ SOURCES += \
     testmopidyparser.cpp
 
 # Lib
-INCLUDEPATH += ../src ../include/libmopiqy
-LIBS += -L../src -lmopiqy
+INCLUDEPATH += ../src
+LIBS += -L../src
 
-# websocketpp
-INCLUDEPATH += ../src/3rdparty/websocketpp
-LIBS += -lboost_system -lboost_random -lboost_thread
+CONFIG(debug, debug|release): LIBS += -lmopiqyd
+CONFIG(release, debug|release): LIBS += -lmopiqy
+
