@@ -41,7 +41,7 @@ void TestQWebSocketClient::ping()
     QSignalSpy spPong(&wsc, SIGNAL(pong()));
 
     wsc.connectToHost(m_host, m_port, m_path);
-    if(!spConnect.wait()) QSKIP("Connection failed, cannot test disconnect function.");
+    if(!spConnect.wait()) QSKIP("Connection failed, cannot test ping function.");
 
     wsc.ping();
     QCOMPARE(spPong.wait(), true);
@@ -55,7 +55,7 @@ void TestQWebSocketClient::writeTextMessage()
     QSignalSpy spRead(&wsc, SIGNAL(textMessageReceived(QString)));
 
     wsc.connectToHost(m_host, m_port, m_path);
-    if(!spConnect.wait()) QSKIP("Connection failed, cannot test disconnect function.");
+    if(!spConnect.wait()) QSKIP("Connection failed, cannot test writeTextMessage function.");
 
     QString str("Hello world !");
 
@@ -75,7 +75,7 @@ void TestQWebSocketClient::writeBinaryMessage()
     QSignalSpy spRead(&wsc, SIGNAL(binaryMessageReceived(QByteArray)));
 
     wsc.connectToHost(m_host, m_port, m_path);
-    if(!spConnect.wait()) QSKIP("Connection failed, cannot test disconnect function.");
+    if(!spConnect.wait()) QSKIP("Connection failed, cannot test writeBinaryMessage function.");
 
     QByteArray ba;
     for(int i = 0; i < 20; ++i) ba.append(char(i));
