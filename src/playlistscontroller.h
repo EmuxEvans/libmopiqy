@@ -18,6 +18,7 @@ namespace Mopidy {
             PlaylistsController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
             ~PlaylistsController();
 
+        public slots:
             /*
              * functions from Core API
              */
@@ -27,8 +28,6 @@ namespace Mopidy {
             void lookup(const QString &uri);
             void refresh(const QString &uri = "");
             void save(const Mopidy::Models::Playlist &pl);
-
-        public slots:
             void get_playlists();
 
         signals:

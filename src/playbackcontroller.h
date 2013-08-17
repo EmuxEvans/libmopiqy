@@ -18,6 +18,7 @@ namespace Mopidy {
             PlaybackController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
             ~PlaybackController();
 
+        public slots:
             /*
              * functions from Core API
              */

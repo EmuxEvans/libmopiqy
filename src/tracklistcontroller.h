@@ -19,6 +19,7 @@ namespace Mopidy {
             TracklistController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
             ~TracklistController();
 
+        public slots:
             /*
              * functions from Core API
              */

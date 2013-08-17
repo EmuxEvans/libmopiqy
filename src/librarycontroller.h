@@ -18,6 +18,7 @@ namespace Mopidy {
             LibraryController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
             ~LibraryController();
 
+        public slots:
             /*
              * functions from Core API
              */
