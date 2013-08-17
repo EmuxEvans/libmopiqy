@@ -1,5 +1,5 @@
-#ifndef CORELISTENER_H
-#define CORELISTENER_H
+#ifndef EVENTLISTENER_H
+#define EVENTLISTENER_H
 
 #include <QObject>
 #include <QString>
@@ -47,4 +47,4 @@ namespace Mopidy {
     }
 }
 
-#endif //CORELISTENER_H
+#endif //EVENTLISTENER_H

@@ -41,7 +41,7 @@ namespace Mopidy {
         void disconnectClient();
 
         // access to controllers and listener
-        Mopidy::Core::EventListener *coreListener() const;
+        Mopidy::Core::EventListener *eventListener() const;
 
         Mopidy::Core::PlaybackController *playbackController() const;
         Mopidy::Core::PlaylistsController *playlistsController() const;
@@ -69,7 +69,7 @@ namespace Mopidy {
         Mopidy::Internal::JsonWebSocket *m_jwSocket;
         Mopidy::Internal::JsonRpcHandler *m_jrHandler;
 
-        Mopidy::Core::EventListener *m_coreListener;
+        Mopidy::Core::EventListener *m_eventListener;
         Mopidy::Core::PlaybackController *m_playbackController;
         Mopidy::Core::PlaylistsController *m_playlistsController;
         Mopidy::Core::TracklistController *m_tracklistController;
