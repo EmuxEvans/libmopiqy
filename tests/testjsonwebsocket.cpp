@@ -7,7 +7,7 @@ void TestJsonWebSocket::isConnectedTrue()
 
     // have to wait for connection
     QSignalSpy connectedSignal(&jws, SIGNAL(socketConnected()));
-    jws.openSocket("127.0.0.1", 6680, "/mopidy/ws/");
+    jws.openSocket("127.0.0.1", 9000, "");
     if(!connectedSignal.wait()) QSKIP("Cannot connect to mopidy server");
 
     QCOMPARE(jws.isConnected(), true);
@@ -29,7 +29,7 @@ void TestJsonWebSocket::sendRequest()
 void TestJsonWebSocket::openSocketValid()
 {
     Mopidy::Internal::JsonWebSocket jws;
-    QCOMPARE(jws.openSocket("127.0.0.1", 6680, "/mopidy/ws/"), true);
+    QCOMPARE(jws.openSocket("127.0.0.1", 9000, ""), true);
 }
 
 void TestJsonWebSocket::openSocketInvalid()

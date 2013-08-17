@@ -48,7 +48,7 @@ bool QWebSocketClient::connectToHost(const QString &host, const quint16 &port, c
 
 bool QWebSocketClient::isConnected() const
 {
-    return m_tcpSocket->isOpen();
+    return (m_tcpSocket->state() == QTcpSocket::ConnectedState) && (m_wsState == QAbstractSocket::ConnectedState);
 }
 
 bool QWebSocketClient::disconnectFromHost()

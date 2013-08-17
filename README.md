@@ -16,3 +16,8 @@ It is used in [Mopiqy Desktop](https://github.com/AlexandreP2101/mopiqy_desktop)
 Libmopiqy is a simple Qt5 project, so it can be build easily using command line :
 
     $ qmake && make
+
+## Documentation ##
+
+Soon.
+
