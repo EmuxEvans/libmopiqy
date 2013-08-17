@@ -21,7 +21,9 @@ void TestJsonWebSocket::isConnectedFalse()
 
 void TestJsonWebSocket::sendRequest()
 {
-
+    Mopidy::Internal::JsonWebSocket jws;
+    QCOMPARE(jws.sendRequest(QJsonObject(), true), 0);
+    QVERIFY(jws.sendRequest(QJsonObject(), false) > 0);
 }
 
 void TestJsonWebSocket::openSocketValid()
@@ -33,7 +35,7 @@ void TestJsonWebSocket::openSocketValid()
 void TestJsonWebSocket::openSocketInvalid()
 {
     Mopidy::Internal::JsonWebSocket jws;
-    QCOMPARE(jws.openSocket("127.0", 6680, "/mopidy/ws/"), false);
+    QCOMPARE(jws.openSocket("127.0.0.1", -1, "/mopidy/ws/"), false);
     QCOMPARE(jws.openSocket("127.0.0.1", 0, "/mopidy/ws/"), false);
     QCOMPARE(jws.openSocket("127.0.0.A", 6680, "/mopidy/ws/"), false);
     QCOMPARE(jws.openSocket("127.0.0.1", 6680, ""), false);

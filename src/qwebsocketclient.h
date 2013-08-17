@@ -6,6 +6,12 @@
 
 namespace Mopidy {
     namespace Internal {
+        /*
+         * Implement WebSocket protocol from http://tools.ietf.org/html/rfc6455
+         * This is a bare minimal implementation that looks enough for mopidy communication
+         * May be used in other project, or not...
+         *
+         */
         class QWebSocketClient : public QObject
         {
             Q_OBJECT

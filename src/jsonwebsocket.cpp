@@ -17,7 +17,6 @@ JsonWebSocket::JsonWebSocket(QObject *parent) : QObject(parent)
     connect(m_wsclient, &QWebSocketClient::connected, this, &JsonWebSocket::socketConnected);
     connect(m_wsclient, &QWebSocketClient::disconnected, this, &JsonWebSocket::socketDisconnected);
     connect(m_wsclient, &QWebSocketClient::textMessageReceived, this, &JsonWebSocket::parseRawDdata);
-    //connect(m_wsclient, SIGNAL(frameReceived(QString)), this, SLOT(parseRawDdata(QString)));
     connect(m_wsclient, SIGNAL(error(int,QString)), this, SIGNAL(socketError(int,QString)));
 }
 
@@ -64,14 +63,12 @@ bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QS
     if(isConnected()) closeSocket();
 
     // create connection
-    m_wsclient->connectToHost(host, port, path);
-
-    return true;
+    return m_wsclient->connectToHost(host, port, path);
 }
 
-void JsonWebSocket::closeSocket()
+bool JsonWebSocket::closeSocket()
 {
-    m_wsclient->disconnectFromHost();
+    return m_wsclient->disconnectFromHost();
 }
 
 void JsonWebSocket::parseRawDdata(const QString &rawData)

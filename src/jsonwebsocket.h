@@ -28,7 +28,7 @@ namespace Mopidy {
 
         public slots:
             bool openSocket(const QString &host, const qint16 &port, const QString &path);
-            void closeSocket();
+            bool closeSocket();
 
         signals:
             void eventReceived(const QByteArray &rawMsg);

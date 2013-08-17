@@ -247,14 +247,16 @@ void QWebSocketClient::processWsRead(const QByteArray &tcpData)
 
 void QWebSocketClient::writeMessage(const QByteArray &data, bool sendAsText)
 {
-    QList<QByteArray> frames = WebSocketUtility::createFrames(data, sendAsText);
-    foreach(QByteArray frame, frames)
+    if((m_tcpSocket->state() == QAbstractSocket::ConnectedState) && (m_wsState == QAbstractSocket::ConnectedState))
     {
-        m_tcpSocket->write(frame);
-        m_tcpSocket->waitForBytesWritten();
+        QList<QByteArray> frames = WebSocketUtility::createFrames(data, sendAsText);
+        foreach(QByteArray frame, frames)
+        {
+            m_tcpSocket->write(frame);
+            m_tcpSocket->waitForBytesWritten();
+        }
     }
 }
-
 
 void QWebSocketClient::sendPong()
 {
