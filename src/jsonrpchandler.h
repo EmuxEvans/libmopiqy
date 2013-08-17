@@ -20,7 +20,7 @@ namespace Mopidy {
             Q_OBJECT
 
         public:
-            JsonRpcHandler(JsonWebSocket *socket, QObject *parent = 0);
+            JsonRpcHandler(QObject *parent = 0);
             ~JsonRpcHandler();
 
             void setJsonWebSocket(JsonWebSocket *socket);

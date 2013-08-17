@@ -8,7 +8,6 @@
 
 #include "mopiqy_export.h"
 
-// just because 'Dict' is shorter
 typedef QHash<QString, QString> Dict;
 
 namespace Mopidy {
@@ -23,7 +22,7 @@ namespace Mopidy {
 
     namespace Models {
 
-        struct MOPIQY_CORE_EXPORT Artist
+        struct LIBMOPIQY_EXPORT Artist
         {
             QString uri;
             QString name;
@@ -31,7 +30,7 @@ namespace Mopidy {
         };
         typedef QList<Artist> Artists;
 
-        struct MOPIQY_CORE_EXPORT Album
+        struct LIBMOPIQY_EXPORT Album
         {
             QString uri;
             QString name;
@@ -44,7 +43,7 @@ namespace Mopidy {
         };
         typedef QList<Album> Albums;
 
-        struct MOPIQY_CORE_EXPORT Track
+        struct LIBMOPIQY_EXPORT Track
         {
             QString uri;
             QString name;
@@ -59,7 +58,7 @@ namespace Mopidy {
         };
         typedef QList<Track> Tracks;
 
-        struct MOPIQY_CORE_EXPORT Playlist
+        struct LIBMOPIQY_EXPORT Playlist
         {
             QString uri;
             QString name;
@@ -68,7 +67,7 @@ namespace Mopidy {
         };
         typedef QList<Playlist> Playlists;
 
-        struct MOPIQY_CORE_EXPORT SearchResult
+        struct LIBMOPIQY_EXPORT SearchResult
         {
             QString uri;
             Tracks tracks;
@@ -76,7 +75,7 @@ namespace Mopidy {
             Artists artists;
         };
 
-        struct  MOPIQY_CORE_EXPORT TlTrack
+        struct  LIBMOPIQY_EXPORT TlTrack
         {
             int tlid;
             Track track;
@@ -85,6 +84,7 @@ namespace Mopidy {
     }
 }
 
+// allow cast with QVariant
 Q_DECLARE_METATYPE(Mopidy::Models::Artist)
 Q_DECLARE_METATYPE(Mopidy::Models::Album)
 Q_DECLARE_METATYPE(Mopidy::Models::Track)

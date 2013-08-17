@@ -23,7 +23,7 @@ QWebSocketClient::~QWebSocketClient()
     m_tcpSocket->deleteLater();
 }
 
-void QWebSocketClient::connectToHost(const QString &host, const quint16 &port, const QString &path)
+bool QWebSocketClient::connectToHost(const QString &host, const quint16 &port, const QString &path)
 {
     // Close before trying to connect to another one
     disconnectFromHost();
@@ -36,11 +36,14 @@ void QWebSocketClient::connectToHost(const QString &host, const quint16 &port, c
     if(url.scheme() == "ws") url.setScheme("http");
     else if(url.scheme() == "wss") url.setScheme("https");
 
+    if(!url.isValid()) return false;
+
     m_currentPort = url.port();
     m_currentHost = url.host();
     m_currentPath = url.path();
 
     m_tcpSocket->connectToHost(url.host(), url.port());
+    return true;
 }
 
 bool QWebSocketClient::isConnected() const

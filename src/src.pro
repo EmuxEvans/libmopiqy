@@ -9,7 +9,7 @@ SOURCES = \
     jsonwebsocket.cpp \
     jsonrpchandler.cpp \
     mopidyparser.cpp \
-    corelistener.cpp \
+    eventlistener.cpp \
     controllerinterface.cpp \
     playbackcontroller.cpp \
     playlistscontroller.cpp \
@@ -22,7 +22,7 @@ PUBLIC_HEADERS += \
     mopidyclient.h \
     mopidymodels.h \
     mopiqy_export.h \
-    corelistener.h \
+    eventlistener.h \
     playbackcontroller.h \
     playlistscontroller.h \
     tracklistcontroller.h \

@@ -9,7 +9,7 @@
 
 namespace Mopidy {
     namespace Core {
-        class MOPIQY_CORE_EXPORT PlaybackController : public QObject, public ControllerInterface
+        class LIBMOPIQY_EXPORT PlaybackController : public QObject, public ControllerInterface
         {
             Q_OBJECT
 

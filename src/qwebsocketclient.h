@@ -14,7 +14,7 @@ namespace Mopidy {
             explicit QWebSocketClient(QObject *parent = 0);
             ~QWebSocketClient();
 
-            void connectToHost(const QString &host, const quint16 &port = 80, const QString &path = "");
+            bool connectToHost(const QString &host, const quint16 &port = 80, const QString &path = "");
             bool isConnected() const;
             bool disconnectFromHost();
 

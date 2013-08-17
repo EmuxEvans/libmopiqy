@@ -8,8 +8,8 @@ MopidyClient::MopidyClient(QObject *parent) : QObject(parent)
 {
     m_jwSocket = 0;
 
-    m_jrHandler = new Internal::JsonRpcHandler(m_jwSocket, this);
-    m_coreListener = new Core::CoreListener(m_jwSocket, this);
+    m_jrHandler = new Internal::JsonRpcHandler(this);
+    m_coreListener = new Core::EventListener(this);
     m_playlistsController = new Core::PlaylistsController(m_jrHandler, this);
     m_tracklistController = new Core::TracklistController(m_jrHandler, this);
     m_playbackController = new Core::PlaybackController(m_jrHandler, this);
@@ -56,7 +56,7 @@ void MopidyClient::disconnectClient()
     m_jwSocket->closeSocket();
 }
 
-Core::CoreListener *MopidyClient::coreListener() const
+Core::EventListener *MopidyClient::coreListener() const
 {
     return m_coreListener;
 }

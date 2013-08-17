@@ -10,7 +10,7 @@
 
 namespace Mopidy {
     namespace Core {
-        class MOPIQY_CORE_EXPORT LibraryController : public QObject, public ControllerInterface
+        class LIBMOPIQY_EXPORT LibraryController : public QObject, public ControllerInterface
         {
             Q_OBJECT
 

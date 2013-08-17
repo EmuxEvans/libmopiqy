@@ -4,9 +4,9 @@
 using namespace Mopidy::Internal;
 using namespace Mopidy::Core;
 
-JsonRpcHandler::JsonRpcHandler(JsonWebSocket *socket, QObject *parent) : QObject(parent)
+JsonRpcHandler::JsonRpcHandler(QObject *parent) : QObject(parent)
 {
-    setJsonWebSocket(socket);
+    m_socket = 0;
 }
 
 JsonRpcHandler::~JsonRpcHandler()

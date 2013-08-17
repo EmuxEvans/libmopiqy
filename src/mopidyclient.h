@@ -8,7 +8,7 @@
 #include <QObject>
 
 #include "mopidymodels.h"
-#include "corelistener.h"
+#include "eventlistener.h"
 
 #include "playbackcontroller.h"
 #include "playlistscontroller.h"
@@ -24,7 +24,7 @@ namespace Mopidy {
         class JsonRpcHandler;
     }
 
-    class MOPIQY_CORE_EXPORT MopidyClient : public QObject
+    class LIBMOPIQY_EXPORT MopidyClient : public QObject
     {
         Q_OBJECT
 
@@ -41,7 +41,7 @@ namespace Mopidy {
         void disconnectClient();
 
         // access to controllers and listener
-        Mopidy::Core::CoreListener *coreListener() const;
+        Mopidy::Core::EventListener *coreListener() const;
 
         Mopidy::Core::PlaybackController *playbackController() const;
         Mopidy::Core::PlaylistsController *playlistsController() const;
@@ -69,7 +69,7 @@ namespace Mopidy {
         Mopidy::Internal::JsonWebSocket *m_jwSocket;
         Mopidy::Internal::JsonRpcHandler *m_jrHandler;
 
-        Mopidy::Core::CoreListener *m_coreListener;
+        Mopidy::Core::EventListener *m_coreListener;
         Mopidy::Core::PlaybackController *m_playbackController;
         Mopidy::Core::PlaylistsController *m_playlistsController;
         Mopidy::Core::TracklistController *m_tracklistController;
