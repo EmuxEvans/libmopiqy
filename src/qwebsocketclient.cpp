@@ -237,7 +237,7 @@ void QWebSocketClient::processWsRead(const QByteArray &tcpData)
         break;
 
     case WebSocketUtility::Op_Text:
-        emit textMessageReceived(ba);
+        emit textMessageReceived(QString::fromUtf8(ba));
         break;
 
     default:
@@ -249,12 +249,28 @@ void QWebSocketClient::writeMessage(const QByteArray &data, bool sendAsText)
 {
     if((m_tcpSocket->state() == QAbstractSocket::ConnectedState) && (m_wsState == QAbstractSocket::ConnectedState))
     {
-        QList<QByteArray> frames = WebSocketUtility::createFrames(data, sendAsText);
-        foreach(QByteArray frame, frames)
-        {
-            m_tcpSocket->write(frame);
-            m_tcpSocket->waitForBytesWritten();
-        }
+        WebSocketUtility::OpCode opcode = sendAsText ? WebSocketUtility::Op_Text : WebSocketUtility::Op_Binary;
+
+        quint64 payloadLength = data.size();
+
+        // mask
+        QByteArray mask = WebSocketUtility::createRandomKey(4, false);
+
+        // create header
+        QByteArray wsMsg = WebSocketUtility::createFrameHeader(opcode, payloadLength, true, mask);
+
+        // create masked data
+        QByteArray mdata = WebSocketUtility::applyMask(data, mask);
+
+        // merge
+        wsMsg.append(mdata);
+
+        // send
+        m_tcpSocket->write(wsMsg);
+    }
+    else
+    {
+        emit error(0, "Cannot send message on unconnected WebSocket");
     }
 }
 
