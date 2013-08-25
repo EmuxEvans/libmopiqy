@@ -15,7 +15,6 @@ private slots:
     void disconnectFromHost();
     void ping();
     void writeTextMessage();
-    void writeBinaryMessage();
 
 private:
     QString m_host;

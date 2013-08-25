@@ -2,61 +2,39 @@
 #define QWEBSOCKETCLIENT_H
 
 #include <QObject>
-#include <QTcpSocket>
 
 namespace Mopidy {
-    namespace Internal {
-        /*
-         * Implement WebSocket protocol from http://tools.ietf.org/html/rfc6455
-         * This is a bare minimal implementation that looks enough for mopidy communication
-         * May be used in other project, or not...
-         *
-         */
-        class QWebSocketClient : public QObject
-        {
-            Q_OBJECT
+namespace Internal {
 
-        public:
-            explicit QWebSocketClient(QObject *parent = 0);
-            ~QWebSocketClient();
+class QWebSocketClientPrivate;
 
-            bool connectToHost(const QString &host, const quint16 &port = 80, const QString &path = "");
-            bool isConnected() const;
-            bool disconnectFromHost();
+class QWebSocketClient : public QObject
+{
+    Q_OBJECT
 
-            void ping();
+public:
+    explicit QWebSocketClient(QObject *parent = 0);
+    ~QWebSocketClient();
 
-            void writeTextMessage(const QString &message);
-            void writeBinaryMessage(const QByteArray &message);
+    bool connectToHost(const QString &host, const quint16 &port = 80, const QString &path = QString(""));
+    bool isConnected() const;
+    void disconnectFromHost();
 
-        signals:
-            void connected();
-            void disconnected();
-            void textMessageReceived(const QString &);
-            void binaryMessageReceived(const QByteArray &);
-            void pong();
-            void error(int code, QString message);
+    void ping();
 
-        private slots:
-            void onTcpError(QAbstractSocket::SocketError);
-            void onTcpStateChanged(QAbstractSocket::SocketState);
-            void onTcpReadyRead();
+    void writeTextMessage(const QString &message);
 
-            void processWsConnecting(const QByteArray &tcpData);
-            void processWsRead(const QByteArray &tcpData);
-            void writeMessage(const QByteArray &data, bool sendAsText);
+signals:
+    void connected();
+    void disconnected();
+    void textMessageReceived(const QString &);
+    void pong();
+    void error(int code, QString message);
 
-            void sendPong();
-
-        private:
-            QAbstractSocket::SocketState m_wsState;
-            QTcpSocket *m_tcpSocket;
-            QString m_currentHost;
-            QString m_currentPath;
-            quint16 m_currentPort;
-            QByteArray m_currentSessionHSKey;
-        };
-    }
+private:
+    QWebSocketClientPrivate *m_d;
+};
+}
 }
 
 #endif //QWEBSOCKETCLIENT_H

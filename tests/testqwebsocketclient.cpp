@@ -29,7 +29,7 @@ void TestQWebSocketClient::disconnectFromHost()
     wsc.connectToHost(m_host, m_port, m_path);
     if(!spConnect.wait()) QSKIP("Connection failed, cannot test disconnect function.");
 
-    QCOMPARE(wsc.disconnectFromHost(), true);
+    wsc.disconnectFromHost();
     QCOMPARE(spDisconnect.wait(), true);
     QCOMPARE(wsc.isConnected(), false);
 }
@@ -65,25 +65,4 @@ void TestQWebSocketClient::writeTextMessage()
     QList<QVariant> arguments = spRead.takeFirst();
     QCOMPARE(arguments.at(0).type(), QVariant::String);
     QVERIFY(arguments.at(0).toString() == str);
-}
-
-void TestQWebSocketClient::writeBinaryMessage()
-{
-    // be sure to have echo ws server
-    Mopidy::Internal::QWebSocketClient wsc;
-    QSignalSpy spConnect(&wsc, SIGNAL(connected()));
-    QSignalSpy spRead(&wsc, SIGNAL(binaryMessageReceived(QByteArray)));
-
-    wsc.connectToHost(m_host, m_port, m_path);
-    if(!spConnect.wait()) QSKIP("Connection failed, cannot test writeBinaryMessage function.");
-
-    QByteArray ba;
-    for(int i = 0; i < 20; ++i) ba.append(char(i));
-
-    wsc.writeBinaryMessage(ba);
-    QCOMPARE(spRead.wait(), true);
-
-    QList<QVariant> arguments = spRead.takeFirst();
-    QCOMPARE(arguments.at(0).type(), QVariant::ByteArray);
-    QVERIFY(arguments.at(0).toByteArray() == ba);
 }

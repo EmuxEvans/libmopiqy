@@ -66,9 +66,9 @@ bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QS
     return m_wsclient->connectToHost(host, port, path);
 }
 
-bool JsonWebSocket::closeSocket()
+void JsonWebSocket::closeSocket()
 {
-    return m_wsclient->disconnectFromHost();
+    m_wsclient->disconnectFromHost();
 }
 
 void JsonWebSocket::parseRawDdata(const QString &rawData)

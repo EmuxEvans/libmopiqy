@@ -16,7 +16,7 @@ SOURCES = \
     tracklistcontroller.cpp \
     librarycontroller.cpp \
     qwebsocketclient.cpp \
-    websocketutility.cpp \
+    qwebsocketclient_p.cpp
 
 PUBLIC_HEADERS += \
     mopidyclient.h \
@@ -34,15 +34,21 @@ PRIVATE_HEADERS += \
     jsonrpchandler.h \
     mopidyparser.h \
     qwebsocketclient.h \
-    websocketutility.h \
+    qwebsocketclient_p.h
 
 HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+
+#
+# WebSocket
+#
+INCLUDEPATH += 3rdparty/websocketpp
 
 #
 # Platform dependant config
 #
 unix {
     VERSION = $$system(git describe --tags)
+    LIBS += -lboost_thread -lboost_system -lboost_random
 }
 
 win32 {
