@@ -4,7 +4,7 @@
 
 This library handle connection to mopidy server through websocket and implement its core API functions.
 
-It is used in [Mopiqy Desktop](https://github.com/AlexandreP2101/mopiqy_desktop) and aims to be used in mobile project.
+It is used in [Mopiqy Desktop](https://github.com/AlexandrePTJ/mopiqy_desktop) and aims to be used in mobile project.
 
 ## Dependencies ##
 
