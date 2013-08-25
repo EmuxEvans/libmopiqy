@@ -13,7 +13,7 @@ LibraryController::~LibraryController()
 {
 }
 
-void LibraryController::find_exact(const Dict &query, const QStringList &uris)
+void LibraryController::find_exact(const QHash<QString, QString> &query, const QStringList &uris)
 {
     // build request
     QJsonObject jso = Mopidy::Parser::searchLikeEncode("core.library.find_exact", query, uris);
@@ -50,7 +50,7 @@ void LibraryController::refresh(const QString &uri)
     m_jrHandler->sendMessage(this, jso, true);
 }
 
-void LibraryController::search(const Dict &query, const QStringList &uris)
+void LibraryController::search(const QHash<QString, QString> &query, const QStringList &uris)
 {
     // build request
     QJsonObject jso = Mopidy::Parser::searchLikeEncode("core.library.search", query, uris);

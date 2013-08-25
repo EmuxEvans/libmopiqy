@@ -26,11 +26,11 @@ namespace Mopidy {
             void add(const Mopidy::Models::Tracks &tracks, const int &at_position = -1);
             void add(const QString &uri, const int &at_position = -1);
             void clear();
-            void filter(const Dict &criteria);
+            void filter(const QHash<QString, QString> &criteria);
             void index(const Mopidy::Models::TlTrack &);
             void get_length();
             void move(const int &start, const int &end, const int &to_position);
-            void remove(const Dict &criteria);
+            void remove(const QHash<QString, QString> &criteria);
             void shuffle(const int &start = -1, const int &end = -1);
             void slice(const int &start, const int &end);
             void get_tltracks();

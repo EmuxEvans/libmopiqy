@@ -8,8 +8,6 @@
 
 #include "mopiqy_export.h"
 
-typedef QHash<QString, QString> Dict;
-
 namespace Mopidy {
 
     namespace Core {

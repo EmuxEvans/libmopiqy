@@ -38,7 +38,7 @@ void PlaylistsController::deletePl(const QString &uri)
     m_jrHandler->sendMessage(this, jso, true);
 }
 
-void PlaylistsController::filter(const Dict &criteria)
+void PlaylistsController::filter(const QHash<QString, QString> &criteria)
 {
     // TODO: implemented but not tested
     QJsonObject vparams;

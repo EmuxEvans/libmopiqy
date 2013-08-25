@@ -22,10 +22,10 @@ namespace Mopidy {
             /*
              * functions from Core API
              */
-            void find_exact(const Dict &query = Dict(), const QStringList &uris = QStringList());
+            void find_exact(const QHash<QString, QString> &query, const QStringList &uris = QStringList());
             void lookup(const QString &uri);
             void refresh(const QString &uri = "");
-            void search(const Dict &query = Dict(), const QStringList &uris = QStringList());
+            void search(const QHash<QString, QString> &query, const QStringList &uris = QStringList());
 
 
         signals:

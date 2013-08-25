@@ -24,7 +24,7 @@ namespace Mopidy {
              */
             void create(const QString &name, const QString &uri_scheme = "");
             void deletePl(const QString &uri);
-            void filter(const Dict &criteria);
+            void filter(const QHash<QString, QString> &criteria);
             void lookup(const QString &uri);
             void refresh(const QString &uri = "");
             void save(const Mopidy::Models::Playlist &pl);

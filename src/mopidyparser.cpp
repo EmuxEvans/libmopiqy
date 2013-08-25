@@ -19,7 +19,7 @@ QJsonObject Mopidy::Parser::rpcEncode(const QString &method, const QJsonValue &p
     return jso;
 }
 
-QJsonObject Mopidy::Parser::searchLikeEncode(const QString &method, const Dict &query, const QStringList &uris)
+QJsonObject Mopidy::Parser::searchLikeEncode(const QString &method, const QHash<QString, QString> &query, const QStringList &uris)
 {
     QJsonObject jso;
     jso.insert("method", method);
@@ -215,11 +215,11 @@ Mopidy::Core::PlaybackState Mopidy::Parser::getState(const QString &stateStr)
     return Mopidy::Core::STOPPED;
 }
 
-QJsonObject Mopidy::Parser::toJsonDict(const Dict &d)
+QJsonObject Mopidy::Parser::toJsonDict(const QHash<QString, QString> &d)
 {
     QJsonObject jo;
 
-    for(Dict::const_iterator it = d.begin(); it != d.end(); ++it)
+    for(QHash<QString, QString>::const_iterator it = d.begin(); it != d.end(); ++it)
         jo.insert(it.key(), it.value());
 
     return jo;

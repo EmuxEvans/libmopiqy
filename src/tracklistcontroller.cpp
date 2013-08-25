@@ -52,7 +52,7 @@ void TracklistController::clear()
     m_jrHandler->sendMessage(this, jso, true);
 }
 
-void TracklistController::filter(const Dict &criteria)
+void TracklistController::filter(const QHash<QString, QString> &criteria)
 {
     // // TODO: implemented but not tested
     QJsonObject vparams;
@@ -105,7 +105,7 @@ void TracklistController::move(const int &start, const int &end, const int &to_p
     m_jrHandler->sendMessage(this, jso, true);
 }
 
-void TracklistController::remove(const Dict &criteria)
+void TracklistController::remove(const QHash<QString, QString> &criteria)
 {
     // TODO: implemented but not tested
     QJsonObject vparams;

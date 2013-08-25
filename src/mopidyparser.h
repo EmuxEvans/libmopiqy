@@ -19,7 +19,7 @@ namespace Mopidy {
          * Encoders
          */
         QJsonObject rpcEncode(const QString &method, const QJsonValue &params = QJsonValue::Null);
-        QJsonObject searchLikeEncode(const QString &method, const Dict &query, const QStringList &uris);
+        QJsonObject searchLikeEncode(const QString &method, const QHash<QString, QString> &query, const QStringList &uris);
 
         QJsonObject encodeModel(const Mopidy::Models::Artist &artist);
         QJsonObject encodeModel(const Mopidy::Models::Album &album);
@@ -52,7 +52,7 @@ namespace Mopidy {
         Mopidy::Core::PlaybackState getState(const QString &);
 
         // dict
-        QJsonObject toJsonDict(const Dict &);
+        QJsonObject toJsonDict(const QHash<QString, QString> &);
     }
 }
 
