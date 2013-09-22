@@ -19,5 +19,6 @@ Libmopiqy is a simple Qt5 project, so it can be build easily using command line 
 
 ## Documentation ##
 
-Soon.
+An exampled called [PlaylistsPlayer](https://github.com/AlexandrePTJ/libmopiqy/tree/master/demos/playlistsplayer) is available to show how the library works.
 
+The straight idea is to implement 'as is' [API Models](http://docs.mopidy.com/en/latest/api/models/) and [API Core](http://docs.mopidy.com/en/latest/api/core/)
