@@ -3,6 +3,11 @@
 
 #include <QObject>
 
+/*
+ * Minimalist WebSocket client interface sufficient for this library.
+ * This declaration should never change, QWebSocketClientPrivate can.
+ */
+
 namespace Mopidy {
 namespace Internal {
 

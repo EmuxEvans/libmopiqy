@@ -1,6 +1,11 @@
 #ifndef MOPIDYCLIENT_H
 #define MOPIDYCLIENT_H
 
+/*
+ * This is the main entry point to Mopidy server.
+ * When connected, all controllers and the eventlistener are ready to send message
+ */
+
 #include <QJsonValue>
 #include <QJsonObject>
 
@@ -60,10 +65,6 @@ namespace Mopidy {
     private slots:
         void onJwsConnected();
         void onJwsDisconnected();
-
-    private:
-        void deleteAll();
-        void createAll();
 
     private:
         Mopidy::Internal::JsonWebSocket *m_jwSocket;

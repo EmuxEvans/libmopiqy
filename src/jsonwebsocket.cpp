@@ -33,6 +33,7 @@ bool JsonWebSocket::isConnected() const
 int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
 {
     int id = 0;
+
     // update to JsonRpc
     request.insert("jsonrpc", QString("2.0"));
 
@@ -78,7 +79,7 @@ void JsonWebSocket::parseRawDdata(const QString &rawData)
     QJsonDocument jdoc = QJsonDocument::fromJson(rawData.toLatin1(), &jpError);
     if(jpError.error != QJsonParseError::NoError)
     {
-        emit responseError(jpError.error, jpError.errorString());
+        qCritical() << __FUNCTION__ << QObject::tr("Not a JsonDocument:") << jpError.error << jpError.errorString();
         return;
     }
 
@@ -111,7 +112,6 @@ void JsonWebSocket::parseRawDdata(const QString &rawData)
                     errStr += ", message: " + errObj.value("message").toString();
 
                 emit responseError(errObj.value("code").toDouble(), errStr);
-                return;
             }
             else
             {
@@ -120,8 +120,7 @@ void JsonWebSocket::parseRawDdata(const QString &rawData)
         }
         else
         {
-            emit responseError(-1, QObject::tr("Neither a JsonRpc answer not an event..."));
-            return;
+            qCritical() << __FUNCTION__ << QObject::tr("Neither a JsonRpc answer not an event...");
         }
     }
 }

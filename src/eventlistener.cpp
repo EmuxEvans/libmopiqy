@@ -4,6 +4,7 @@
 
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QDebug>
 
 using namespace Mopidy::Core;
 
@@ -93,7 +94,7 @@ void EventListener::processJsonMessage(const QByteArray &rawMsg)
         }
         else
         {
-            emit error(0, "Unknown event: " + evtName);
+            qCritical() << __FUNCTION__ << QObject::tr("Unknown event:") << evtName;
         }
     }
 }

@@ -14,8 +14,6 @@ MopidyClient::MopidyClient(QObject *parent) : QObject(parent)
     m_tracklistController = new Core::TracklistController(m_jrHandler, this);
     m_playbackController = new Core::PlaybackController(m_jrHandler, this);
     m_libraryController = new Core::LibraryController(m_jrHandler, this);
-
-    connect(m_eventListener, &Core::EventListener::error, this, &MopidyClient::messageError);
 }
 
 MopidyClient::~MopidyClient()
