@@ -28,7 +28,7 @@ namespace Mopidy {
             void lookup(const QString &uri);
             void refresh(const QString &uri = "");
             void save(const Mopidy::Models::Playlist &pl);
-            void get_playlists();
+            void get_playlists(const bool &include_tracks = false);
 
         signals:
             void onCreate(const Mopidy::Models::Playlist &pl);

@@ -18,8 +18,6 @@ MopidyClient::MopidyClient(QObject *parent) : QObject(parent)
 
 MopidyClient::~MopidyClient()
 {
-    disconnectClient();
-
     delete m_playbackController;
     delete m_playlistsController;
     delete m_tracklistController;

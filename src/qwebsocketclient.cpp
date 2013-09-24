@@ -15,7 +15,7 @@ QWebSocketClient::QWebSocketClient(QObject *parent) : QObject(parent)
 
 QWebSocketClient::~QWebSocketClient()
 {
-    m_d->disconnectFromHost();
+    delete m_d;
 }
 
 bool QWebSocketClient::connectToHost(const QString &host, const quint16 &port, const QString &path)

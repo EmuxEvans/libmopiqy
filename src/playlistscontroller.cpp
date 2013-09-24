@@ -66,11 +66,11 @@ void PlaylistsController::lookup(const QString &uri)
     m_idQuery.insert(id, PLS_LOOKUP);
 }
 
-void PlaylistsController::get_playlists()
+void PlaylistsController::get_playlists(const bool &include_tracks)
 {
     // build request
     QJsonObject vparams;
-    vparams.insert("include_tracks", false);
+    vparams.insert("include_tracks", include_tracks);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.get_playlists", vparams);
 
     // send it

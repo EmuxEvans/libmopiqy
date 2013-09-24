@@ -72,11 +72,14 @@ bool QWebSocketClientPrivate::isConnected() const
 
 void QWebSocketClientPrivate::disconnectFromHost()
 {
-    websocketpp::lib::error_code ec;
-    m_wsclient.close(m_wshandle, websocketpp::close::status::normal, "goodbye", ec);
-    if(ec) {
-        emit socket_error(ec.value(), QString::fromStdString(ec.message()));
-        return;
+    if(m_connected)
+    {
+        websocketpp::lib::error_code ec;
+        m_wsclient.close(m_wshandle, websocketpp::close::status::normal, "goodbye", ec);
+        if(ec) {
+            emit socket_error(ec.value(), QString::fromStdString(ec.message()));
+        }
+        m_connected = false;
     }
 }
 
