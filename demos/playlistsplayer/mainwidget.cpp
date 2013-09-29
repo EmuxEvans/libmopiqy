@@ -16,21 +16,18 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent), m_ui(new Ui::MainWidg
     connect(m_client, &Mopidy::MopidyClient::messageError, this, &MainWidget::onMC_MessageError);
 
     // connection to eventlistener
-    connect(m_client->eventListener(), &Mopidy::Core::EventListener::playback_state_changed,
-            this, &MainWidget::onEL_PlaybackStateChanged);
     connect(m_client->eventListener(), &Mopidy::Core::EventListener::track_playback_ended,
             this, &MainWidget::onEL_TrackPlaybackEnded);
     connect(m_client->eventListener(), &Mopidy::Core::EventListener::track_playback_started,
             this, &MainWidget::onEL_TrackPlaybackStarted);
-    connect(m_client->eventListener(), &Mopidy::Core::EventListener::tracklist_changed,
-            this, &MainWidget::onEL_TracklistChanged);
-
 
     // connect to controllers signals
     connect(m_client->playlistsController(), &Mopidy::Core::PlaylistsController::onGetPlaylists,
             this, &MainWidget::onPlaylistsController_GetPlaylists);
     connect(m_client->playlistsController(), &Mopidy::Core::PlaylistsController::onLookup,
             this, &MainWidget::onPlaylistsController_Lookup);
+    connect(m_client->tracklistController(), &Mopidy::Core::TracklistController::onAdd,
+            this, &MainWidget::onTracklistController_Add);
     connect(m_client->tracklistController(), &Mopidy::Core::TracklistController::onGetTlTracks,
             this, &MainWidget::onTracklistController_GetTlTracks);
 
@@ -107,6 +104,12 @@ void MainWidget::on_lwPlaylists_currentItemChanged(QListWidgetItem *current, QLi
     }
 }
 
+void MainWidget::on_btRefreshTracklist_clicked()
+{
+    qWarning() << "get current tracklist request";
+    m_client->tracklistController()->get_tltracks();
+}
+
 void MainWidget::on_tbPlay_clicked()
 {
     if(m_currentTltracks.count() > 0)
@@ -160,14 +163,10 @@ void MainWidget::onMC_MessageError(const int &code, const QString &message)
 /*
  * EventListener slots
  */
-void MainWidget::onEL_PlaybackStateChanged(const Mopidy::Core::PlaybackState &oldState, const Mopidy::Core::PlaybackState &newState)
-{
-    qWarning() << "event: playback state changed" << oldState << "to" << newState;
-}
-
 void MainWidget::onEL_TrackPlaybackEnded(const Mopidy::Models::TlTrack &tl_track, const int &time_position)
 {
     Q_UNUSED(time_position)
+
     qWarning() << "event: playback ended" << tl_track.tlid;
     m_ui->lbCurrentName->clear();
     m_ui->lbCurrentInfos->clear();
@@ -182,13 +181,6 @@ void MainWidget::onEL_TrackPlaybackStarted(const Mopidy::Models::TlTrack &tl_tra
 
     QTime trackLength(0, 0, 0);
     m_ui->lbCurrentLength->setText(trackLength.addMSecs(tl_track.track.length).toString("[mm:ss]"));
-}
-
-void MainWidget::onEL_TracklistChanged()
-{
-    qWarning() << "event: tracklist changed";
-    qWarning() << "request current tracklist";
-    m_client->tracklistController()->get_tltracks();
 }
 
 /*
@@ -244,10 +236,35 @@ void MainWidget::onPlaylistsController_Lookup(const Mopidy::Models::Playlist &pl
         m_ui->lwTracks->resizeColumnToContents(i);
 }
 
-void MainWidget::onTracklistController_GetTlTracks(const Mopidy::Models::TlTracks &tltracks)
+void MainWidget::onTracklistController_Add(const Mopidy::Models::TlTracks &tltracks)
 {
     qWarning() << tltracks.count() << "Tl_Tracks in tracklist";
     m_currentTltracks = tltracks;
+}
+
+void MainWidget::onTracklistController_GetTlTracks(const Mopidy::Models::TlTracks &tltracks)
+{
+    qWarning() << "playlist lookup done";
+    m_ui->lwTlTracks->clear();
+
+    foreach(Mopidy::Models::TlTrack tltrack, tltracks)
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem;
+        item->setText(0, QString::number(tltrack.tlid));
+        item->setText(1, tltrack.track.name);
+        item->setText(2, tltrack.track.album.name);
+
+        QStringList artistsNames;
+        foreach (Mopidy::Models::Artist artist, tltrack.track.artists) {
+            artistsNames << artist.name;
+        }
+        item->setText(3, artistsNames.join(", "));
+
+        m_ui->lwTlTracks->addTopLevelItem(item);
+    }
+
+    for(int i = 0; i < m_ui->lwTracks->columnCount(); ++i)
+        m_ui->lwTlTracks->resizeColumnToContents(i);
 }
 
 void MainWidget::setControlsState(const bool &isConnected)
@@ -261,6 +278,8 @@ void MainWidget::setControlsState(const bool &isConnected)
 
     m_ui->btGetPlaylists->setEnabled(isConnected);
     m_ui->btSetAsCurrentPlaylist->setEnabled(isConnected);
+
+    m_ui->tabWidget->setEnabled(isConnected);
 
     m_ui->tbPlay->setEnabled(isConnected);
     m_ui->tbStop->setEnabled(isConnected);

@@ -26,6 +26,8 @@ private slots:
     void on_btSetAsCurrentPlaylist_clicked();
     void on_lwPlaylists_currentItemChanged(QListWidgetItem * current, QListWidgetItem * previous);
 
+    void on_btRefreshTracklist_clicked();
+
     void on_tbPlay_clicked();
     void on_tbStop_clicked();
     void on_tbNext_clicked();
@@ -37,14 +39,13 @@ private slots:
     void onMC_MessageError(const int &code, const QString &message);
 
     // EventListener slots
-    void onEL_PlaybackStateChanged(const Mopidy::Core::PlaybackState &oldState, const Mopidy::Core::PlaybackState &newState);
     void onEL_TrackPlaybackEnded(const Mopidy::Models::TlTrack &tl_track, const int &time_position);
     void onEL_TrackPlaybackStarted(const Mopidy::Models::TlTrack &tl_track);
-    void onEL_TracklistChanged();
 
     // Controllers slots
     void onPlaylistsController_GetPlaylists(const Mopidy::Models::Playlists &pls);
     void onPlaylistsController_Lookup(const Mopidy::Models::Playlist &pl);
+    void onTracklistController_Add(const Mopidy::Models::TlTracks &);
     void onTracklistController_GetTlTracks(const Mopidy::Models::TlTracks &);
 
 private:
