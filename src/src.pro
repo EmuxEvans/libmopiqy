@@ -1,5 +1,5 @@
 TEMPLATE = lib
-QT = core network
+QT = core
 
 TARGET = mopiqy
 CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)

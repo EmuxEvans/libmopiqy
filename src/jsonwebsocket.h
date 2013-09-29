@@ -2,8 +2,6 @@
 #define JSONWEBSOCKET_H
 
 #include <QObject>
-#include <QAbstractSocket>
-
 
 namespace Mopidy {
     namespace Internal {
