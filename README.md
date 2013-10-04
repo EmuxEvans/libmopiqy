@@ -8,8 +8,9 @@ It is used in [Mopiqy Desktop](https://github.com/AlexandrePTJ/mopiqy_desktop) a
 
 ## Dependencies ##
 
-- [Qt](http://qt-project.org/) >= 5.0
-  - only `qt5-base` module is required
+- [Qt](http://qt-project.org/) >= 5.1
+  - `qt5-base`
+  - `qt5-websockets` from [Qt playground](https://qt.gitorious.org/qtplayground/websockets)
 
 ## Building ##
 
