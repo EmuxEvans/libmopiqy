@@ -1,5 +1,5 @@
 TEMPLATE = lib
-QT = core
+QT = core websockets
 
 TARGET = mopiqy
 CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
@@ -14,9 +14,7 @@ SOURCES = \
     playbackcontroller.cpp \
     playlistscontroller.cpp \
     tracklistcontroller.cpp \
-    librarycontroller.cpp \
-    qwebsocketclient.cpp \
-    qwebsocketclient_p.cpp
+    librarycontroller.cpp
 
 PUBLIC_HEADERS += \
     mopidyclient.h \
@@ -32,9 +30,7 @@ PUBLIC_HEADERS += \
 PRIVATE_HEADERS += \
     jsonwebsocket.h \
     jsonrpchandler.h \
-    mopidyparser.h \
-    qwebsocketclient.h \
-    qwebsocketclient_p.h
+    mopidyparser.h
 
 HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
 

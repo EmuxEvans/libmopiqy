@@ -1,5 +1,4 @@
 #include "jsonwebsocket.h"
-#include "qwebsocketclient.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -12,12 +11,11 @@ using namespace Mopidy::Internal;
 JsonWebSocket::JsonWebSocket(QObject *parent) : QObject(parent)
 {
     m_lastId = 0;
-    m_wsclient = new QWebSocketClient(this);
 
-    connect(m_wsclient, &QWebSocketClient::connected, this, &JsonWebSocket::socketConnected);
-    connect(m_wsclient, &QWebSocketClient::disconnected, this, &JsonWebSocket::socketDisconnected);
-    connect(m_wsclient, &QWebSocketClient::textMessageReceived, this, &JsonWebSocket::parseRawDdata);
-    connect(m_wsclient, SIGNAL(error(int,QString)), this, SIGNAL(socketError(int,QString)));
+    connect(&m_wsclient, &QWebSocket::connected, this, &JsonWebSocket::socketConnected);
+    connect(&m_wsclient, &QWebSocket::disconnected, this, &JsonWebSocket::socketDisconnected);
+    connect(&m_wsclient, &QWebSocket::textMessageReceived, this, &JsonWebSocket::parseRawDdata);
+    connect(&m_wsclient, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
 }
 
 JsonWebSocket::~JsonWebSocket()
@@ -27,7 +25,8 @@ JsonWebSocket::~JsonWebSocket()
 
 bool JsonWebSocket::isConnected() const
 {
-    return m_wsclient->isConnected();
+    // TODO: check it
+    return m_wsclient.isValid();
 }
 
 int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
@@ -52,7 +51,7 @@ int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
     QJsonDocument jsDoc(request);
     QString st2Send = jsDoc.toJson(QJsonDocument::Compact);
 
-    m_wsclient->writeTextMessage(st2Send);
+    m_wsclient.write(st2Send);
 
     // ...
     return id;
@@ -64,12 +63,21 @@ bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QS
     if(isConnected()) closeSocket();
 
     // create connection
-    return m_wsclient->connectToHost(host, port, path);
+    QUrl url = QUrl::fromUserInput(host);
+    url.setPort(port);
+    url.setPath(path);
+    m_wsclient.open(url);
+    return m_wsclient.waitForConnected();
 }
 
 void JsonWebSocket::closeSocket()
 {
-    m_wsclient->disconnectFromHost();
+    m_wsclient.close();
+}
+
+void JsonWebSocket::onSocketError(QAbstractSocket::SocketError error)
+{
+    emit socketError(error, m_wsclient.errorString());
 }
 
 void JsonWebSocket::parseRawDdata(const QString &rawData)

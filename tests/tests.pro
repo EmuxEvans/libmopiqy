@@ -8,13 +8,11 @@ SOURCES += main.cpp
 HEADERS += \
     testjsonwebsocket.h \
     testjsonrpchandler.h \
-    testqwebsocketclient.h \
     testmopidyparser.h
 
 SOURCES += \
     testjsonwebsocket.cpp \
     testjsonrpchandler.cpp \
-    testqwebsocketclient.cpp \
     testmopidyparser.cpp
 
 # Lib

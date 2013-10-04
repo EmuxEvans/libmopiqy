@@ -2,11 +2,10 @@
 #define JSONWEBSOCKET_H
 
 #include <QObject>
+#include <QtWebSockets/QWebSocket>
 
 namespace Mopidy {
     namespace Internal {
-
-        class QWebSocketClient;
 
         /*
          * WebSocket to mopidy server
@@ -38,12 +37,14 @@ namespace Mopidy {
             void socketError(const int &code, const QString &message);
 
         private slots:
+            // WebSocket
+            void onSocketError(QAbstractSocket::SocketError error);
             // Json
             void parseRawDdata(const QString &rawData);
 
         private:
             // WebSocket
-            QWebSocketClient *m_wsclient;
+            QWebSocket m_wsclient;
 
             // IDs
             int m_lastId;
