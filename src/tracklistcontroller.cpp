@@ -182,6 +182,156 @@ void TracklistController::get_version()
     m_idQuery.insert(id, TC_GETVERSION);
 }
 
+void TracklistController::get_consume()
+{
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.get_consume");
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_GETCONSUME);
+}
+
+void TracklistController::set_consume(const bool &v)
+{
+    // build request
+    QJsonObject vparams;
+    vparams.insert("value", v);
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.set_consume", vparams);
+
+    // send it
+    m_jrHandler->sendMessage(this, jso, true);
+}
+
+void TracklistController::get_random()
+{
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.get_random");
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_GETRANDOM);
+}
+
+void TracklistController::set_random(const bool &v)
+{
+    // build request
+    QJsonObject vparams;
+    vparams.insert("value", v);
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.set_random", vparams);
+
+    // send it
+    m_jrHandler->sendMessage(this, jso, true);
+}
+
+void TracklistController::get_repeat()
+{
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.get_repeat");
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_GETREPEAT);
+}
+
+void TracklistController::set_repeat(const bool &v)
+{
+    // build request
+    QJsonObject vparams;
+    vparams.insert("value", v);
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.set_repeat", vparams);
+
+    // send it
+    m_jrHandler->sendMessage(this, jso, true);
+}
+
+void TracklistController::get_single()
+{
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.get_single");
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_GETSINGLE);
+}
+
+void TracklistController::set_single(const bool &v)
+{
+    // build request
+    QJsonObject vparams;
+    vparams.insert("value", v);
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.set_single", vparams);
+
+    // send it
+    m_jrHandler->sendMessage(this, jso, true);
+}
+
+void TracklistController::eot_track(const Mopidy::Models::TlTrack &tltrack)
+{
+    QJsonObject vparams;
+    if(tltrack.tlid >= 0)
+        vparams.insert("tl_track", Mopidy::Parser::encodeModel(tltrack));
+    else
+        vparams.insert("tl_track", QJsonValue(QJsonValue::Null));
+
+
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.eot_track", vparams);
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_EOTTRACK);
+}
+
+void TracklistController::next_track(const Mopidy::Models::TlTrack &tltrack)
+{
+    QJsonObject vparams;
+    if(tltrack.tlid >= 0)
+        vparams.insert("tl_track", Mopidy::Parser::encodeModel(tltrack));
+    else
+        vparams.insert("tl_track", QJsonValue(QJsonValue::Null));
+
+
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.next_track", vparams);
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_NEXTTRACK);
+}
+
+void TracklistController::previous_track(const Mopidy::Models::TlTrack &tltrack)
+{
+    QJsonObject vparams;
+    if(tltrack.tlid >= 0)
+        vparams.insert("tl_track", Mopidy::Parser::encodeModel(tltrack));
+    else
+        vparams.insert("tl_track", QJsonValue(QJsonValue::Null));
+
+
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.tracklist.previous_track", vparams);
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, TC_PREVIOUSTRACK);
+}
+
+
 void TracklistController::processJsonResponse(const int &id, const QJsonValue &jv)
 {
     if(m_idQuery.contains(id))
@@ -190,17 +340,17 @@ void TracklistController::processJsonResponse(const int &id, const QJsonValue &j
         switch(idt)
         {
         case TC_ADD:
-            {
-                Mopidy::Models::TlTracks tls = Mopidy::Parser::parseArrayOf<Mopidy::Models::TlTrack>(jv.toArray());
-                emit onAdd(tls);
-            }
+        {
+            Mopidy::Models::TlTracks tls = Mopidy::Parser::parseArrayOf<Mopidy::Models::TlTrack>(jv.toArray());
+            emit onAdd(tls);
+        }
             break;
 
         case TC_FILTER:
-            {
-                Mopidy::Models::TlTracks tls = Mopidy::Parser::parseArrayOf<Mopidy::Models::TlTrack>(jv.toArray());
-                emit onFilter(tls);
-            }
+        {
+            Mopidy::Models::TlTracks tls = Mopidy::Parser::parseArrayOf<Mopidy::Models::TlTrack>(jv.toArray());
+            emit onFilter(tls);
+        }
             break;
 
         case TC_INDEX:
@@ -212,36 +362,76 @@ void TracklistController::processJsonResponse(const int &id, const QJsonValue &j
             break;
 
         case TC_REMOVE:
-            {
-                Mopidy::Models::TlTracks tls = Mopidy::Parser::parseArrayOf<Mopidy::Models::TlTrack>(jv.toArray());
-                emit onRemove(tls);
-            }
+        {
+            Mopidy::Models::TlTracks tls = Mopidy::Parser::parseArrayOf<Mopidy::Models::TlTrack>(jv.toArray());
+            emit onRemove(tls);
+        }
             break;
 
         case TC_SLICE:
-            {
-                Mopidy::Models::TlTrack tltrack;
-                Mopidy::Parser::parseSingleObject(jv.toObject(), tltrack);
-                emit onSlice(tltrack);
-            }
+        {
+            Mopidy::Models::TlTrack tltrack;
+            Mopidy::Parser::parseSingleObject(jv.toObject(), tltrack);
+            emit onSlice(tltrack);
+        }
             break;
 
         case TC_GETTLTRACKS:
-            {
-                Mopidy::Models::TlTracks tls = Mopidy::Parser::parseArrayOf<Mopidy::Models::TlTrack>(jv.toArray());
-                emit onGetTlTracks(tls);
-            }
+        {
+            Mopidy::Models::TlTracks tls = Mopidy::Parser::parseArrayOf<Mopidy::Models::TlTrack>(jv.toArray());
+            emit onGetTlTracks(tls);
+        }
             break;
 
         case TC_GETTRACKS:
-            {
-                Mopidy::Models::Tracks tracks = Mopidy::Parser::parseArrayOf<Mopidy::Models::Track>(jv.toArray());
-                emit onGetTracks(tracks);
-            }
+        {
+            Mopidy::Models::Tracks tracks = Mopidy::Parser::parseArrayOf<Mopidy::Models::Track>(jv.toArray());
+            emit onGetTracks(tracks);
+        }
             break;
 
         case TC_GETVERSION:
             emit onGetVersion(jv.toDouble());
+            break;
+
+        case TC_GETCONSUME:
+            emit onGetConsume(jv.toBool());
+            break;
+
+        case TC_GETRANDOM:
+            emit onGetRandom(jv.toBool());
+            break;
+
+        case TC_GETREPEAT:
+            emit onGetRepeat(jv.toBool());
+            break;
+
+        case TC_GETSINGLE:
+            emit onGetSingle(jv.toBool());
+            break;
+
+        case TC_EOTTRACK:
+        {
+            Mopidy::Models::TlTrack tltrack;
+            Mopidy::Parser::parseSingleObject(jv.toObject(), tltrack);
+            emit onEotTrack(tltrack);
+        }
+            break;
+
+        case TC_NEXTTRACK:
+        {
+            Mopidy::Models::TlTrack tltrack;
+            Mopidy::Parser::parseSingleObject(jv.toObject(), tltrack);
+            emit onNextTrack(tltrack);
+        }
+            break;
+
+        case TC_PREVIOUSTRACK:
+        {
+            Mopidy::Models::TlTrack tltrack;
+            Mopidy::Parser::parseSingleObject(jv.toObject(), tltrack);
+            emit onPreviousTrack(tltrack);
+        }
             break;
 
         default:

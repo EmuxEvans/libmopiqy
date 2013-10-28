@@ -92,6 +92,10 @@ void EventListener::processJsonMessage(const QByteArray &rawMsg)
         {
             emit volume_changed();
         }
+        else if(evtName == "mute_changed")
+        {
+            emit mute_changed(rootObject.value("mute").toBool());
+        }
         else
         {
             qCritical() << __FUNCTION__ << QObject::tr("Unknown event:") << evtName;

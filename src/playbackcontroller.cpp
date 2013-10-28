@@ -25,29 +25,6 @@ void PlaybackController::change_track(const Mopidy::Models::TlTrack &track, cons
     m_jrHandler->sendMessage(this, jso, true);
 }
 
-void PlaybackController::get_consume()
-{
-    // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_consume");
-
-    // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETCONSUME);
-}
-
-void PlaybackController::set_consume(const bool &v)
-{
-    // build request
-    QJsonObject vparams;
-    vparams.insert("value", v);
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_consume", vparams);
-
-    // send it
-    m_jrHandler->sendMessage(this, jso, true);
-}
-
 void PlaybackController::get_current_tltrack()
 {
     // build request
@@ -102,52 +79,6 @@ void PlaybackController::play(const Mopidy::Models::TlTrack &tltrack, const int 
     m_jrHandler->sendMessage(this, jso, true);
 }
 
-void PlaybackController::get_random()
-{
-    // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_random");
-
-    // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETRANDOM);
-}
-
-void PlaybackController::set_random(const bool &v)
-{
-    // build request
-    QJsonObject vparams;
-    vparams.insert("value", v);
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_random", vparams);
-
-    // send it
-    m_jrHandler->sendMessage(this, jso, true);
-}
-
-void PlaybackController::get_repeat()
-{
-    // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_repeat");
-
-    // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETREPEAT);
-}
-
-void PlaybackController::set_repeat(const bool &v)
-{
-    // build request
-    QJsonObject vparams;
-    vparams.insert("value", v);
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_repeat", vparams);
-
-    // send it
-    m_jrHandler->sendMessage(this, jso, true);
-}
-
 void PlaybackController::resume()
 {
     // build request
@@ -169,29 +100,6 @@ void PlaybackController::seek(const int &time_position)
 
     // keep track
     m_idQuery.insert(id, PC_SEEK);
-}
-
-void PlaybackController::get_single()
-{
-    // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_single");
-
-    // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETSINGLE);
-}
-
-void PlaybackController::set_single(const bool &v)
-{
-    // build request
-    QJsonObject vparams;
-    vparams.insert("value", v);
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_single", vparams);
-
-    // send it
-    m_jrHandler->sendMessage(this, jso, true);
 }
 
 void PlaybackController::get_state()
@@ -229,54 +137,6 @@ void PlaybackController::get_time_position()
     m_idQuery.insert(id, PC_GETTIMEPOSITION);
 }
 
-void PlaybackController::get_tltrack_at_eot()
-{
-    // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_tl_track_at_eot");
-
-    // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETTLTRACKATEOT);
-}
-
-void PlaybackController::get_tltrack_at_next()
-{
-    // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_tl_track_at_next");
-
-    // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETTLTRACKATNEXT);
-}
-
-void PlaybackController::get_tltrack_at_previous()
-{
-    // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_tl_track_at_previous");
-
-    // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETTLTRACKATPREVIOUS);
-}
-
-void PlaybackController::get_tracklist_position()
-{
-    // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_tracklist_position");
-
-    // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETTRACKLISTPOSITION);
-}
-
 void PlaybackController::set_volume(const int &volume)
 {
     // build request
@@ -307,10 +167,6 @@ void PlaybackController::processJsonResponse(const int &id, const QJsonValue &jo
         int idt = m_idQuery.take(id);
         switch(idt)
         {
-        case PC_GETCONSUME:
-            emit onGetConsume(jo.toBool());
-            break;
-
         case PC_GETCURRENTTLTRACK:
             {
                 Mopidy::Models::TlTrack tltrack;
@@ -327,18 +183,6 @@ void PlaybackController::processJsonResponse(const int &id, const QJsonValue &jo
             }
             break;
 
-        case PC_GETRANDOM:
-            emit onGetRandom(jo.toBool());
-            break;
-
-        case PC_GETREPEAT:
-            emit onGetRepeat(jo.toBool());
-            break;
-
-        case PC_GETSINGLE:
-            emit onGetSingle(jo.toBool());
-            break;
-
         case PC_SEEK:
             emit onSeek(jo.toBool());
             break;
@@ -349,34 +193,6 @@ void PlaybackController::processJsonResponse(const int &id, const QJsonValue &jo
 
         case PC_GETTIMEPOSITION:
             emit onGetTimePosition(jo.toDouble());
-            break;
-
-        case PC_GETTLTRACKATEOT:
-            {
-                Mopidy::Models::TlTrack tltrack;
-                Mopidy::Parser::parseSingleObject(jo.toObject(), tltrack);
-                emit onGetTlTrackAtEot(tltrack);
-            }
-            break;
-
-        case PC_GETTLTRACKATNEXT:
-            {
-                Mopidy::Models::TlTrack tltrack;
-                Mopidy::Parser::parseSingleObject(jo.toObject(), tltrack);
-                emit onGetTlTrackAtNext(tltrack);
-            }
-            break;
-
-        case PC_GETTLTRACKATPREVIOUS:
-            {
-                Mopidy::Models::TlTrack tltrack;
-                Mopidy::Parser::parseSingleObject(jo.toObject(), tltrack);
-                emit onGetTlTrackAtPrevious(tltrack);
-            }
-            break;
-
-        case PC_GETTRACKLISTPOSITION:
-            emit onGetTracklistPosition(jo.toDouble());
             break;
 
         case PC_GETVOLUME:

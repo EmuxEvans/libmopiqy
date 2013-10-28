@@ -37,6 +37,21 @@ namespace Mopidy {
             void get_tracks();
             void get_version();
 
+            /*
+             * Since mopidy 0.16
+             */
+            void get_consume();
+            void set_consume(const bool &);
+            void get_random();
+            void set_random(const bool &);
+            void get_repeat();
+            void set_repeat(const bool &);
+            void get_single();
+            void set_single(const bool &);
+            void eot_track(const Mopidy::Models::TlTrack &tltrack = Mopidy::Models::TlTrack());
+            void next_track(const Mopidy::Models::TlTrack &tltrack = Mopidy::Models::TlTrack());
+            void previous_track(const Mopidy::Models::TlTrack &tltrack = Mopidy::Models::TlTrack());
+
         signals:
             void onAdd(const Mopidy::Models::TlTracks &);
             void onFilter(const Mopidy::Models::TlTracks &);
@@ -47,6 +62,13 @@ namespace Mopidy {
             void onGetTlTracks(const Mopidy::Models::TlTracks &);
             void onGetTracks(const Mopidy::Models::Tracks &);
             void onGetVersion(const int &);
+            void onGetConsume(const bool &);
+            void onGetRandom(const bool &);
+            void onGetRepeat(const bool &);
+            void onGetSingle(const bool &);
+            void onEotTrack(const Mopidy::Models::TlTrack &);
+            void onNextTrack(const Mopidy::Models::TlTrack &);
+            void onPreviousTrack(const Mopidy::Models::TlTrack &);
 
         protected:
             void processJsonResponse(const int &id, const QJsonValue &jv);
@@ -62,7 +84,14 @@ namespace Mopidy {
                 TC_SLICE,
                 TC_GETTLTRACKS,
                 TC_GETTRACKS,
-                TC_GETVERSION
+                TC_GETVERSION,
+                TC_GETCONSUME,
+                TC_GETRANDOM,
+                TC_GETREPEAT,
+                TC_GETSINGLE,
+                TC_EOTTRACK,
+                TC_NEXTTRACK,
+                TC_PREVIOUSTRACK
             };
         };
     }

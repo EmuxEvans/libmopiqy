@@ -77,6 +77,11 @@ namespace Mopidy {
         {
             int tlid;
             Track track;
+
+            TlTrack()
+            {
+                tlid = -1;
+            }
         };
         typedef QList<TlTrack> TlTracks;
     }

@@ -39,6 +39,7 @@ namespace Mopidy {
             void track_playback_started(const Mopidy::Models::TlTrack &tl_track);
             void tracklist_changed();
             void volume_changed();
+            void mute_changed(bool muted);
 
         protected slots:
             void processJsonMessage(const QByteArray &rawMsg);
