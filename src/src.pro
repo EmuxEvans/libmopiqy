@@ -35,16 +35,10 @@ PRIVATE_HEADERS += \
 HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
 
 #
-# WebSocket
-#
-INCLUDEPATH += 3rdparty/websocketpp
-
-#
 # Platform dependant config
 #
 unix {
     VERSION = $$system(git describe --tags)
-    LIBS += -lboost_thread -lboost_system -lboost_random
 }
 
 win32 {
