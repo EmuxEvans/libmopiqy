@@ -37,16 +37,17 @@ HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
 #
 # Platform dependant config
 #
+LVERSION = $$system(git describe --tags --long)
 unix {
-    VERSION = $$system(git describe --tags)
+    VERSION = $$LVERSION
+    macx {
+        CONFIG += staticlib
+    }
 }
-
 win32 {
-    VERSION = 1.0
-    DEFINES += MOPIQY_CORE_SHARED
+    VERSION = $$system(git describe --tags --abbrev=0)
 }
-
-DEFINES += LIBMOPIQY_VERSION=\\\"$${VERSION}\\\"
+DEFINES += LIBMOPIQY_VERSION=\\\"$${LVERSION}\\\"
 
 #
 # Install

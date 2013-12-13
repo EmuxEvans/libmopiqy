@@ -1,5 +1,8 @@
 TEMPLATE = app
+
 QT = core network testlib
+macx: QT += websockets
+
 TARGET = tests
 
 SOURCES += main.cpp
@@ -18,7 +21,5 @@ SOURCES += \
 # Lib
 INCLUDEPATH += ../src
 LIBS += -L../src
-
 CONFIG(debug, debug|release): LIBS += -lmopiqyd
 CONFIG(release, debug|release): LIBS += -lmopiqy
-

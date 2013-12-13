@@ -64,6 +64,7 @@ bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QS
 
     // create connection
     QUrl url = QUrl::fromUserInput(host);
+    url.setScheme("ws");
     url.setPort(port);
     url.setPath(path);
     m_wsclient.open(url);

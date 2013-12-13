@@ -1,6 +1,7 @@
 TEMPLATE = app
 
 QT = core gui widgets
+macx: QT += websockets
 
 SOURCES = main.cpp mainwidget.cpp
 HEADERS = mainwidget.h
