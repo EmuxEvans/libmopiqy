@@ -193,7 +193,13 @@ bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Tl
 
 bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Ref &ref)
 {
-    // FIXME: Implement parse Ref
+    if(jo.value("__model__").toString() == "Ref")
+    {
+        ref.uri = jo.value("uri").toString();
+        ref.name = jo.value("name").toString();
+        ref.type = getRefType(jo.value("type").toString());
+        return true;
+    }
     return false;
 }
 
@@ -231,4 +237,12 @@ QJsonObject Mopidy::Parser::toJsonDict(const QHash<QString, QString> &d)
     return jo;
 }
 
-
+Mopidy::Core::RefType Mopidy::Parser::getRefType(const QString &typeStr)
+{
+    if(typeStr.toLower() == "album") return Mopidy::Core::ALBUM;
+    if(typeStr.toLower() == "artist") return Mopidy::Core::ARTIST;
+    if(typeStr.toLower() == "directory") return Mopidy::Core::DIRECTORY;
+    if(typeStr.toLower() == "playlist") return Mopidy::Core::PLAYLIST;
+    if(typeStr.toLower() == "track") return Mopidy::Core::TRACK;
+    return Mopidy::Core::DIRECTORY;
+}

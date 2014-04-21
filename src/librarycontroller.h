@@ -22,7 +22,7 @@ namespace Mopidy {
             /*
              * functions from Core API
              */
-            void browse(const QString &uri);
+            void browse(const QString &uri = "");
             void find_exact(const QHash<QString, QString> &query, const QStringList &uris = QStringList());
             void lookup(const QString &uri);
             void refresh(const QString &uri = "");

@@ -16,7 +16,12 @@ LibraryController::~LibraryController()
 void LibraryController::browse(const QString &uri)
 {
     // build request
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.library.browse", uri);
+    QJsonObject vparams;
+    if(!uri.isEmpty())
+        vparams.insert("uri", uri);
+    else
+        vparams.insert("uri", QJsonValue::Null);
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.library.browse", vparams);
 
     // send it
     int id = m_jrHandler->sendMessage(this, jso);

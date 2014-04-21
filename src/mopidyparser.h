@@ -52,6 +52,9 @@ namespace Mopidy {
         // state
         Mopidy::Core::PlaybackState getState(const QString &);
 
+        // Ref type
+        Mopidy::Core::RefType getRefType(const QString &);
+
         // dict
         QJsonObject toJsonDict(const QHash<QString, QString> &);
     }
