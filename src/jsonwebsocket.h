@@ -24,7 +24,7 @@ namespace Mopidy {
             int sendRequest(QJsonObject request, bool notification = false);
 
         public slots:
-            bool openSocket(const QString &host, const qint16 &port, const QString &path);
+            void openSocket(const QString &host, const qint16 &port, const QString &path);
             void closeSocket();
 
         signals:

@@ -14,10 +14,12 @@ MopidyClient::MopidyClient(QObject *parent) : QObject(parent)
     m_tracklistController = new Core::TracklistController(m_jrHandler, this);
     m_playbackController = new Core::PlaybackController(m_jrHandler, this);
     m_libraryController = new Core::LibraryController(m_jrHandler, this);
+    m_coreController = new Core::CoreController(m_jrHandler, this);
 }
 
 MopidyClient::~MopidyClient()
 {
+    delete m_coreController;
     delete m_playbackController;
     delete m_playlistsController;
     delete m_tracklistController;
@@ -32,7 +34,7 @@ QString MopidyClient::clientVersion() const
     return LIBMOPIQY_VERSION;
 }
 
-bool MopidyClient::connectTo(const QString &host, const qint16 &port, const QString &path)
+void MopidyClient::connectTo(const QString &host, const qint16 &port, const QString &path)
 {
     if(m_jwSocket)
     {
@@ -46,7 +48,7 @@ bool MopidyClient::connectTo(const QString &host, const qint16 &port, const QStr
     connect(m_jwSocket, &Internal::JsonWebSocket::socketDisconnected, this, &MopidyClient::onJwsDisconnected);
     connect(m_jwSocket, &Internal::JsonWebSocket::socketConnected, this, &MopidyClient::onJwsConnected);
 
-    return m_jwSocket->openSocket(host, port, path);
+    m_jwSocket->openSocket(host, port, path);
 }
 
 void MopidyClient::disconnectClient()
@@ -79,16 +81,21 @@ Mopidy::Core::LibraryController *MopidyClient::libraryController() const
     return m_libraryController;
 }
 
+Core::CoreController *MopidyClient::coreController() const
+{
+    return m_coreController;
+}
+
 void MopidyClient::onJwsConnected()
 {
     m_jrHandler->setJsonWebSocket(m_jwSocket);
     m_eventListener->setJsonWebSocket(m_jwSocket);
-    emit connected();
+    emit clientConnected();
 }
 
 void MopidyClient::onJwsDisconnected()
 {
     m_jrHandler->setJsonWebSocket(0);
     m_eventListener->setJsonWebSocket(0);
-    emit disconnected();
+    emit clientConnected();
 }

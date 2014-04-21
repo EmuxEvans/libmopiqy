@@ -16,6 +16,14 @@ namespace Mopidy {
             PLAYING,
             STOPPED
         };
+
+        enum RefType {
+            ALBUM,
+            ARTIST,
+            DIRECTORY,
+            PLAYLIST,
+            TRACK
+        };
     }
 
     namespace Models {
@@ -73,7 +81,7 @@ namespace Mopidy {
             Artists artists;
         };
 
-        struct  LIBMOPIQY_EXPORT TlTrack
+        struct LIBMOPIQY_EXPORT TlTrack
         {
             int tlid;
             Track track;
@@ -84,6 +92,17 @@ namespace Mopidy {
             }
         };
         typedef QList<TlTrack> TlTracks;
+
+        /*
+         * New since 0.18
+         */
+        struct LIBMOPIQY_EXPORT Ref
+        {
+            QString uri;
+            QString name;
+            Core::RefType type;
+        };
+        typedef QList<Ref> Refs;
     }
 }
 
@@ -94,5 +113,6 @@ Q_DECLARE_METATYPE(Mopidy::Models::Track)
 Q_DECLARE_METATYPE(Mopidy::Models::Playlist)
 Q_DECLARE_METATYPE(Mopidy::Models::SearchResult)
 Q_DECLARE_METATYPE(Mopidy::Models::TlTrack)
+Q_DECLARE_METATYPE(Mopidy::Models::Ref)
 
 #endif // MOPIDYMODELS_H

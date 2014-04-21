@@ -3,6 +3,8 @@
 
 #include <QDebug>
 #include <QTime>
+#include <QFile>
+#include <QJsonDocument>
 
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent), m_ui(new Ui::MainWidget)
 {
@@ -10,8 +12,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent), m_ui(new Ui::MainWidg
     m_client = new Mopidy::MopidyClient(this);
 
     // connection to client signals
-    connect(m_client, &Mopidy::MopidyClient::connected, this, &MainWidget::onMC_Connected);
-    connect(m_client, &Mopidy::MopidyClient::disconnected, this, &MainWidget::onMC_Disconnected);
+    connect(m_client, &Mopidy::MopidyClient::clientConnected, this, &MainWidget::onMC_Connected);
+    connect(m_client, &Mopidy::MopidyClient::clientDisconnected, this, &MainWidget::onMC_Disconnected);
     connect(m_client, &Mopidy::MopidyClient::connectionError, this, &MainWidget::onMC_ConnectionError);
     connect(m_client, &Mopidy::MopidyClient::messageError, this, &MainWidget::onMC_MessageError);
 
@@ -22,6 +24,11 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent), m_ui(new Ui::MainWidg
             this, &MainWidget::onEL_TrackPlaybackStarted);
 
     // connect to controllers signals
+    connect(m_client->coreController(), &Mopidy::Core::CoreController::onDescribe,
+            this, &MainWidget::onMC_Describe);
+    connect(m_client->coreController(), &Mopidy::Core::CoreController::onVersion,
+            [=](const QString &v) { m_ui->lbMopidyVersion->setText(v); });
+
     connect(m_client->playlistsController(), &Mopidy::Core::PlaylistsController::onGetPlaylists,
             this, &MainWidget::onPlaylistsController_GetPlaylists);
     connect(m_client->playlistsController(), &Mopidy::Core::PlaylistsController::onLookup,
@@ -44,6 +51,12 @@ void MainWidget::on_btConnect_clicked()
 {
     qWarning() << "connecting client request";
     m_client->connectTo(m_ui->leHost->text(), m_ui->sbPort->value(), m_ui->lePath->text());
+}
+
+void MainWidget::on_btDescribe_clicked()
+{
+    qWarning() << "describe request";
+    m_client->coreController()->describe();
 }
 
 void MainWidget::on_btDisconnect_clicked()
@@ -140,6 +153,22 @@ void MainWidget::onMC_Connected()
 
     // Enable controls
     setControlsState(true);
+
+    // Get Version and URIs
+    m_client->coreController()->get_version();
+    m_client->coreController()->get_uri_schemes();
+}
+
+void MainWidget::onMC_Describe(const QJsonObject &desc)
+{
+    QJsonDocument jdoc(desc);
+
+    QFile fDesc("describe.json");
+    if(fDesc.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        fDesc.write(jdoc.toJson());
+        fDesc.close();
+    }
 }
 
 void MainWidget::onMC_Disconnected()
@@ -274,6 +303,7 @@ void MainWidget::setControlsState(const bool &isConnected)
     m_ui->sbPort->setEnabled(!isConnected);
     m_ui->lePath->setEnabled(!isConnected);
     m_ui->btConnect->setEnabled(!isConnected);
+    m_ui->btDescribe->setEnabled(isConnected);
     m_ui->btDisconnect->setEnabled(isConnected);
 
     m_ui->btGetPlaylists->setEnabled(isConnected);

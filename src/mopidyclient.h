@@ -19,6 +19,7 @@
 #include "playlistscontroller.h"
 #include "tracklistcontroller.h"
 #include "librarycontroller.h"
+#include "corecontroller.h"
 
 #include "mopiqy_export.h"
 
@@ -42,7 +43,7 @@ namespace Mopidy {
         /*
          * Connection handling
          */
-        bool connectTo(const QString &host, const qint16 &port, const QString &path);
+        void connectTo(const QString &host, const qint16 &port, const QString &path);
         void disconnectClient();
 
         // access to controllers and listener
@@ -52,13 +53,14 @@ namespace Mopidy {
         Mopidy::Core::PlaylistsController *playlistsController() const;
         Mopidy::Core::TracklistController *tracklistController() const;
         Mopidy::Core::LibraryController *libraryController() const;
+        Mopidy::Core::CoreController *coreController() const;
 
     signals:
         /*
          * Connection handling
          */
-        void connected();
-        void disconnected();
+        void clientConnected();
+        void clientDisconnected();
         void connectionError(const int &code, const QString &message);
         void messageError(const int &code, const QString &message);
 
@@ -75,6 +77,7 @@ namespace Mopidy {
         Mopidy::Core::PlaylistsController *m_playlistsController;
         Mopidy::Core::TracklistController *m_tracklistController;
         Mopidy::Core::LibraryController *m_libraryController;
+        Mopidy::Core::CoreController *m_coreController;
     };
 }
 

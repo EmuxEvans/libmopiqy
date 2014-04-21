@@ -23,24 +23,19 @@ namespace Mopidy {
              * functions from Core API
              */
             void change_track(const Mopidy::Models::TlTrack &track, const int &on_error_step = 1);
-
             void get_current_tltrack();
             void get_current_track();
-
+            void set_mute(const bool &mute);
+            void get_mute();
             void next();
             void pause();
             void play(const Mopidy::Models::TlTrack &tltrack, const int &on_error_step = 1);
-
+            void previous();
             void resume();
-
             void seek(const int &time_position);
-
             void get_state();
-
             void stop(const bool &clear_current_track = false);
-
             void get_time_position();
-
             void set_volume(const int &volume);
             void get_volume();
 
@@ -62,7 +57,8 @@ namespace Mopidy {
                 PC_SEEK,
                 PC_GETSTATE,
                 PC_GETTIMEPOSITION,
-                PC_GETVOLUME
+                PC_GETVOLUME,
+                PC_GETMUTE
             };
         };
     }

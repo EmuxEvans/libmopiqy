@@ -22,16 +22,17 @@ namespace Mopidy {
             /*
              * functions from Core API
              */
+            void browse(const QString &uri);
             void find_exact(const QHash<QString, QString> &query, const QStringList &uris = QStringList());
             void lookup(const QString &uri);
             void refresh(const QString &uri = "");
             void search(const QHash<QString, QString> &query, const QStringList &uris = QStringList());
 
-
         signals:
             void onFindExact(const Mopidy::Models::SearchResult &);
             void onLookup(const Mopidy::Models::Tracks &);
             void onSearch(const Mopidy::Models::SearchResult &);
+            void onBrowse(const Mopidy::Models::Refs &);
 
         protected:
             void processJsonResponse(const int &id, const QJsonValue &jv);
@@ -41,7 +42,8 @@ namespace Mopidy {
             {
                 LC_FINDEXACT,
                 LC_LOOKUP,
-                LC_SEARCH
+                LC_SEARCH,
+                LC_BROWSE
             };
         };
     }

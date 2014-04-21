@@ -13,6 +13,18 @@ LibraryController::~LibraryController()
 {
 }
 
+void LibraryController::browse(const QString &uri)
+{
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.library.browse", uri);
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, LC_BROWSE);
+}
+
 void LibraryController::find_exact(const QHash<QString, QString> &query, const QStringList &uris)
 {
     // build request
@@ -89,6 +101,13 @@ void LibraryController::processJsonResponse(const int &id, const QJsonValue &jv)
                 Mopidy::Models::SearchResult sr;
                 Mopidy::Parser::parseSingleObject(jv.toArray().at(0).toObject(), sr);
                 emit onSearch(sr);
+            }
+            break;
+
+        case LC_BROWSE:
+            {
+                Mopidy::Models::Refs refs = Mopidy::Parser::parseArrayOf<Mopidy::Models::Ref>(jv.toArray());
+                emit onBrowse(refs);
             }
             break;
 

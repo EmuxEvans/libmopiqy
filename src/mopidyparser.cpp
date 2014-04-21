@@ -191,6 +191,12 @@ bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Tl
     return false;
 }
 
+bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Ref &ref)
+{
+    // FIXME: Implement parse Ref
+    return false;
+}
+
 QDate Mopidy::Parser::getMopidyDate(const QString &strDate)
 {
     if(strDate.isEmpty()) return QDate();
@@ -224,4 +230,5 @@ QJsonObject Mopidy::Parser::toJsonDict(const QHash<QString, QString> &d)
 
     return jo;
 }
+
 

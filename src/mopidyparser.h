@@ -43,6 +43,7 @@ namespace Mopidy {
         bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::Playlist &playlist);
         bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::SearchResult &searchResult);
         bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::TlTrack &tlTrack);
+        bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::Ref &ref);
 
         // date
         QDate getMopidyDate(const QString &);

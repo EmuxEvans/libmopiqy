@@ -49,6 +49,29 @@ void PlaybackController::get_current_track()
     m_idQuery.insert(id, PC_GETCURRENTTRACK);
 }
 
+void PlaybackController::set_mute(const bool &mute)
+{
+    // build request
+    QJsonObject vparams;
+    vparams.insert("mute", mute);
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_mute", vparams);
+
+    // send it
+    m_jrHandler->sendMessage(this, jso);
+}
+
+void PlaybackController::get_mute()
+{
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_mute");
+
+    // send it
+    int id = m_jrHandler->sendMessage(this, jso);
+
+    // keep track
+    m_idQuery.insert(id, PC_GETMUTE);
+}
+
 void PlaybackController::next()
 {
     // build request
@@ -74,6 +97,15 @@ void PlaybackController::play(const Mopidy::Models::TlTrack &tltrack, const int 
     if(!tltrack.track.uri.isEmpty()) vparams.insert("tl_track", Mopidy::Parser::encodeModel(tltrack));
     vparams.insert("on_error_step", on_error_step);
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.play", vparams);
+
+    // send it
+    m_jrHandler->sendMessage(this, jso, true);
+}
+
+void PlaybackController::previous()
+{
+    // build request
+    QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.previous");
 
     // send it
     m_jrHandler->sendMessage(this, jso, true);

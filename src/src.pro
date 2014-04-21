@@ -14,7 +14,8 @@ SOURCES = \
     playbackcontroller.cpp \
     playlistscontroller.cpp \
     tracklistcontroller.cpp \
-    librarycontroller.cpp
+    librarycontroller.cpp \
+    corecontroller.cpp
 
 PUBLIC_HEADERS += \
     mopidyclient.h \
@@ -25,7 +26,8 @@ PUBLIC_HEADERS += \
     playlistscontroller.h \
     tracklistcontroller.h \
     librarycontroller.h \
-    controllerinterface.h
+    controllerinterface.h \
+    corecontroller.h
 
 PRIVATE_HEADERS += \
     jsonwebsocket.h \
@@ -48,6 +50,7 @@ win32 {
     VERSION = $$system(git describe --tags --abbrev=0)
 }
 DEFINES += LIBMOPIQY_VERSION=\\\"$${LVERSION}\\\"
+DEFINES += LIBMOPIQY_SHARED
 
 #
 # Install

@@ -51,13 +51,13 @@ int JsonWebSocket::sendRequest(QJsonObject request, bool notification)
     QJsonDocument jsDoc(request);
     QString st2Send = jsDoc.toJson(QJsonDocument::Compact);
 
-    m_wsclient.write(st2Send);
+    m_wsclient.sendTextMessage(st2Send);
 
     // ...
     return id;
 }
 
-bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QString &path)
+void JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QString &path)
 {
     // just in case...
     if(isConnected()) closeSocket();
@@ -68,7 +68,6 @@ bool JsonWebSocket::openSocket(const QString &host, const qint16 &port, const QS
     url.setPort(port);
     url.setPath(path);
     m_wsclient.open(url);
-    return m_wsclient.waitForConnected();
 }
 
 void JsonWebSocket::closeSocket()

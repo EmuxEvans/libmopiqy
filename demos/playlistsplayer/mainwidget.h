@@ -21,6 +21,7 @@ public:
 private slots:
     // GUI slots
     void on_btConnect_clicked();
+    void on_btDescribe_clicked();
     void on_btDisconnect_clicked();
     void on_btGetPlaylists_clicked();
     void on_btSetAsCurrentPlaylist_clicked();
@@ -34,6 +35,7 @@ private slots:
 
     // MopidyClient slots
     void onMC_Connected();
+    void onMC_Describe(const QJsonObject &desc);
     void onMC_Disconnected();
     void onMC_ConnectionError(const int &code, const QString &message);
     void onMC_MessageError(const int &code, const QString &message);
@@ -47,6 +49,7 @@ private slots:
     void onPlaylistsController_Lookup(const Mopidy::Models::Playlist &pl);
     void onTracklistController_Add(const Mopidy::Models::TlTracks &);
     void onTracklistController_GetTlTracks(const Mopidy::Models::TlTracks &);
+
 
 private:
     void setControlsState(const bool &isConnected);
