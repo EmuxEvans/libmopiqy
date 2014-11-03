@@ -10,5 +10,13 @@ HEADERS = mainwidget.h
 FORMS   = mainwidget.ui
 
 INCLUDEPATH += ../../src
-CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../src/debug -lmopiqyd0
-CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../src/release -lmopiqy0
+
+win32 {
+    CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../src/debug -lmopiqyd0
+    CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../src/release -lmopiqy0
+}
+unix {
+    LIBS += -L$$OUT_PWD/../../src
+    CONFIG(debug, debug|release): LIBS += -lmopiqyd
+    CONFIG(release, debug|release): LIBS += -lmopiqy
+}
