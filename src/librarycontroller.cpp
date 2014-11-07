@@ -4,8 +4,7 @@
 
 using namespace Mopidy::Core;
 
-LibraryController::LibraryController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent)
-    : QObject(parent), ControllerInterface(jrHandler)
+LibraryController::LibraryController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient)
 {
 }
 
@@ -24,10 +23,7 @@ void LibraryController::browse(const QString &uri)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.library.browse", vparams);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, LC_BROWSE);
+    sendMessage(jso, LC_BROWSE);
 }
 
 void LibraryController::find_exact(const QHash<QString, QString> &query, const QStringList &uris)
@@ -36,10 +32,7 @@ void LibraryController::find_exact(const QHash<QString, QString> &query, const Q
     QJsonObject jso = Mopidy::Parser::searchLikeEncode("core.library.find_exact", query, uris);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, LC_SEARCH);
+    sendMessage(jso, LC_SEARCH);
 }
 
 void LibraryController::lookup(const QString &uri)
@@ -50,10 +43,7 @@ void LibraryController::lookup(const QString &uri)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.library.lookup", vparams);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, LC_LOOKUP);
+    sendMessage(jso, LC_LOOKUP);
 }
 
 void LibraryController::refresh(const QString &uri)
@@ -64,7 +54,7 @@ void LibraryController::refresh(const QString &uri)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.library.refresh", vparams);
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, 0, true);
 }
 
 void LibraryController::search(const QHash<QString, QString> &query, const QStringList &uris)
@@ -73,51 +63,44 @@ void LibraryController::search(const QHash<QString, QString> &query, const QStri
     QJsonObject jso = Mopidy::Parser::searchLikeEncode("core.library.search", query, uris);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, LC_SEARCH);
+    sendMessage(jso, LC_SEARCH);
 }
 
-void LibraryController::processJsonResponse(const int &id, const QJsonValue &jv)
+void LibraryController::processJsonResponse(const int &idt, const QJsonValue &jv)
 {
-    if(m_idQuery.contains(id))
+    switch(idt)
     {
-        int idt = m_idQuery.take(id);
-        switch(idt)
-        {
-        case LC_FINDEXACT:
-            {
-                Mopidy::Models::SearchResult sr;
-                Mopidy::Parser::parseSingleObject(jv.toObject(), sr);
-                emit onFindExact(sr);
-            }
-            break;
+    case LC_FINDEXACT:
+    {
+        Mopidy::Models::SearchResult sr;
+        Mopidy::Parser::parseSingleObject(jv.toObject(), sr);
+        emit onFindExact(sr);
+    }
+        break;
 
-        case LC_LOOKUP:
-            {
-                Mopidy::Models::Tracks tracks = Mopidy::Parser::parseArrayOf<Mopidy::Models::Track>(jv.toArray());
-                emit onLookup(tracks);
-            }
-            break;
+    case LC_LOOKUP:
+    {
+        Mopidy::Models::Tracks tracks = Mopidy::Parser::parseArrayOf<Mopidy::Models::Track>(jv.toArray());
+        emit onLookup(tracks);
+    }
+        break;
 
-        case LC_SEARCH:
-            {
-                Mopidy::Models::SearchResult sr;
-                Mopidy::Parser::parseSingleObject(jv.toArray().at(0).toObject(), sr);
-                emit onSearch(sr);
-            }
-            break;
+    case LC_SEARCH:
+    {
+        Mopidy::Models::SearchResult sr;
+        Mopidy::Parser::parseSingleObject(jv.toArray().at(0).toObject(), sr);
+        emit onSearch(sr);
+    }
+        break;
 
-        case LC_BROWSE:
-            {
-                Mopidy::Models::Refs refs = Mopidy::Parser::parseArrayOf<Mopidy::Models::Ref>(jv.toArray());
-                emit onBrowse(refs);
-            }
-            break;
+    case LC_BROWSE:
+    {
+        Mopidy::Models::Refs refs = Mopidy::Parser::parseArrayOf<Mopidy::Models::Ref>(jv.toArray());
+        emit onBrowse(refs);
+    }
+        break;
 
-        default:
-            break;
-        }
+    default:
+        break;
     }
 }

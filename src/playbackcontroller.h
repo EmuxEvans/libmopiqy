@@ -9,13 +9,13 @@
 
 namespace Mopidy {
     namespace Core {
-        class LIBMOPIQY_EXPORT PlaybackController : public QObject, public ControllerInterface
+        class LIBMOPIQY_EXPORT PlaybackController : public ControllerInterface
         {
             Q_OBJECT
 
         public:
 
-            PlaybackController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
+            PlaybackController(Mopidy::MopidyClient *mopidyClient);
             ~PlaybackController();
 
         public slots:
@@ -48,10 +48,11 @@ namespace Mopidy {
             void onGetVolume(const int &);
 
         protected:
-            void processJsonResponse(const int &id, const QJsonValue &jo);
+            void processJsonResponse(const int &idt, const QJsonValue &jo);
 
         private:
             enum PCEnum {
+                PC_NONE,
                 PC_GETCURRENTTLTRACK,
                 PC_GETCURRENTTRACK,
                 PC_SEEK,

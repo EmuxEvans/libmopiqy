@@ -1,32 +1,22 @@
 #include "mopidyclient.h"
-#include "jsonwebsocket.h"
-#include "jsonrpchandler.h"
+#include "mopidyparser.h"
+
+#include <QJsonDocument>
 
 using namespace Mopidy;
 
 MopidyClient::MopidyClient(QObject *parent) : QObject(parent)
 {
-    m_jwSocket = 0;
+    m_webSocket = new QWebSocket("libmopiqy", QWebSocketProtocol::VersionLatest, this);
 
-    m_jrHandler = new Internal::JsonRpcHandler(this);
-    m_eventListener = new Core::EventListener(this);
-    m_playlistsController = new Core::PlaylistsController(m_jrHandler, this);
-    m_tracklistController = new Core::TracklistController(m_jrHandler, this);
-    m_playbackController = new Core::PlaybackController(m_jrHandler, this);
-    m_libraryController = new Core::LibraryController(m_jrHandler, this);
-    m_coreController = new Core::CoreController(m_jrHandler, this);
+    connect(m_webSocket, &QWebSocket::connected, this, &MopidyClient::clientConnected);
+    connect(m_webSocket, &QWebSocket::disconnected, this, &MopidyClient::clientDisconnected);
+    connect(m_webSocket, &QWebSocket::textMessageReceived, this, &MopidyClient::onTextMessageReceived);
+    connect(m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
 }
 
 MopidyClient::~MopidyClient()
 {
-    delete m_coreController;
-    delete m_playbackController;
-    delete m_playlistsController;
-    delete m_tracklistController;
-    delete m_libraryController;
-    delete m_eventListener;
-    delete m_jrHandler;
-    delete m_jwSocket;
 }
 
 QString MopidyClient::clientVersion() const
@@ -36,66 +26,194 @@ QString MopidyClient::clientVersion() const
 
 void MopidyClient::connectTo(const QString &host, const qint16 &port, const QString &path)
 {
-    if(m_jwSocket)
-    {
-        delete m_jwSocket;
-        m_jwSocket = 0;
-    }
+    disconnectClient();
 
-    m_jwSocket = new Internal::JsonWebSocket(this);
-    connect(m_jwSocket, &Internal::JsonWebSocket::socketError, this, &MopidyClient::connectionError);
-    connect(m_jwSocket, &Internal::JsonWebSocket::responseError, this, &MopidyClient::messageError);
-    connect(m_jwSocket, &Internal::JsonWebSocket::socketDisconnected, this, &MopidyClient::onJwsDisconnected);
-    connect(m_jwSocket, &Internal::JsonWebSocket::socketConnected, this, &MopidyClient::onJwsConnected);
-
-    m_jwSocket->openSocket(host, port, path);
+    // create connection
+    QUrl url = QUrl::fromUserInput(host);
+    url.setScheme("ws");
+    url.setPort(port);
+    url.setPath(path);
+    m_webSocket->open(url);
 }
 
 void MopidyClient::disconnectClient()
 {
-    m_jwSocket->closeSocket();
+    if(m_webSocket->state() == QAbstractSocket::ConnectedState)
+        m_webSocket->close();
 }
 
-Core::EventListener *MopidyClient::eventListener() const
+QString MopidyClient::sendRequest(QJsonObject request, const bool &isNotification, Mopidy::Core::ControllerInterface *ci)
 {
-    return m_eventListener;
+    QString id("");
+
+    // update to JsonRpc
+    request.insert("jsonrpc", QString("2.0"));
+
+    if(!isNotification)
+    {
+        id = generateRandomString();
+        request.insert("id", id);
+
+        // append to queries list
+        m_mapMsg.insert(id, ci);
+    }
+
+    /*
+     * Send to socket
+     */
+    QJsonDocument jsDoc(request);
+    QString st2Send = jsDoc.toJson(QJsonDocument::Compact);
+
+    m_webSocket->sendTextMessage(st2Send);
+
+    // TODO: Check what have been sent
+
+    //
+    return id;
 }
 
-Core::PlaybackController *MopidyClient::playbackController() const
+void MopidyClient::onTextMessageReceived(const QString &rawData)
 {
-    return m_playbackController;
+    // try to read json document
+    QJsonParseError jpError;
+    QJsonDocument jdoc = QJsonDocument::fromJson(rawData.toLatin1(), &jpError);
+    if(jpError.error != QJsonParseError::NoError)
+    {
+        qCritical() << __FUNCTION__ << QObject::tr("Not a valid Json Document:") << jpError.error << jpError.errorString();
+        return;
+    }
+
+    QJsonObject rootObject = jdoc.object();
+
+    // event or answer to request ?
+    if(rootObject.contains("event"))
+    {
+        parseEvent(rootObject);
+    }
+    else
+    {
+        if(rootObject.contains("id") && rootObject.contains("jsonrpc"))
+        {
+            // we only use string id
+            if(rootObject.value("id").type() != QJsonValue::String) return;
+
+            QString id = rootObject.value("id").toString();
+
+            // error ?
+            if(rootObject.contains("error"))
+            {
+                QJsonObject errObj = rootObject.value("error").toObject();
+
+                QString errStr;
+                if(errObj.contains("data"))
+                    errStr = errObj.value("data").toString();
+
+                if(errObj.contains("message"))
+                    errStr += ", message: " + errObj.value("message").toString();
+
+                emit messageError(errObj.value("code").toDouble(), errStr);
+            }
+            else
+            {
+                parseResponse(id, rootObject.value("result"));
+            }
+        }
+        else
+        {
+            qCritical() << __FUNCTION__ << QObject::tr("Neither a JsonRpc answer not an event...");
+        }
+    }
 }
 
-Core::PlaylistsController *MopidyClient::playlistsController() const
+void MopidyClient::onSocketError(QAbstractSocket::SocketError error)
 {
-    return m_playlistsController;
+    emit connectionError(error, m_webSocket->errorString());
 }
 
-Core::TracklistController *MopidyClient::tracklistController() const
+void MopidyClient::parseEvent(const QJsonObject &eventObj)
 {
-    return m_tracklistController;
+    QString evtName = eventObj.value("event").toString();
+
+    if(evtName == "options_changed")
+    {
+        emit options_changed();
+    }
+    else if(evtName == "playback_state_changed")
+    {
+        QString os = eventObj.value("old_state").toString();
+        QString ns = eventObj.value("new_state").toString();
+        emit playback_state_changed(Mopidy::Parser::getState(os), Mopidy::Parser::getState(ns));
+    }
+    else if(evtName == "playlist_changed")
+    {
+        Mopidy::Models::Playlist pl;
+        Mopidy::Parser::parseSingleObject(eventObj.value("playlist").toObject(), pl);
+        emit playlist_changed(pl);
+    }
+    else if(evtName == "playlists_loaded")
+    {
+        emit playlists_loaded();
+    }
+    else if(evtName == "seeked")
+    {
+        int tp = eventObj.value("time_position").toDouble();
+        emit seeked(tp);
+    }
+    else if(evtName == "track_playback_ended")
+    {
+        Mopidy::Models::TlTrack tlt;
+        Mopidy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        int tp = eventObj.value("time_position").toDouble();
+        emit track_playback_ended(tlt, tp);
+    }
+    else if(evtName == "track_playback_paused")
+    {
+        Mopidy::Models::TlTrack tlt;
+        Mopidy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        int tp = eventObj.value("time_position").toDouble();
+        emit track_playback_paused(tlt, tp);
+    }
+    else if(evtName == "track_playback_resumed")
+    {
+        Mopidy::Models::TlTrack tlt;
+        Mopidy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        int tp = eventObj.value("time_position").toDouble();
+        emit track_playback_resumed(tlt, tp);
+    }
+    else if(evtName == "track_playback_started")
+    {
+        Mopidy::Models::TlTrack tlt;
+        Mopidy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        emit track_playback_started(tlt);
+    }
+    else if(evtName == "tracklist_changed")
+    {
+        emit tracklist_changed();
+    }
+    else if(evtName == "volume_changed")
+    {
+        emit volume_changed();
+    }
+    else if(evtName == "mute_changed")
+    {
+        emit mute_changed(eventObj.value("mute").toBool());
+    }
+    else
+    {
+        qCritical() << __FUNCTION__ << QObject::tr("Unknown event:") << evtName;
+    }
 }
 
-Mopidy::Core::LibraryController *MopidyClient::libraryController() const
+void MopidyClient::parseResponse(const QString &id, const QJsonValue &responseValue)
 {
-    return m_libraryController;
+    if(m_mapMsg.contains(id))
+    {
+        Core::ControllerInterface *ci = m_mapMsg.take(id);
+        ci->processResponse(id, responseValue);
+    }
 }
 
-Core::CoreController *MopidyClient::coreController() const
+QString MopidyClient::generateRandomString()
 {
-    return m_coreController;
-}
-
-void MopidyClient::onJwsConnected()
-{
-    m_jrHandler->setJsonWebSocket(m_jwSocket);
-    m_eventListener->setJsonWebSocket(m_jwSocket);
-    emit clientConnected();
-}
-
-void MopidyClient::onJwsDisconnected()
-{
-    m_jrHandler->setJsonWebSocket(0);
-    m_eventListener->setJsonWebSocket(0);
-    emit clientConnected();
+    return "azerty";
 }

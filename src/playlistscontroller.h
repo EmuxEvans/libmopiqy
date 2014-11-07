@@ -10,12 +10,12 @@
 
 namespace Mopidy {
     namespace Core {
-        class LIBMOPIQY_EXPORT PlaylistsController : public QObject, public ControllerInterface
+        class LIBMOPIQY_EXPORT PlaylistsController : public ControllerInterface
         {
             Q_OBJECT
 
         public:
-            PlaylistsController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
+            PlaylistsController(Mopidy::MopidyClient *mopidyClient);
             ~PlaylistsController();
 
         public slots:
@@ -38,7 +38,7 @@ namespace Mopidy {
             void onSave(const Mopidy::Models::Playlist &pl);
 
         protected:
-            void processJsonResponse(const int &id, const QJsonValue &jv);
+            void processJsonResponse(const int &idt, const QJsonValue &jv);
 
         private:
             enum PLSEnum

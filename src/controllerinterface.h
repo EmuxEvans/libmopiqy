@@ -3,34 +3,36 @@
 
 #include <QMap>
 #include <QJsonValue>
+#include <QObject>
 
 namespace Mopidy {
 
-    namespace Internal {
-        class JsonRpcHandler;
-    }
+    class MopidyClient;
 
     namespace Core {
         /*
          * Abstract class for each Controller class
          * - process json response
-         * - keep json-rpc handler
          * - keep map with message sended waiting for response
          */
-        class ControllerInterface
+        class ControllerInterface : public QObject
         {
+            Q_OBJECT
+
         public:
-            ControllerInterface(Mopidy::Internal::JsonRpcHandler *jrHandler);
+            ControllerInterface(Mopidy::MopidyClient *mopidyClient);
+
+            void processResponse(const QString &id, const QJsonValue &jv);
 
         protected:
-            friend class Mopidy::Internal::JsonRpcHandler;
-            virtual void processJsonResponse(const int &id, const QJsonValue &jo) = 0;
+            virtual void processJsonResponse(const int &idt, const QJsonValue &jo) = 0;
+            void sendMessage(const QJsonObject &msg, const int &requestType, bool notification = false);
 
-        protected:
-            Mopidy::Internal::JsonRpcHandler *m_jrHandler;
+        private:
+            Mopidy::MopidyClient *m_client;
 
             // map to store id / request type per controller
-            QMap<int, int> m_idQuery;
+            QMap<QString, int> m_idQuery;
         };
     }
 }

@@ -9,12 +9,12 @@
 
 namespace Mopidy {
     namespace Core {
-        class LIBMOPIQY_EXPORT CoreController : public QObject, public ControllerInterface
+        class LIBMOPIQY_EXPORT CoreController : public ControllerInterface
         {
             Q_OBJECT
 
         public:
-            CoreController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
+            CoreController(Mopidy::MopidyClient *mopidyClient);
             ~CoreController();
 
         public slots:
@@ -31,7 +31,7 @@ namespace Mopidy {
             void onUriSchemes(const QStringList &uris);
 
         protected:
-            void processJsonResponse(const int &id, const QJsonValue &jv);
+            void processJsonResponse(const int &idt, const QJsonValue &jv);
 
         private:
             enum CCEnum

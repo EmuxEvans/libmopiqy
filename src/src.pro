@@ -6,10 +6,7 @@ CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
 
 SOURCES = \
     mopidyclient.cpp \
-    jsonwebsocket.cpp \
-    jsonrpchandler.cpp \
     mopidyparser.cpp \
-    eventlistener.cpp \
     controllerinterface.cpp \
     playbackcontroller.cpp \
     playlistscontroller.cpp \
@@ -21,7 +18,6 @@ PUBLIC_HEADERS += \
     mopidyclient.h \
     mopidymodels.h \
     mopiqy_export.h \
-    eventlistener.h \
     playbackcontroller.h \
     playlistscontroller.h \
     tracklistcontroller.h \
@@ -30,8 +26,6 @@ PUBLIC_HEADERS += \
     corecontroller.h
 
 PRIVATE_HEADERS += \
-    jsonwebsocket.h \
-    jsonrpchandler.h \
     mopidyparser.h
 
 HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS

@@ -1,17 +1,11 @@
 #include "playbackcontroller.h"
-#include "jsonrpchandler.h"
 #include "mopidyparser.h"
 
 using namespace Mopidy::Core;
-using namespace Mopidy::Internal;
 
-PlaybackController::PlaybackController(JsonRpcHandler *jrHandler, QObject *parent) : QObject(parent), ControllerInterface(jrHandler)
-{
-}
+PlaybackController::PlaybackController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient) { }
 
-PlaybackController::~PlaybackController()
-{
-}
+PlaybackController::~PlaybackController() { }
 
 void PlaybackController::change_track(const Mopidy::Models::TlTrack &track, const int &on_error_step)
 {
@@ -22,7 +16,7 @@ void PlaybackController::change_track(const Mopidy::Models::TlTrack &track, cons
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.change_track", vparams);
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, PC_NONE, true);
 }
 
 void PlaybackController::get_current_tltrack()
@@ -31,10 +25,7 @@ void PlaybackController::get_current_tltrack()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_current_tl_track");
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETCURRENTTLTRACK);
+    sendMessage(jso, PC_GETCURRENTTLTRACK);
 }
 
 void PlaybackController::get_current_track()
@@ -43,10 +34,7 @@ void PlaybackController::get_current_track()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_current_track");
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETCURRENTTRACK);
+    sendMessage(jso, PC_GETCURRENTTRACK);
 }
 
 void PlaybackController::set_mute(const bool &mute)
@@ -57,7 +45,7 @@ void PlaybackController::set_mute(const bool &mute)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_mute", vparams);
 
     // send it
-    m_jrHandler->sendMessage(this, jso);
+    sendMessage(jso, PC_NONE);
 }
 
 void PlaybackController::get_mute()
@@ -66,10 +54,7 @@ void PlaybackController::get_mute()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_mute");
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETMUTE);
+    sendMessage(jso, PC_GETMUTE);
 }
 
 void PlaybackController::next()
@@ -78,7 +63,7 @@ void PlaybackController::next()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.next");
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, PC_NONE, true);
 }
 
 void PlaybackController::pause()
@@ -87,7 +72,7 @@ void PlaybackController::pause()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.pause");
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, PC_NONE, true);
 }
 
 void PlaybackController::play(const Mopidy::Models::TlTrack &tltrack, const int &on_error_step)
@@ -99,7 +84,7 @@ void PlaybackController::play(const Mopidy::Models::TlTrack &tltrack, const int 
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.play", vparams);
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, PC_NONE, true);
 }
 
 void PlaybackController::previous()
@@ -108,7 +93,7 @@ void PlaybackController::previous()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.previous");
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, PC_NONE, true);
 }
 
 void PlaybackController::resume()
@@ -117,7 +102,7 @@ void PlaybackController::resume()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.resume");
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, PC_NONE, true);
 }
 
 void PlaybackController::seek(const int &time_position)
@@ -128,10 +113,7 @@ void PlaybackController::seek(const int &time_position)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.seek", vparams);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso, true);
-
-    // keep track
-    m_idQuery.insert(id, PC_SEEK);
+    sendMessage(jso, PC_SEEK, true);
 }
 
 void PlaybackController::get_state()
@@ -140,10 +122,7 @@ void PlaybackController::get_state()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_state");
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETSTATE);
+    sendMessage(jso, PC_GETSTATE);
 }
 
 void PlaybackController::stop(const bool &clear_current_track)
@@ -154,7 +133,7 @@ void PlaybackController::stop(const bool &clear_current_track)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.stop", vparams);
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, PC_NONE, true);
 }
 
 void PlaybackController::get_time_position()
@@ -163,10 +142,7 @@ void PlaybackController::get_time_position()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_time_position");
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETTIMEPOSITION);
+    sendMessage(jso, PC_GETTIMEPOSITION);
 }
 
 void PlaybackController::set_volume(const int &volume)
@@ -177,7 +153,7 @@ void PlaybackController::set_volume(const int &volume)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.set_volume", vparams);
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, PC_NONE, true);
 }
 
 void PlaybackController::get_volume()
@@ -186,59 +162,48 @@ void PlaybackController::get_volume()
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playback.get_volume");
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PC_GETVOLUME);
+    sendMessage(jso, PC_GETVOLUME);
 }
 
-void PlaybackController::processJsonResponse(const int &id, const QJsonValue &jo)
+void PlaybackController::processJsonResponse(const int &idt, const QJsonValue &jo)
 {
-    if(m_idQuery.contains(id))
+    switch(idt)
     {
-        int idt = m_idQuery.take(id);
-        switch(idt)
-        {
-        case PC_GETCURRENTTLTRACK:
-            {
-                Mopidy::Models::TlTrack tltrack;
-                Mopidy::Parser::parseSingleObject(jo.toObject(), tltrack);
-                emit onGetCurrentTlTrack(tltrack);
-            }
-            break;
-
-        case PC_GETCURRENTTRACK:
-            {
-                Mopidy::Models::Track track;
-                Mopidy::Parser::parseSingleObject(jo.toObject(), track);
-                emit onGetCurrentTrack(track);
-            }
-            break;
-
-        case PC_SEEK:
-            emit onSeek(jo.toBool());
-            break;
-
-        case PC_GETSTATE:
-            emit onGetState(Parser::getState(jo.toString()));
-            break;
-
-        case PC_GETTIMEPOSITION:
-            emit onGetTimePosition(jo.toDouble());
-            break;
-
-        case PC_GETVOLUME:
-            emit onGetVolume(jo.toDouble());
-            break;
-
-        default:
-            qDebug() << "[PlaybackController]" << id << jo;
-            break;
-        }
+    case PC_GETCURRENTTLTRACK:
+    {
+        Mopidy::Models::TlTrack tltrack;
+        Mopidy::Parser::parseSingleObject(jo.toObject(), tltrack);
+        emit onGetCurrentTlTrack(tltrack);
     }
-    else
+        break;
+
+    case PC_GETCURRENTTRACK:
     {
-        qDebug() << tr("unmanaged query [PlaybackController]") << id << jo;
+        Mopidy::Models::Track track;
+        Mopidy::Parser::parseSingleObject(jo.toObject(), track);
+        emit onGetCurrentTrack(track);
+    }
+        break;
+
+    case PC_SEEK:
+        emit onSeek(jo.toBool());
+        break;
+
+    case PC_GETSTATE:
+        emit onGetState(Parser::getState(jo.toString()));
+        break;
+
+    case PC_GETTIMEPOSITION:
+        emit onGetTimePosition(jo.toDouble());
+        break;
+
+    case PC_GETVOLUME:
+        emit onGetVolume(jo.toDouble());
+        break;
+
+    default:
+        qDebug() << "[PlaybackController]" << idt << jo;
+        break;
     }
 }
 

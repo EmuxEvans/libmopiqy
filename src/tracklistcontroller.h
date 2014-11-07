@@ -11,12 +11,12 @@
 
 namespace Mopidy {
     namespace Core {
-        class LIBMOPIQY_EXPORT TracklistController : public QObject, public ControllerInterface
+        class LIBMOPIQY_EXPORT TracklistController : public ControllerInterface
         {
             Q_OBJECT
 
         public:
-            TracklistController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent = 0);
+            TracklistController(Mopidy::MopidyClient *mopidyClient);
             ~TracklistController();
 
         public slots:
@@ -71,7 +71,7 @@ namespace Mopidy {
             void onPreviousTrack(const Mopidy::Models::TlTrack &);
 
         protected:
-            void processJsonResponse(const int &id, const QJsonValue &jv);
+            void processJsonResponse(const int &idt, const QJsonValue &jv);
 
         private:
             enum TCEnum

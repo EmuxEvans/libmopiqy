@@ -1,5 +1,4 @@
 #include "jsonrpchandler.h"
-#include "jsonwebsocket.h"
 
 using namespace Mopidy::Internal;
 using namespace Mopidy::Core;

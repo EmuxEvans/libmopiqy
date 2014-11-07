@@ -1,10 +1,9 @@
 #include "playlistscontroller.h"
-#include "jsonrpchandler.h"
 #include "mopidyparser.h"
 
 using namespace Mopidy::Core;
 
-PlaylistsController::PlaylistsController(Mopidy::Internal::JsonRpcHandler *jrHandler, QObject *parent) : QObject(parent), ControllerInterface(jrHandler)
+PlaylistsController::PlaylistsController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient)
 {
 }
 
@@ -21,10 +20,7 @@ void PlaylistsController::create(const QString &name, const QString &uri_scheme)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.create", vparams);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PLS_CREATE);
+    sendMessage(jso, PLS_CREATE);
 }
 
 void PlaylistsController::deletePl(const QString &uri)
@@ -35,7 +31,7 @@ void PlaylistsController::deletePl(const QString &uri)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.delete", vparams);
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, 0, true);
 }
 
 void PlaylistsController::filter(const QHash<QString, QString> &criteria)
@@ -46,10 +42,7 @@ void PlaylistsController::filter(const QHash<QString, QString> &criteria)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.filter", vparams);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PLS_FILTER);
+    sendMessage(jso, PLS_FILTER);
 }
 
 void PlaylistsController::lookup(const QString &uri)
@@ -60,10 +53,7 @@ void PlaylistsController::lookup(const QString &uri)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.lookup", vparams);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PLS_LOOKUP);
+    sendMessage(jso, PLS_LOOKUP);
 }
 
 void PlaylistsController::get_playlists(const bool &include_tracks)
@@ -74,10 +64,7 @@ void PlaylistsController::get_playlists(const bool &include_tracks)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.get_playlists", vparams);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PLS_GETPLAYLISTS);
+    sendMessage(jso, PLS_GETPLAYLISTS);
 }
 
 void PlaylistsController::refresh(const QString &uri)
@@ -88,7 +75,7 @@ void PlaylistsController::refresh(const QString &uri)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.refresh", vparams);
 
     // send it
-    m_jrHandler->sendMessage(this, jso, true);
+    sendMessage(jso, 0, true);
 }
 
 void PlaylistsController::save(const Mopidy::Models::Playlist &pl)
@@ -99,59 +86,52 @@ void PlaylistsController::save(const Mopidy::Models::Playlist &pl)
     QJsonObject jso = Mopidy::Parser::rpcEncode("core.playlists.save", vparams);
 
     // send it
-    int id = m_jrHandler->sendMessage(this, jso);
-
-    // keep track
-    m_idQuery.insert(id, PLS_SAVE);
+    sendMessage(jso, PLS_SAVE);
 }
 
-void PlaylistsController::processJsonResponse(const int &id, const QJsonValue &jv)
+void PlaylistsController::processJsonResponse(const int &idt, const QJsonValue &jv)
 {
-    if(m_idQuery.contains(id))
+    switch(idt)
     {
-        int idt = m_idQuery.take(id);
-        switch(idt)
-        {
-        case PLS_CREATE:
-            {
-                Mopidy::Models::Playlist pl;
-                Mopidy::Parser::parseSingleObject(jv.toObject(), pl);
-                emit onCreate(pl);
-            }
-            break;
+    case PLS_CREATE:
+    {
+        Mopidy::Models::Playlist pl;
+        Mopidy::Parser::parseSingleObject(jv.toObject(), pl);
+        emit onCreate(pl);
+    }
+        break;
 
-        case PLS_FILTER:
-            {
-                Mopidy::Models::Playlists pls = Mopidy::Parser::parseArrayOf<Mopidy::Models::Playlist>(jv.toArray());
-                emit onFilter(pls);
-            }
-            break;
+    case PLS_FILTER:
+    {
+        Mopidy::Models::Playlists pls = Mopidy::Parser::parseArrayOf<Mopidy::Models::Playlist>(jv.toArray());
+        emit onFilter(pls);
+    }
+        break;
 
-        case PLS_LOOKUP:
-            {
-                Mopidy::Models::Playlist pl;
-                Mopidy::Parser::parseSingleObject(jv.toObject(), pl);
-                emit onLookup(pl);
-            }
-            break;
+    case PLS_LOOKUP:
+    {
+        Mopidy::Models::Playlist pl;
+        Mopidy::Parser::parseSingleObject(jv.toObject(), pl);
+        emit onLookup(pl);
+    }
+        break;
 
-        case PLS_GETPLAYLISTS:
-            {
-                Mopidy::Models::Playlists pls = Mopidy::Parser::parseArrayOf<Mopidy::Models::Playlist>(jv.toArray());
-                emit onGetPlaylists(pls);
-            }
-            break;
+    case PLS_GETPLAYLISTS:
+    {
+        Mopidy::Models::Playlists pls = Mopidy::Parser::parseArrayOf<Mopidy::Models::Playlist>(jv.toArray());
+        emit onGetPlaylists(pls);
+    }
+        break;
 
-        case PLS_SAVE:
-            {
-                Mopidy::Models::Playlist pl;
-                Mopidy::Parser::parseSingleObject(jv.toObject(), pl);
-                emit onSave(pl);
-            }
-            break;
+    case PLS_SAVE:
+    {
+        Mopidy::Models::Playlist pl;
+        Mopidy::Parser::parseSingleObject(jv.toObject(), pl);
+        emit onSave(pl);
+    }
+        break;
 
-        default:
-            break;
-        }
+    default:
+        break;
     }
 }
