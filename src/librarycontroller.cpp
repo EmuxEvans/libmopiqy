@@ -2,6 +2,7 @@
 #include "jsonrpchandler.h"
 #include "mopidyparser.h"
 
+using namespace Mopidy;
 using namespace Mopidy::Core;
 
 LibraryController::LibraryController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient)
@@ -101,6 +102,7 @@ void LibraryController::processJsonResponse(const int &idt, const QJsonValue &jv
         break;
 
     default:
+        qDebug() << "[LibraryController]" << idt << jv;
         break;
     }
 }

@@ -1,6 +1,7 @@
 #include "tracklistcontroller.h"
 #include "mopidyparser.h"
 
+using namespace Mopidy;
 using namespace Mopidy::Core;
 
 TracklistController::TracklistController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient)
@@ -379,6 +380,7 @@ void TracklistController::processJsonResponse(const int &idt, const QJsonValue &
         break;
 
     default:
+        qDebug() << "[TracklistController]" << idt << jo;
         break;
     }
 }

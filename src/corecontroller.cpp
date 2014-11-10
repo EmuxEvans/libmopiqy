@@ -2,8 +2,8 @@
 #include "jsonrpchandler.h"
 #include "mopidyparser.h"
 
+using namespace Mopidy;
 using namespace Mopidy::Core;
-using namespace Mopidy::Internal;
 
 CoreController::CoreController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient)
 { }

@@ -1,6 +1,7 @@
 #include "controllerinterface.h"
 #include "mopidyclient.h"
 
+using namespace Mopidy;
 using namespace Mopidy::Core;
 
 ControllerInterface::ControllerInterface(MopidyClient *mopidyClient) : QObject(mopidyClient)

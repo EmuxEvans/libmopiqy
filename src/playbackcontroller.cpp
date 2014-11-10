@@ -1,6 +1,7 @@
 #include "playbackcontroller.h"
 #include "mopidyparser.h"
 
+using namespace Mopidy;
 using namespace Mopidy::Core;
 
 PlaybackController::PlaybackController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient) { }

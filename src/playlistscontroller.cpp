@@ -1,6 +1,7 @@
 #include "playlistscontroller.h"
 #include "mopidyparser.h"
 
+using namespace Mopidy;
 using namespace Mopidy::Core;
 
 PlaylistsController::PlaylistsController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient)
@@ -132,6 +133,7 @@ void PlaylistsController::processJsonResponse(const int &idt, const QJsonValue &
         break;
 
     default:
+        qDebug() << "[PlaylistsController]" << idt << jo;
         break;
     }
 }
