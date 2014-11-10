@@ -1,7 +1,7 @@
 #ifndef MOPIQY_EXPORT
 #define MOPIQY_EXPORT
 
-#include <QtGlobal>
+#include <QtCore/QtGlobal>
 
 #ifdef Q_OS_WIN
 #   ifdef LIBMOPIQY_SHARED

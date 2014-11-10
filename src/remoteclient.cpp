@@ -1,30 +1,33 @@
-#include "mopidyclient.h"
+#include "remoteclient.h"
 #include "mopidyparser.h"
 
 #include <QJsonDocument>
+#include <QUuid>
 
-using namespace Mopidy;
+using namespace Mopiqy;
 
-MopidyClient::MopidyClient(QObject *parent) : QObject(parent)
+RemoteClient::RemoteClient(QObject *parent) : QObject(parent)
 {
     m_webSocket = new QWebSocket("libmopiqy", QWebSocketProtocol::VersionLatest, this);
 
-    connect(m_webSocket, &QWebSocket::connected, this, &MopidyClient::clientConnected);
-    connect(m_webSocket, &QWebSocket::disconnected, this, &MopidyClient::clientDisconnected);
-    connect(m_webSocket, &QWebSocket::textMessageReceived, this, &MopidyClient::onTextMessageReceived);
+    connect(m_webSocket, &QWebSocket::connected, this, &RemoteClient::clientConnected);
+    connect(m_webSocket, &QWebSocket::disconnected, this, &RemoteClient::clientDisconnected);
+    connect(m_webSocket, &QWebSocket::textMessageReceived, this, &RemoteClient::onTextMessageReceived);
     connect(m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
 }
 
-MopidyClient::~MopidyClient()
+RemoteClient::~RemoteClient()
 {
 }
 
-QString MopidyClient::clientVersion() const
+QString RemoteClient::clientVersion() const
 {
-    return LIBMOPIQY_VERSION;
+    QString clientVersion(LIBMOPIQY_VERSION);
+    if(clientVersion.isEmpty()) clientVersion = "Unknow verion";
+    return clientVersion;
 }
 
-void MopidyClient::connectTo(const QString &host, const qint16 &port, const QString &path)
+void RemoteClient::connectTo(const QString &host, const qint16 &port, const QString &path)
 {
     disconnectClient();
 
@@ -36,15 +39,18 @@ void MopidyClient::connectTo(const QString &host, const qint16 &port, const QStr
     m_webSocket->open(url);
 }
 
-void MopidyClient::disconnectClient()
+void RemoteClient::disconnectClient()
 {
     if(m_webSocket->state() == QAbstractSocket::ConnectedState)
         m_webSocket->close();
 }
 
-QString MopidyClient::sendRequest(QJsonObject request, const bool &isNotification, Mopidy::Core::ControllerInterface *ci)
+QString RemoteClient::sendRequest(QJsonObject request, const bool &isNotification, Mopiqy::ControllerInterface *ci)
 {
     QString id("");
+
+    // controller check
+    if(!ci) return id;
 
     // update to JsonRpc
     request.insert("jsonrpc", QString("2.0"));
@@ -72,7 +78,7 @@ QString MopidyClient::sendRequest(QJsonObject request, const bool &isNotificatio
     return id;
 }
 
-void MopidyClient::onTextMessageReceived(const QString &rawData)
+void RemoteClient::onTextMessageReceived(const QString &rawData)
 {
     // try to read json document
     QJsonParseError jpError;
@@ -125,12 +131,12 @@ void MopidyClient::onTextMessageReceived(const QString &rawData)
     }
 }
 
-void MopidyClient::onSocketError(QAbstractSocket::SocketError error)
+void RemoteClient::onSocketError(QAbstractSocket::SocketError error)
 {
     emit connectionError(error, m_webSocket->errorString());
 }
 
-void MopidyClient::parseEvent(const QJsonObject &eventObj)
+void RemoteClient::parseEvent(const QJsonObject &eventObj)
 {
     QString evtName = eventObj.value("event").toString();
 
@@ -142,12 +148,12 @@ void MopidyClient::parseEvent(const QJsonObject &eventObj)
     {
         QString os = eventObj.value("old_state").toString();
         QString ns = eventObj.value("new_state").toString();
-        emit playback_state_changed(Mopidy::Parser::getState(os), Mopidy::Parser::getState(ns));
+        emit playback_state_changed(Mopiqy::Parser::getState(os), Mopiqy::Parser::getState(ns));
     }
     else if(evtName == "playlist_changed")
     {
-        Mopidy::Models::Playlist pl;
-        Mopidy::Parser::parseSingleObject(eventObj.value("playlist").toObject(), pl);
+        Mopiqy::Models::Playlist pl;
+        Mopiqy::Parser::parseSingleObject(eventObj.value("playlist").toObject(), pl);
         emit playlist_changed(pl);
     }
     else if(evtName == "playlists_loaded")
@@ -161,29 +167,29 @@ void MopidyClient::parseEvent(const QJsonObject &eventObj)
     }
     else if(evtName == "track_playback_ended")
     {
-        Mopidy::Models::TlTrack tlt;
-        Mopidy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        Mopiqy::Models::TlTrack tlt;
+        Mopiqy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
         int tp = eventObj.value("time_position").toDouble();
         emit track_playback_ended(tlt, tp);
     }
     else if(evtName == "track_playback_paused")
     {
-        Mopidy::Models::TlTrack tlt;
-        Mopidy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        Mopiqy::Models::TlTrack tlt;
+        Mopiqy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
         int tp = eventObj.value("time_position").toDouble();
         emit track_playback_paused(tlt, tp);
     }
     else if(evtName == "track_playback_resumed")
     {
-        Mopidy::Models::TlTrack tlt;
-        Mopidy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        Mopiqy::Models::TlTrack tlt;
+        Mopiqy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
         int tp = eventObj.value("time_position").toDouble();
         emit track_playback_resumed(tlt, tp);
     }
     else if(evtName == "track_playback_started")
     {
-        Mopidy::Models::TlTrack tlt;
-        Mopidy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        Mopiqy::Models::TlTrack tlt;
+        Mopiqy::Parser::parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
         emit track_playback_started(tlt);
     }
     else if(evtName == "tracklist_changed")
@@ -204,16 +210,16 @@ void MopidyClient::parseEvent(const QJsonObject &eventObj)
     }
 }
 
-void MopidyClient::parseResponse(const QString &id, const QJsonValue &responseValue)
+void RemoteClient::parseResponse(const QString &id, const QJsonValue &responseValue)
 {
     if(m_mapMsg.contains(id))
     {
-        Core::ControllerInterface *ci = m_mapMsg.take(id);
+        ControllerInterface *ci = m_mapMsg.take(id);
         ci->processResponse(id, responseValue);
     }
 }
 
-QString MopidyClient::generateRandomString()
+QString RemoteClient::generateRandomString()
 {
-    return "azerty";
+    return QUuid::createUuid().toString();
 }

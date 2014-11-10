@@ -5,17 +5,19 @@ TARGET = mopiqy
 CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
 
 SOURCES = \
-    mopidyclient.cpp \
     mopidyparser.cpp \
     controllerinterface.cpp \
     playbackcontroller.cpp \
     playlistscontroller.cpp \
     tracklistcontroller.cpp \
     librarycontroller.cpp \
-    corecontroller.cpp
+    corecontroller.cpp \
+    remoteclient.cpp \
+    mopiqyhelper.cpp
 
 PUBLIC_HEADERS += \
-    mopidyclient.h \
+    mopiqy.h \
+    remoteclient.h \
     mopidymodels.h \
     mopiqy_export.h \
     playbackcontroller.h \
@@ -23,7 +25,8 @@ PUBLIC_HEADERS += \
     tracklistcontroller.h \
     librarycontroller.h \
     controllerinterface.h \
-    corecontroller.h
+    corecontroller.h \
+    mopiqyhelper.h
 
 PRIVATE_HEADERS += \
     mopidyparser.h

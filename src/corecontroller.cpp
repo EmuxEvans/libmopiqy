@@ -1,11 +1,11 @@
 #include "corecontroller.h"
-#include "jsonrpchandler.h"
 #include "mopidyparser.h"
 
-using namespace Mopidy;
-using namespace Mopidy::Core;
+#include <QtCore/QDebug>
 
-CoreController::CoreController(MopidyClient *mopidyClient) : ControllerInterface(mopidyClient)
+using namespace Mopiqy;
+
+CoreController::CoreController(RemoteClient *remoteClient) : ControllerInterface(remoteClient)
 { }
 
 CoreController::~CoreController()
@@ -13,7 +13,7 @@ CoreController::~CoreController()
 
 void CoreController::describe()
 {
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.describe");
+    QJsonObject jso = Parser::rpcEncode("core.describe");
 
     // send it
     sendMessage(jso, CC_DESCRIBE);
@@ -21,7 +21,7 @@ void CoreController::describe()
 
 void CoreController::get_uri_schemes()
 {
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.get_uri_schemes");
+    QJsonObject jso = Parser::rpcEncode("core.get_uri_schemes");
 
     // send it
     sendMessage(jso, CC_URI_SCHEMES);
@@ -29,7 +29,7 @@ void CoreController::get_uri_schemes()
 
 void CoreController::get_version()
 {
-    QJsonObject jso = Mopidy::Parser::rpcEncode("core.get_version");
+    QJsonObject jso = Parser::rpcEncode("core.get_version");
 
     // send it
     sendMessage(jso, CC_VERSION);

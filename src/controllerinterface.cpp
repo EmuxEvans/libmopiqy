@@ -1,12 +1,11 @@
 #include "controllerinterface.h"
-#include "mopidyclient.h"
+#include "remoteclient.h"
 
-using namespace Mopidy;
-using namespace Mopidy::Core;
+using namespace Mopiqy;
 
-ControllerInterface::ControllerInterface(MopidyClient *mopidyClient) : QObject(mopidyClient)
+ControllerInterface::ControllerInterface(RemoteClient *remoteClient) : QObject(remoteClient)
 {
-    m_client = mopidyClient;
+    m_client = remoteClient;
 }
 
 void ControllerInterface::processResponse(const QString &id, const QJsonValue &jv)

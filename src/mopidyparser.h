@@ -1,18 +1,15 @@
 #ifndef MOPIDYPARSER_H
 #define MOPIDYPARSER_H
 
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <QDebug>
-
-#include <QStringList>
-#include <QString>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonValue>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include "mopidymodels.h"
 
-namespace Mopidy {
+namespace Mopiqy {
     namespace Parser {
 
         /*
@@ -21,11 +18,11 @@ namespace Mopidy {
         QJsonObject rpcEncode(const QString &method, const QJsonValue &params = QJsonValue::Null);
         QJsonObject searchLikeEncode(const QString &method, const QHash<QString, QString> &query, const QStringList &uris);
 
-        QJsonObject encodeModel(const Mopidy::Models::Artist &artist);
-        QJsonObject encodeModel(const Mopidy::Models::Album &album);
-        QJsonObject encodeModel(const Mopidy::Models::Track &track);
-        QJsonObject encodeModel(const Mopidy::Models::Playlist &playlist);
-        QJsonObject encodeModel(const Mopidy::Models::TlTrack &tltrack);
+        QJsonObject encodeModel(const Mopiqy::Models::Artist &artist);
+        QJsonObject encodeModel(const Mopiqy::Models::Album &album);
+        QJsonObject encodeModel(const Mopiqy::Models::Track &track);
+        QJsonObject encodeModel(const Mopiqy::Models::Playlist &playlist);
+        QJsonObject encodeModel(const Mopiqy::Models::TlTrack &tltrack);
 
         template<class T>
         QJsonArray encodeArrayOf(const QList<T> &lt);
@@ -37,23 +34,23 @@ namespace Mopidy {
         QList<T> parseArrayOf(const QJsonArray &ja);
 
         // Parsers
-        bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::Artist &artis);
-        bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::Album &album);
-        bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::Track &track);
-        bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::Playlist &playlist);
-        bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::SearchResult &searchResult);
-        bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::TlTrack &tlTrack);
-        bool parseSingleObject(const QJsonObject &jo, Mopidy::Models::Ref &ref);
+        bool parseSingleObject(const QJsonObject &jo, Mopiqy::Models::Artist &artis);
+        bool parseSingleObject(const QJsonObject &jo, Mopiqy::Models::Album &album);
+        bool parseSingleObject(const QJsonObject &jo, Mopiqy::Models::Track &track);
+        bool parseSingleObject(const QJsonObject &jo, Mopiqy::Models::Playlist &playlist);
+        bool parseSingleObject(const QJsonObject &jo, Mopiqy::Models::SearchResult &searchResult);
+        bool parseSingleObject(const QJsonObject &jo, Mopiqy::Models::TlTrack &tlTrack);
+        bool parseSingleObject(const QJsonObject &jo, Mopiqy::Models::Ref &ref);
 
         // date
         QDate getMopidyDate(const QString &);
         QString toMopidyDate(const QDate &);
 
         // state
-        Mopidy::Core::PlaybackState getState(const QString &);
+        Mopiqy::Core::PlaybackState getState(const QString &);
 
         // Ref type
-        Mopidy::Core::RefType getRefType(const QString &);
+        Mopiqy::Core::RefType getRefType(const QString &);
 
         // dict
         QJsonObject toJsonDict(const QHash<QString, QString> &);
@@ -62,7 +59,7 @@ namespace Mopidy {
 
 // Implementation
 template<class T>
-QJsonArray Mopidy::Parser::encodeArrayOf(const QList<T> &lt)
+QJsonArray Mopiqy::Parser::encodeArrayOf(const QList<T> &lt)
 {
     QJsonArray ja;
 
@@ -73,7 +70,7 @@ QJsonArray Mopidy::Parser::encodeArrayOf(const QList<T> &lt)
 }
 
 template<class T>
-QList<T> Mopidy::Parser::parseArrayOf(const QJsonArray &ja)
+QList<T> Mopiqy::Parser::parseArrayOf(const QJsonArray &ja)
 {
     QList<T> lst;
     bool convOk;

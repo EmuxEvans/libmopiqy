@@ -4,42 +4,44 @@
 #include <QDebug>
 #include <QTime>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent), m_ui(new Ui::MainWidget)
 {
     m_ui->setupUi(this);
-    m_client = new Mopidy::MopidyClient(this);
+
+    Mopiqy::RemoteClient *client = Mopiqy::MopiqyHelper::instance()->remoteClient();
 
     // connection to client signals
-    connect(m_client, &Mopidy::MopidyClient::clientConnected, this, &MainWidget::onMC_Connected);
-    connect(m_client, &Mopidy::MopidyClient::clientDisconnected, this, &MainWidget::onMC_Disconnected);
-    connect(m_client, &Mopidy::MopidyClient::connectionError, this, &MainWidget::onMC_ConnectionError);
-    connect(m_client, &Mopidy::MopidyClient::messageError, this, &MainWidget::onMC_MessageError);
+    connect(client, &Mopiqy::RemoteClient::clientConnected, this, &MainWidget::onMC_Connected);
+    connect(client, &Mopiqy::RemoteClient::clientDisconnected, this, &MainWidget::onMC_Disconnected);
+    connect(client, &Mopiqy::RemoteClient::connectionError, this, &MainWidget::onMC_ConnectionError);
+    connect(client, &Mopiqy::RemoteClient::messageError, this, &MainWidget::onMC_MessageError);
 
-    // connection to eventlistener
-    connect(m_client->eventListener(), &Mopidy::Core::EventListener::track_playback_ended,
+    // connection to events
+    connect(client, &Mopiqy::RemoteClient::track_playback_ended,
             this, &MainWidget::onEL_TrackPlaybackEnded);
-    connect(m_client->eventListener(), &Mopidy::Core::EventListener::track_playback_started,
+    connect(client, &Mopiqy::RemoteClient::track_playback_started,
             this, &MainWidget::onEL_TrackPlaybackStarted);
 
     // connect to controllers signals
-    connect(m_client->coreController(), &Mopidy::Core::CoreController::onDescribe,
+    connect(Mopiqy::MopiqyHelper::instance()->coreController(), &Mopiqy::CoreController::onDescribe,
             this, &MainWidget::onMC_Describe);
-    connect(m_client->coreController(), &Mopidy::Core::CoreController::onVersion,
+    connect(Mopiqy::MopiqyHelper::instance()->coreController(), &Mopiqy::CoreController::onVersion,
             [=](const QString &v) { m_ui->lbMopidyVersion->setText(v); });
 
-    connect(m_client->playlistsController(), &Mopidy::Core::PlaylistsController::onGetPlaylists,
+    connect(Mopiqy::MopiqyHelper::instance()->playlistsController(), &Mopiqy::PlaylistsController::onGetPlaylists,
             this, &MainWidget::onPlaylistsController_GetPlaylists);
-    connect(m_client->playlistsController(), &Mopidy::Core::PlaylistsController::onLookup,
+    connect(Mopiqy::MopiqyHelper::instance()->playlistsController(), &Mopiqy::PlaylistsController::onLookup,
             this, &MainWidget::onPlaylistsController_Lookup);
-    connect(m_client->tracklistController(), &Mopidy::Core::TracklistController::onAdd,
+    connect(Mopiqy::MopiqyHelper::instance()->tracklistController(), &Mopiqy::TracklistController::onAdd,
             this, &MainWidget::onTracklistController_Add);
-    connect(m_client->tracklistController(), &Mopidy::Core::TracklistController::onGetTlTracks,
+    connect(Mopiqy::MopiqyHelper::instance()->tracklistController(), &Mopiqy::TracklistController::onGetTlTracks,
             this, &MainWidget::onTracklistController_GetTlTracks);
 
     //
-    qWarning() << "Using libmopiqy" << m_client->clientVersion();
+    qWarning() << "Using libmopiqy" << client->clientVersion();
 }
 
 MainWidget::~MainWidget()
@@ -50,19 +52,19 @@ MainWidget::~MainWidget()
 void MainWidget::on_btConnect_clicked()
 {
     qWarning() << "connecting client request";
-    m_client->connectTo(m_ui->leHost->text(), m_ui->sbPort->value(), m_ui->lePath->text());
+    Mopiqy::MopiqyHelper::instance()->remoteClient()->connectTo(m_ui->leHost->text(), m_ui->sbPort->value(), m_ui->lePath->text());
 }
 
 void MainWidget::on_btDescribe_clicked()
 {
     qWarning() << "describe request";
-    m_client->coreController()->describe();
+    Mopiqy::MopiqyHelper::instance()->coreController()->describe();
 }
 
 void MainWidget::on_btDisconnect_clicked()
 {
     qWarning() << "disconnecting client request";
-    m_client->disconnectClient();
+    Mopiqy::MopiqyHelper::instance()->remoteClient()->disconnectClient();
 }
 
 void MainWidget::on_btGetPlaylists_clicked()
@@ -72,7 +74,7 @@ void MainWidget::on_btGetPlaylists_clicked()
     // Controllers functions are thoses defined from
     // http://docs.mopidy.com/en/latest/api/core/
     //
-    m_client->playlistsController()->get_playlists();
+    Mopiqy::MopiqyHelper::instance()->playlistsController()->get_playlists();
 }
 
 void MainWidget::on_btSetAsCurrentPlaylist_clicked()
@@ -83,15 +85,15 @@ void MainWidget::on_btSetAsCurrentPlaylist_clicked()
         QVariant vData = selItem->data(Qt::UserRole);
 
         //
-        // Mopidy::Models can be casted from QVariant
+        // Mopiqy::Models can be casted from QVariant
         //
-        if(vData.canConvert<Mopidy::Models::Playlist>())
+        if(vData.canConvert<Mopiqy::Models::Playlist>())
         {
-            Mopidy::Models::Playlist pl = qvariant_cast<Mopidy::Models::Playlist>(vData);
+            Mopiqy::Models::Playlist pl = qvariant_cast<Mopiqy::Models::Playlist>(vData);
 
             qWarning() << "set current playlist" << pl.name << "[" << pl.tracks.count() << " tracks] @" << pl.uri;
-            m_client->tracklistController()->clear();
-            m_client->tracklistController()->add(pl.uri);
+            Mopiqy::MopiqyHelper::instance()->tracklistController()->clear();
+            Mopiqy::MopiqyHelper::instance()->tracklistController()->add(pl.uri);
         }
     }
 }
@@ -105,14 +107,14 @@ void MainWidget::on_lwPlaylists_currentItemChanged(QListWidgetItem *current, QLi
         QVariant vData = current->data(Qt::UserRole);
 
         //
-        // Mopidy::Models can be casted from QVariant
+        // Mopiqy::Models can be casted from QVariant
         //
-        if(vData.canConvert<Mopidy::Models::Playlist>())
+        if(vData.canConvert<Mopiqy::Models::Playlist>())
         {
-            Mopidy::Models::Playlist pl = qvariant_cast<Mopidy::Models::Playlist>(vData);
+            Mopiqy::Models::Playlist pl = qvariant_cast<Mopiqy::Models::Playlist>(vData);
 
             qWarning() << "request lookup for playlist" << pl.name;
-            m_client->playlistsController()->lookup(pl.uri);
+            Mopiqy::MopiqyHelper::instance()->playlistsController()->lookup(pl.uri);
         }
     }
 }
@@ -120,7 +122,7 @@ void MainWidget::on_lwPlaylists_currentItemChanged(QListWidgetItem *current, QLi
 void MainWidget::on_btRefreshTracklist_clicked()
 {
     qWarning() << "get current tracklist request";
-    m_client->tracklistController()->get_tltracks();
+    Mopiqy::MopiqyHelper::instance()->tracklistController()->get_tltracks();
 }
 
 void MainWidget::on_tbPlay_clicked()
@@ -128,20 +130,20 @@ void MainWidget::on_tbPlay_clicked()
     if(m_currentTltracks.count() > 0)
     {
         qWarning() << "play request";
-        m_client->playbackController()->play(m_currentTltracks.at(0));
+        Mopiqy::MopiqyHelper::instance()->playbackController()->play(m_currentTltracks.at(0));
     }
 }
 
 void MainWidget::on_tbStop_clicked()
 {
     qWarning() << "stop request";
-    m_client->playbackController()->stop();
+    Mopiqy::MopiqyHelper::instance()->playbackController()->stop();
 }
 
 void MainWidget::on_tbNext_clicked()
 {
     qWarning() << "next request";
-    m_client->playbackController()->next();
+    Mopiqy::MopiqyHelper::instance()->playbackController()->next();
 }
 
 /*
@@ -155,8 +157,8 @@ void MainWidget::onMC_Connected()
     setControlsState(true);
 
     // Get Version and URIs
-    m_client->coreController()->get_version();
-    m_client->coreController()->get_uri_schemes();
+    Mopiqy::MopiqyHelper::instance()->coreController()->get_version();
+    Mopiqy::MopiqyHelper::instance()->coreController()->get_uri_schemes();
 }
 
 void MainWidget::onMC_Describe(const QJsonObject &desc)
@@ -169,6 +171,8 @@ void MainWidget::onMC_Describe(const QJsonObject &desc)
         fDesc.write(jdoc.toJson());
         fDesc.close();
     }
+
+    qWarning() << "Describe file saved at" << QFileInfo(fDesc).absoluteFilePath();
 }
 
 void MainWidget::onMC_Disconnected()
@@ -192,7 +196,7 @@ void MainWidget::onMC_MessageError(const int &code, const QString &message)
 /*
  * EventListener slots
  */
-void MainWidget::onEL_TrackPlaybackEnded(const Mopidy::Models::TlTrack &tl_track, const int &time_position)
+void MainWidget::onEL_TrackPlaybackEnded(const Mopiqy::Models::TlTrack &tl_track, const int &time_position)
 {
     Q_UNUSED(time_position)
 
@@ -202,7 +206,7 @@ void MainWidget::onEL_TrackPlaybackEnded(const Mopidy::Models::TlTrack &tl_track
     m_ui->lbCurrentLength->clear();
 }
 
-void MainWidget::onEL_TrackPlaybackStarted(const Mopidy::Models::TlTrack &tl_track)
+void MainWidget::onEL_TrackPlaybackStarted(const Mopiqy::Models::TlTrack &tl_track)
 {
     qWarning() << "event: playback started" << tl_track.tlid;
     m_ui->lbCurrentName->setText(tl_track.track.name);
@@ -215,23 +219,23 @@ void MainWidget::onEL_TrackPlaybackStarted(const Mopidy::Models::TlTrack &tl_tra
 /*
  * Controllers slots
  */
-void MainWidget::onPlaylistsController_GetPlaylists(const Mopidy::Models::Playlists &pls)
+void MainWidget::onPlaylistsController_GetPlaylists(const Mopiqy::Models::Playlists &pls)
 {
     qWarning() << pls.count() << "playlists received";
 
     m_ui->lwPlaylists->clear();
-    foreach(Mopidy::Models::Playlist pl, pls)
+    foreach(Mopiqy::Models::Playlist pl, pls)
     {
         QListWidgetItem *item = new QListWidgetItem;
 
         //
-        // Mopidy::Models are struct corresponding to definition from
+        // Mopiqy::Models are struct corresponding to definition from
         // http://docs.mopidy.com/en/latest/api/models/
         //
         item->setText(pl.name);
 
         //
-        // Every Mopidy::Models structs can be used as QVariant
+        // Every Mopiqy::Models structs can be used as QVariant
         //
         QVariant vPlaylist;
         vPlaylist.setValue(pl);
@@ -241,19 +245,19 @@ void MainWidget::onPlaylistsController_GetPlaylists(const Mopidy::Models::Playli
     }
 }
 
-void MainWidget::onPlaylistsController_Lookup(const Mopidy::Models::Playlist &pl)
+void MainWidget::onPlaylistsController_Lookup(const Mopiqy::Models::Playlist &pl)
 {
     qWarning() << "playlist lookup done";
     m_ui->lwTracks->clear();
 
-    foreach(Mopidy::Models::Track track, pl.tracks)
+    foreach(Mopiqy::Models::Track track, pl.tracks)
     {
         QTreeWidgetItem *item = new QTreeWidgetItem;
         item->setText(1, track.name);
         item->setText(2, track.album.name);
 
         QStringList artistsNames;
-        foreach (Mopidy::Models::Artist artist, track.artists) {
+        foreach (Mopiqy::Models::Artist artist, track.artists) {
             artistsNames << artist.name;
         }
         item->setText(3, artistsNames.join(", "));
@@ -265,18 +269,18 @@ void MainWidget::onPlaylistsController_Lookup(const Mopidy::Models::Playlist &pl
         m_ui->lwTracks->resizeColumnToContents(i);
 }
 
-void MainWidget::onTracklistController_Add(const Mopidy::Models::TlTracks &tltracks)
+void MainWidget::onTracklistController_Add(const Mopiqy::Models::TlTracks &tltracks)
 {
     qWarning() << tltracks.count() << "Tl_Tracks in tracklist";
     m_currentTltracks = tltracks;
 }
 
-void MainWidget::onTracklistController_GetTlTracks(const Mopidy::Models::TlTracks &tltracks)
+void MainWidget::onTracklistController_GetTlTracks(const Mopiqy::Models::TlTracks &tltracks)
 {
     qWarning() << "playlist lookup done";
     m_ui->lwTlTracks->clear();
 
-    foreach(Mopidy::Models::TlTrack tltrack, tltracks)
+    foreach(Mopiqy::Models::TlTrack tltrack, tltracks)
     {
         QTreeWidgetItem *item = new QTreeWidgetItem;
         item->setText(0, QString::number(tltrack.tlid));
@@ -284,7 +288,7 @@ void MainWidget::onTracklistController_GetTlTracks(const Mopidy::Models::TlTrack
         item->setText(2, tltrack.track.album.name);
 
         QStringList artistsNames;
-        foreach (Mopidy::Models::Artist artist, tltrack.track.artists) {
+        foreach (Mopiqy::Models::Artist artist, tltrack.track.artists) {
             artistsNames << artist.name;
         }
         item->setText(3, artistsNames.join(", "));

@@ -1,14 +1,14 @@
 #ifndef MOPIDYMODELS_H
 #define MOPIDYMODELS_H
 
-#include <QDate>
-#include <QList>
-#include <QString>
-#include <QStringList>
+#include <QtCore/QDate>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include "mopiqy_export.h"
 
-namespace Mopidy {
+namespace Mopiqy {
 
     namespace Core {
         enum PlaybackState {
@@ -107,12 +107,12 @@ namespace Mopidy {
 }
 
 // allow cast with QVariant
-Q_DECLARE_METATYPE(Mopidy::Models::Artist)
-Q_DECLARE_METATYPE(Mopidy::Models::Album)
-Q_DECLARE_METATYPE(Mopidy::Models::Track)
-Q_DECLARE_METATYPE(Mopidy::Models::Playlist)
-Q_DECLARE_METATYPE(Mopidy::Models::SearchResult)
-Q_DECLARE_METATYPE(Mopidy::Models::TlTrack)
-Q_DECLARE_METATYPE(Mopidy::Models::Ref)
+Q_DECLARE_METATYPE(Mopiqy::Models::Artist)
+Q_DECLARE_METATYPE(Mopiqy::Models::Album)
+Q_DECLARE_METATYPE(Mopiqy::Models::Track)
+Q_DECLARE_METATYPE(Mopiqy::Models::Playlist)
+Q_DECLARE_METATYPE(Mopiqy::Models::SearchResult)
+Q_DECLARE_METATYPE(Mopiqy::Models::TlTrack)
+Q_DECLARE_METATYPE(Mopiqy::Models::Ref)
 
 #endif // MOPIDYMODELS_H

@@ -8,10 +8,12 @@
 #define MOPIDY_SHORT_DATE QString("yyyy")
 #define MOPIDY_LONG_DATE QString("yyyy-MM-dd")
 
+using namespace Mopiqy;
+
 /*
  * Encoder
  */
-QJsonObject Mopidy::Parser::rpcEncode(const QString &method, const QJsonValue &params)
+QJsonObject Parser::rpcEncode(const QString &method, const QJsonValue &params)
 {
     QJsonObject jso;
     jso.insert("method", method);
@@ -19,7 +21,7 @@ QJsonObject Mopidy::Parser::rpcEncode(const QString &method, const QJsonValue &p
     return jso;
 }
 
-QJsonObject Mopidy::Parser::searchLikeEncode(const QString &method, const QHash<QString, QString> &query, const QStringList &uris)
+QJsonObject Parser::searchLikeEncode(const QString &method, const QHash<QString, QString> &query, const QStringList &uris)
 {
     QJsonObject jso;
     jso.insert("method", method);
@@ -39,7 +41,7 @@ QJsonObject Mopidy::Parser::searchLikeEncode(const QString &method, const QHash<
     }
 }
 
-QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::Artist &artist)
+QJsonObject Parser::encodeModel(const Models::Artist &artist)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("Artist"));
@@ -49,12 +51,12 @@ QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::Artist &artist)
     return jo;
 }
 
-QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::Album &album)
+QJsonObject Parser::encodeModel(const Models::Album &album)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("Album"));
     jo.insert("uri", album.uri);
-    jo.insert("artists", encodeArrayOf<Mopidy::Models::Artist>(album.artists));
+    jo.insert("artists", encodeArrayOf<Models::Artist>(album.artists));
     jo.insert("date", toMopidyDate(album.date));
     jo.insert("images", QJsonArray::fromStringList(album.images));
     jo.insert("musicbrainz_id", album.musicbrainz_id);
@@ -64,13 +66,13 @@ QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::Album &album)
     return jo;
 }
 
-QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::Track &track)
+QJsonObject Parser::encodeModel(const Models::Track &track)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("Track"));
     jo.insert("uri", track.uri);
     jo.insert("album", encodeModel(track.album));
-    jo.insert("artists", encodeArrayOf<Mopidy::Models::Artist>(track.artists));
+    jo.insert("artists", encodeArrayOf<Models::Artist>(track.artists));
     jo.insert("bitrate", track.bitrate);
     jo.insert("date", toMopidyDate(track.date));
     jo.insert("disc_no", track.disc_no);
@@ -81,18 +83,18 @@ QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::Track &track)
     return jo;
 }
 
-QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::Playlist &playlist)
+QJsonObject Parser::encodeModel(const Models::Playlist &playlist)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("Playlist"));
     jo.insert("uri", playlist.uri);
     jo.insert("name", playlist.name);
     jo.insert("last_modified", toMopidyDate(playlist.last_modified));
-    jo.insert("tracks", encodeArrayOf<Mopidy::Models::Track>(playlist.tracks));
+    jo.insert("tracks", encodeArrayOf<Models::Track>(playlist.tracks));
     return jo;
 }
 
-QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::TlTrack &tltrack)
+QJsonObject Parser::encodeModel(const Models::TlTrack &tltrack)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("TlTrack"));
@@ -105,7 +107,7 @@ QJsonObject Mopidy::Parser::encodeModel(const Mopidy::Models::TlTrack &tltrack)
 /*
  * Decoders
  */
-bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Artist &artist)
+bool Parser::parseSingleObject(const QJsonObject &jo, Models::Artist &artist)
 {
     if(jo.value("__model__").toString() == "Artist")
     {
@@ -117,13 +119,13 @@ bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Ar
     return false;
 }
 
-bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Album &album)
+bool Parser::parseSingleObject(const QJsonObject &jo, Models::Album &album)
 {
     if(jo.value("__model__").toString() == "Album")
     {
         album.uri = jo.value("uri").toString();
         album.name = jo.value("name").toString();
-        album.artists = parseArrayOf<Mopidy::Models::Artist>(jo.value("artists").toArray());
+        album.artists = parseArrayOf<Models::Artist>(jo.value("artists").toArray());
         album.num_tracks = jo.value("num_tracks").toDouble();
         album.num_discs = jo.value("num_discs").toDouble();
         album.date = getMopidyDate(jo.value("date").toString());
@@ -135,13 +137,13 @@ bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Al
     return false;
 }
 
-bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Track &track)
+bool Parser::parseSingleObject(const QJsonObject &jo, Models::Track &track)
 {
     if(jo.value("__model__").toString() == "Track")
     {
         track.uri = jo.value("uri").toString();
         track.name = jo.value("name").toString();
-        track.artists = parseArrayOf<Mopidy::Models::Artist>(jo.value("artists").toArray());
+        track.artists = parseArrayOf<Models::Artist>(jo.value("artists").toArray());
         parseSingleObject(jo.value("album").toObject(), track.album);
         track.track_no = jo.value("track_no").toDouble();
         track.disc_no = jo.value("disc_no").toDouble();
@@ -154,33 +156,33 @@ bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Tr
     return false;
 }
 
-bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Playlist &playlist)
+bool Parser::parseSingleObject(const QJsonObject &jo, Models::Playlist &playlist)
 {
     if(jo.value("__model__").toString() == "Playlist")
     {
         playlist.uri  = jo.value("uri").toString();
         playlist.name = jo.value("name").toString();
-        playlist.tracks = parseArrayOf<Mopidy::Models::Track>(jo.value("tracks").toArray());
+        playlist.tracks = parseArrayOf<Models::Track>(jo.value("tracks").toArray());
         playlist.last_modified = getMopidyDate(jo.value("last_modified").toString());
         return true;
     }
     return false;
 }
 
-bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::SearchResult &searchResult)
+bool Parser::parseSingleObject(const QJsonObject &jo, Models::SearchResult &searchResult)
 {
     if(jo.value("__model__").toString() == "SearchResult")
     {
         searchResult.uri  = jo.value("uri").toString();
-        searchResult.tracks = parseArrayOf<Mopidy::Models::Track>(jo.value("tracks").toArray());
-        searchResult.albums = parseArrayOf<Mopidy::Models::Album>(jo.value("albums").toArray());
-        searchResult.artists = parseArrayOf<Mopidy::Models::Artist>(jo.value("artists").toArray());
+        searchResult.tracks = parseArrayOf<Models::Track>(jo.value("tracks").toArray());
+        searchResult.albums = parseArrayOf<Models::Album>(jo.value("albums").toArray());
+        searchResult.artists = parseArrayOf<Models::Artist>(jo.value("artists").toArray());
         return true;
     }
     return false;
 }
 
-bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::TlTrack &tlTrack)
+bool Parser::parseSingleObject(const QJsonObject &jo, Models::TlTrack &tlTrack)
 {
     if(jo.value("__model__").toString() == "TlTrack")
     {
@@ -191,7 +193,7 @@ bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Tl
     return false;
 }
 
-bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Ref &ref)
+bool Parser::parseSingleObject(const QJsonObject &jo, Models::Ref &ref)
 {
     if(jo.value("__model__").toString() == "Ref")
     {
@@ -203,7 +205,7 @@ bool Mopidy::Parser::parseSingleObject(const QJsonObject &jo, Mopidy::Models::Re
     return false;
 }
 
-QDate Mopidy::Parser::getMopidyDate(const QString &strDate)
+QDate Parser::getMopidyDate(const QString &strDate)
 {
     if(strDate.isEmpty()) return QDate();
 
@@ -211,7 +213,7 @@ QDate Mopidy::Parser::getMopidyDate(const QString &strDate)
     return QDate::fromString(strDate, MOPIDY_LONG_DATE);
 }
 
-QString Mopidy::Parser::toMopidyDate(const QDate &date)
+QString Parser::toMopidyDate(const QDate &date)
 {
     if(!date.isValid()) return "";
     if(date.isNull()) return "";
@@ -219,15 +221,15 @@ QString Mopidy::Parser::toMopidyDate(const QDate &date)
     return date.toString(MOPIDY_LONG_DATE);
 }
 
-Mopidy::Core::PlaybackState Mopidy::Parser::getState(const QString &stateStr)
+Core::PlaybackState Parser::getState(const QString &stateStr)
 {
-    if(stateStr.toLower() == "paused") return Mopidy::Core::PAUSED;
-    if(stateStr.toLower() == "playing") return Mopidy::Core::PLAYING;
-    if(stateStr.toLower() == "stopped") return Mopidy::Core::STOPPED;
-    return Mopidy::Core::STOPPED;
+    if(stateStr.toLower() == "paused") return Core::PAUSED;
+    if(stateStr.toLower() == "playing") return Core::PLAYING;
+    if(stateStr.toLower() == "stopped") return Core::STOPPED;
+    return Core::STOPPED;
 }
 
-QJsonObject Mopidy::Parser::toJsonDict(const QHash<QString, QString> &d)
+QJsonObject Parser::toJsonDict(const QHash<QString, QString> &d)
 {
     QJsonObject jo;
 
@@ -237,12 +239,12 @@ QJsonObject Mopidy::Parser::toJsonDict(const QHash<QString, QString> &d)
     return jo;
 }
 
-Mopidy::Core::RefType Mopidy::Parser::getRefType(const QString &typeStr)
+Core::RefType Parser::getRefType(const QString &typeStr)
 {
-    if(typeStr.toLower() == "album") return Mopidy::Core::ALBUM;
-    if(typeStr.toLower() == "artist") return Mopidy::Core::ARTIST;
-    if(typeStr.toLower() == "directory") return Mopidy::Core::DIRECTORY;
-    if(typeStr.toLower() == "playlist") return Mopidy::Core::PLAYLIST;
-    if(typeStr.toLower() == "track") return Mopidy::Core::TRACK;
-    return Mopidy::Core::DIRECTORY;
+    if(typeStr.toLower() == "album") return Core::ALBUM;
+    if(typeStr.toLower() == "artist") return Core::ARTIST;
+    if(typeStr.toLower() == "directory") return Core::DIRECTORY;
+    if(typeStr.toLower() == "playlist") return Core::PLAYLIST;
+    if(typeStr.toLower() == "track") return Core::TRACK;
+    return Core::DIRECTORY;
 }

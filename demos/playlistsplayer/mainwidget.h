@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QListWidgetItem>
 
-#include "mopidyclient.h"
+#include "mopiqy.h"
 
 namespace Ui {
     class MainWidget;
@@ -41,14 +41,14 @@ private slots:
     void onMC_MessageError(const int &code, const QString &message);
 
     // EventListener slots
-    void onEL_TrackPlaybackEnded(const Mopidy::Models::TlTrack &tl_track, const int &time_position);
-    void onEL_TrackPlaybackStarted(const Mopidy::Models::TlTrack &tl_track);
+    void onEL_TrackPlaybackEnded(const Mopiqy::Models::TlTrack &tl_track, const int &time_position);
+    void onEL_TrackPlaybackStarted(const Mopiqy::Models::TlTrack &tl_track);
 
     // Controllers slots
-    void onPlaylistsController_GetPlaylists(const Mopidy::Models::Playlists &pls);
-    void onPlaylistsController_Lookup(const Mopidy::Models::Playlist &pl);
-    void onTracklistController_Add(const Mopidy::Models::TlTracks &);
-    void onTracklistController_GetTlTracks(const Mopidy::Models::TlTracks &);
+    void onPlaylistsController_GetPlaylists(const Mopiqy::Models::Playlists &pls);
+    void onPlaylistsController_Lookup(const Mopiqy::Models::Playlist &pl);
+    void onTracklistController_Add(const Mopiqy::Models::TlTracks &);
+    void onTracklistController_GetTlTracks(const Mopiqy::Models::TlTracks &);
 
 
 private:
@@ -57,11 +57,8 @@ private:
 private:
     Ui::MainWidget *m_ui;
 
-    // entry point to mopidy server
-    Mopidy::MopidyClient *m_client;
-
     // Tracklist for managing playback
-    Mopidy::Models::TlTracks m_currentTltracks;
+    Mopiqy::Models::TlTracks m_currentTltracks;
 };
 
 #endif //MAINWIDGET_H

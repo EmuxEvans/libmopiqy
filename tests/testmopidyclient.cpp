@@ -1,16 +1,16 @@
 #include "testmopidyclient.h"
-#include "../src/mopidyclient.h"
+#include "../src/mopiqy.h"
 
 void TestMopidyClient::initTestCase()
 {
-    m_host = "127.0.0.1";
+    m_host = "192.168.1.88";
     m_port = 6680;
     m_path = "/mopidy/ws";
 }
 
 void TestMopidyClient::tstConnectionOk()
 {
-    Mopidy::MopidyClient mc;
+    Mopiqy::RemoteClient mc;
     QSignalSpy spy(&mc, SIGNAL(clientConnected()));
 
     mc.connectTo(m_host, m_port, m_path);
@@ -19,7 +19,7 @@ void TestMopidyClient::tstConnectionOk()
 
 void TestMopidyClient::tstDeconnection()
 {
-    Mopidy::MopidyClient mc;
+    Mopiqy::RemoteClient mc;
     QSignalSpy spyConnected(&mc, SIGNAL(clientConnected()));
     QSignalSpy spyDisconnected(&mc, SIGNAL(clientDisconnected()));
 
@@ -37,7 +37,7 @@ void TestMopidyClient::tstDeconnection()
 
 void TestMopidyClient::tstConnectionFail()
 {
-    Mopidy::MopidyClient mc;
+    Mopiqy::RemoteClient mc;
     QSignalSpy spy(&mc, SIGNAL(clientConnected()));
 
     mc.connectTo(m_host, m_port, "");
