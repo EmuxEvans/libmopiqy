@@ -8,9 +8,9 @@ It is used in [Mopiqy Desktop](https://github.com/AlexandrePTJ/mopiqy_desktop) a
 
 ## Dependencies ##
 
-- [Qt](http://qt-project.org/) >= 5.1
+- [Qt](http://qt-project.org/) >= 5.3
   - `qt5-base`
-  - `qt5-websockets` from [Qt playground](https://qt.gitorious.org/qtplayground/websockets)
+  - `qt5-websockets`
 
 ## Building ##
 
