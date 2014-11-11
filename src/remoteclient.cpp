@@ -23,7 +23,7 @@ RemoteClient::~RemoteClient()
 QString RemoteClient::clientVersion() const
 {
     QString clientVersion(LIBMOPIQY_VERSION);
-    if(clientVersion.isEmpty()) clientVersion = "Unknow verion";
+    if(clientVersion.isEmpty()) clientVersion = "Unknow version";
     return clientVersion;
 }
 

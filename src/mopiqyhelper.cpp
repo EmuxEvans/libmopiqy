@@ -73,3 +73,9 @@ MopiqyHelper::MopiqyHelper()
 {
     m_d = new MopiqyHelperPrivate;
 }
+
+
+Mopiqy::MopiqyHelper *iMopidyHelper()
+{
+    return Mopiqy::MopiqyHelper::instance();
+}

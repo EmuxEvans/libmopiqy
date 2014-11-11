@@ -16,7 +16,6 @@ class PlaybackController;
 class PlaylistsController;
 class TracklistController;
 
-
 class LIBMOPIQY_EXPORT MopiqyHelper
 {
 public:
@@ -39,5 +38,8 @@ private:
 };
 
 }
+
+// Shortcuts
+LIBMOPIQY_EXPORT Mopiqy::MopiqyHelper* iMopidyHelper();
 
 #endif //MOPIQY_HELPER_H
