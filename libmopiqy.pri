@@ -1,4 +1,5 @@
 INCLUDEPATH += $${PWD}/src
+CONFIG += c++11
 
 win32 {
     CONFIG(debug, debug|release): LIBS += -lmopiqyd0

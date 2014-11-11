@@ -20,7 +20,7 @@ public:
     PlaylistsController* playlistsController;
     TracklistController* tracklistController;
 
-    MopiqyHelper::MopiqyHelperPrivate()
+    MopiqyHelperPrivate()
     {
         remoteClient = new RemoteClient();
         coreController = new CoreController(remoteClient);
