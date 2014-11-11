@@ -1,8 +1,11 @@
 TEMPLATE = lib
 QT = core websockets
 
-TARGET = mopiqy
-CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
+DESTDIR = $$OUT_PWD
+TARGET = $$qtLibraryTarget(mopiqy)
+DEFINES += LIBMOPIQY_SHARED
+
+include(../version.pri)
 
 SOURCES = \
     mopidyparser.cpp \
@@ -32,22 +35,6 @@ PRIVATE_HEADERS += \
     mopidyparser.h
 
 HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
-
-#
-# Platform dependant config
-#
-LVERSION = $$system(git describe --tags --long)
-unix {
-    VERSION = $$LVERSION
-    macx {
-        CONFIG += staticlib
-    }
-}
-win32 {
-    VERSION = $$system(git describe --tags --abbrev=0)
-}
-DEFINES += LIBMOPIQY_VERSION=\\\"$${LVERSION}\\\"
-DEFINES += LIBMOPIQY_SHARED
 
 #
 # Install
