@@ -6,6 +6,5 @@ win32 {
     CONFIG(release, debug|release): LIBS += -lmopiqy0
 }
 unix {
-    CONFIG(debug, debug|release): LIBS += -lmopiqyd
-    CONFIG(release, debug|release): LIBS += -lmopiqy
+    LIBS += -lmopiqy
 }

@@ -1,7 +1,6 @@
 TEMPLATE = lib
 QT = core websockets
 
-DESTDIR = $$OUT_PWD
 TARGET = $$qtLibraryTarget(mopiqy)
 DEFINES += LIBMOPIQY_SHARED
 
@@ -35,6 +34,13 @@ PRIVATE_HEADERS += \
     mopidyparser.h
 
 HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+
+#
+# OS specific
+#
+win32 {
+    DESTDIR = $$OUT_PWD
+}
 
 #
 # Install
