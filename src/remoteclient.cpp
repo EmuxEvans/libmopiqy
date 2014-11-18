@@ -221,5 +221,8 @@ void RemoteClient::parseResponse(const QString &id, const QJsonValue &responseVa
 
 QString RemoteClient::generateRandomString()
 {
-    return QUuid::createUuid().toString();
+    QString rstr = QUuid::createUuid().toString();
+    rstr.remove("{");
+    rstr.remove("}");
+    return rstr;
 }
