@@ -1,53 +1,29 @@
 TEMPLATE = lib
-QT = core websockets
-
-TARGET = $$qtLibraryTarget(mopiqy)
+QT       = core websockets
+TARGET   = $$qtLibraryTarget(mopiqy)
 DEFINES += LIBMOPIQY_SHARED
+CONFIG  += C++11
 
 include(../version.pri)
 
+#
+# Sources
+#
 SOURCES = \
-    mopidyparser.cpp \
-    controllerinterface.cpp \
-    playbackcontroller.cpp \
-    playlistscontroller.cpp \
-    tracklistcontroller.cpp \
-    librarycontroller.cpp \
-    corecontroller.cpp \
-    remoteclient.cpp \
-    mopiqyhelper.cpp
+    mopidyclient.cpp
 
-PUBLIC_HEADERS += \
-    mopiqy.h \
-    remoteclient.h \
-    mopidymodels.h \
-    mopiqy_export.h \
-    playbackcontroller.h \
-    playlistscontroller.h \
-    tracklistcontroller.h \
-    librarycontroller.h \
-    controllerinterface.h \
-    corecontroller.h \
-    mopiqyhelper.h
+LIBMOPIQY_HEADERS = \
+    libmopiqy_export.h \
+    mopidyclient.h
 
-PRIVATE_HEADERS += \
-    mopidyparser.h
-
-HEADERS = $$PUBLIC_HEADERS $$PRIVATE_HEADERS
-
-#
-# OS specific
-#
-win32 {
-    DESTDIR = $$OUT_PWD
-}
+HEADERS = \
+    $$LIBMOPIQY_HEADERS \
+    mopidyclient_p.h
 
 #
 # Install
 #
-target.path = $${INSTALL_ROOT}/lib
-
-pub_hdrs.files = $$PUBLIC_HEADERS
+target.path    = $${INSTALL_ROOT}/lib
+pub_hdrs.files = $$LIBMOPIQY_HEADERS
 pub_hdrs.path  = $${INSTALL_ROOT}/include/libmopiqy
-
 INSTALLS += target pub_hdrs

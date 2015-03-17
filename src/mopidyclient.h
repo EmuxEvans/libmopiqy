@@ -1,6 +1,10 @@
 #ifndef MOPIDY_CLIENT_H
 #define MOPIDY_CLIENT_H
 
+#include <QObject>
+#include <QHostAddress>
+#include "libmopiqy_export.h"
+
 class MopidyClientPrivate;
 class MopidyClient : public QObject
 {
@@ -20,6 +24,7 @@ signals:
 
 private:
     Q_DECLARE_PRIVATE(MopidyClient)
+    QScopedPointer<MopidyClientPrivate> d_ptr;
 };
 
 #endif //MOPIDY_CLIENT_H
