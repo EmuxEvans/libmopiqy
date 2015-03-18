@@ -10,8 +10,10 @@ class MopidyClientPrivate : public QObject
     Q_OBJECT
 
 public:
-    MopidyClientPrivate(QObject * parent = 0);
+    MopidyClientPrivate(MopidyClient * parent);
     ~MopidyClientPrivate();
+
+    void processEvent(const QJsonObject &eventObj);
 
     QWebSocket *webSocket;
 
@@ -20,7 +22,7 @@ public slots:
     void onError(QAbstractSocket::SocketError socketError);
 
 private:
-    MopidyClient const *q_ptr;
+    MopidyClient * const q_ptr;
     Q_DECLARE_PUBLIC(MopidyClient)
 };
 

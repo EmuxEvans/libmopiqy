@@ -2,11 +2,12 @@
 #define MOPIDY_CLIENT_H
 
 #include <QObject>
-#include <QHostAddress>
+
 #include "libmopiqy_export.h"
+#include "mopidymodels.h"
 
 class MopidyClientPrivate;
-class MopidyClient : public QObject
+class LIBMOPIQY_EXPORT MopidyClient : public QObject
 {
     Q_OBJECT
 
@@ -14,13 +15,33 @@ public:
     MopidyClient(QObject *parent = 0);
     ~MopidyClient();
 
-    void connectToServer(const QHostAddress &address, const quint16 &port, const QString &path);
+    void connectToServer(const QString &host, const quint16 &port, const QString &path);
     void disconnectFromServer();
 
+    QString clientVersion() const;
+
 signals:
+    // connections signals
     void clientConnected();
     void clientDisconnected();
     void connectionError(const int &code, const QString &message);
+
+    //
+    void protocolError(const int &code, const QString &message);
+
+    // mopidy's events
+    void optionsChanged();
+    void playbackStateChanged(const Mopidy::PlaybackState &oldState, const Mopidy::PlaybackState &newState);
+    void playlistChanged(const Mopidy::Playlist &playlist);
+    void playlistsLoaded();
+    void seeked(const int &time_position);
+    void trackPlaybackEnded(const Mopidy::TlTrack &tl_track, const int &time_position);
+    void trackPlaybackPaused(const Mopidy::TlTrack &tl_track, const int &time_position);
+    void trackPlaybackResumed(const Mopidy::TlTrack &tl_track, const int &time_position);
+    void trackPlaybackStarted(const Mopidy::TlTrack &tl_track);
+    void tracklistChanged();
+    void volumeChanged();
+    void muteChanged(bool muted);
 
 private:
     Q_DECLARE_PRIVATE(MopidyClient)

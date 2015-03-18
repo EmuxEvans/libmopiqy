@@ -10,15 +10,20 @@ include(../version.pri)
 # Sources
 #
 SOURCES = \
-    mopidyclient.cpp
+    mopidyclient.cpp \
+    jsonrpcmessage.cpp \
+    mopidymodelfactory.cpp
 
 LIBMOPIQY_HEADERS = \
     libmopiqy_export.h \
+    mopidymodels.h \
     mopidyclient.h
 
 HEADERS = \
     $$LIBMOPIQY_HEADERS \
-    mopidyclient_p.h
+    mopidyclient_p.h \
+    jsonrpcmessage.h \
+    mopidymodelfactory.h
 
 #
 # Install
