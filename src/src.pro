@@ -12,7 +12,7 @@ include(../version.pri)
 SOURCES = \
     mopidyclient.cpp \
     jsonrpcmessage.cpp \
-    mopidymodelfactory.cpp
+    modeltranslator.cpp
 
 LIBMOPIQY_HEADERS = \
     libmopiqy_export.h \
@@ -23,7 +23,7 @@ HEADERS = \
     $$LIBMOPIQY_HEADERS \
     mopidyclient_p.h \
     jsonrpcmessage.h \
-    mopidymodelfactory.h
+    modeltranslator.h
 
 #
 # Install

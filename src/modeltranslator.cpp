@@ -1,4 +1,4 @@
-#include "mopidymodelfactory.h"
+#include "modeltranslator.h"
 
 #include <QJsonArray>
 #include <QJsonValue>
@@ -33,7 +33,7 @@ using namespace Mopidy;
 //    }
 //}
 
-QJsonObject MopidyModelFactory::encodeModel(const Artist &artist)
+QJsonObject ModelTranslator::toJson(const Artist &artist)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("Artist"));
@@ -43,12 +43,12 @@ QJsonObject MopidyModelFactory::encodeModel(const Artist &artist)
     return jo;
 }
 
-QJsonObject MopidyModelFactory::encodeModel(const Album &album)
+QJsonObject ModelTranslator::toJson(const Album &album)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("Album"));
     jo.insert("uri", album.uri);
-    jo.insert("artists", encodeArrayOf<Artist>(album.artists));
+    jo.insert("artists", toJsonArray<Artist>(album.artists));
     jo.insert("date", toMopidyDate(album.date));
     jo.insert("images", QJsonArray::fromStringList(album.images));
     jo.insert("musicbrainz_id", album.musicbrainz_id);
@@ -58,13 +58,13 @@ QJsonObject MopidyModelFactory::encodeModel(const Album &album)
     return jo;
 }
 
-QJsonObject MopidyModelFactory::encodeModel(const Track &track)
+QJsonObject ModelTranslator::toJson(const Track &track)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("Track"));
     jo.insert("uri", track.uri);
-    jo.insert("album", encodeModel(track.album));
-    jo.insert("artists", encodeArrayOf<Artist>(track.artists));
+    jo.insert("album", toJson(track.album));
+    jo.insert("artists", toJsonArray<Artist>(track.artists));
     jo.insert("bitrate", track.bitrate);
     jo.insert("date", toMopidyDate(track.date));
     jo.insert("disc_no", track.disc_no);
@@ -75,23 +75,23 @@ QJsonObject MopidyModelFactory::encodeModel(const Track &track)
     return jo;
 }
 
-QJsonObject MopidyModelFactory::encodeModel(const Playlist &playlist)
+QJsonObject ModelTranslator::toJson(const Playlist &playlist)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("Playlist"));
     jo.insert("uri", playlist.uri);
     jo.insert("name", playlist.name);
     jo.insert("last_modified", toMopidyDate(playlist.last_modified));
-    jo.insert("tracks", encodeArrayOf<Track>(playlist.tracks));
+    jo.insert("tracks", toJsonArray<Track>(playlist.tracks));
     return jo;
 }
 
-QJsonObject MopidyModelFactory::encodeModel(const TlTrack &tltrack)
+QJsonObject ModelTranslator::toJson(const TlTrack &tltrack)
 {
     QJsonObject jo;
     jo.insert("__model__", QString("TlTrack"));
     jo.insert("tlid", tltrack.tlid);
-    jo.insert("track", encodeModel(tltrack.track));
+    jo.insert("track", toJson(tltrack.track));
     return jo;
 }
 
@@ -99,7 +99,7 @@ QJsonObject MopidyModelFactory::encodeModel(const TlTrack &tltrack)
 /*
  * Decoders
  */
-bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Artist &artist)
+bool ModelTranslator::fromJson(const QJsonObject &jo, Artist &artist)
 {
     if(jo.value("__model__").toString() == "Artist")
     {
@@ -111,13 +111,13 @@ bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Artist &artist
     return false;
 }
 
-bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Album &album)
+bool ModelTranslator::fromJson(const QJsonObject &jo, Album &album)
 {
     if(jo.value("__model__").toString() == "Album")
     {
         album.uri = jo.value("uri").toString();
         album.name = jo.value("name").toString();
-        album.artists = parseArrayOf<Artist>(jo.value("artists").toArray());
+        album.artists = fromJsonArray<Artist>(jo.value("artists").toArray());
         album.num_tracks = jo.value("num_tracks").toDouble();
         album.num_discs = jo.value("num_discs").toDouble();
         album.date = getMopidyDate(jo.value("date").toString());
@@ -129,14 +129,14 @@ bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Album &album)
     return false;
 }
 
-bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Track &track)
+bool ModelTranslator::fromJson(const QJsonObject &jo, Track &track)
 {
     if(jo.value("__model__").toString() == "Track")
     {
         track.uri = jo.value("uri").toString();
         track.name = jo.value("name").toString();
-        track.artists = parseArrayOf<Artist>(jo.value("artists").toArray());
-        parseSingleObject(jo.value("album").toObject(), track.album);
+        track.artists = fromJsonArray<Artist>(jo.value("artists").toArray());
+        fromJson(jo.value("album").toObject(), track.album);
         track.track_no = jo.value("track_no").toDouble();
         track.disc_no = jo.value("disc_no").toDouble();
         track.date = getMopidyDate(jo.value("date").toString());
@@ -148,44 +148,44 @@ bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Track &track)
     return false;
 }
 
-bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Playlist &playlist)
+bool ModelTranslator::fromJson(const QJsonObject &jo, Playlist &playlist)
 {
     if(jo.value("__model__").toString() == "Playlist")
     {
         playlist.uri  = jo.value("uri").toString();
         playlist.name = jo.value("name").toString();
-        playlist.tracks = parseArrayOf<Track>(jo.value("tracks").toArray());
+        playlist.tracks = fromJsonArray<Track>(jo.value("tracks").toArray());
         playlist.last_modified = getMopidyDate(jo.value("last_modified").toString());
         return true;
     }
     return false;
 }
 
-bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, SearchResult &searchResult)
+bool ModelTranslator::fromJson(const QJsonObject &jo, SearchResult &searchResult)
 {
     if(jo.value("__model__").toString() == "SearchResult")
     {
         searchResult.uri  = jo.value("uri").toString();
-        searchResult.tracks = parseArrayOf<Track>(jo.value("tracks").toArray());
-        searchResult.albums = parseArrayOf<Album>(jo.value("albums").toArray());
-        searchResult.artists = parseArrayOf<Artist>(jo.value("artists").toArray());
+        searchResult.tracks = fromJsonArray<Track>(jo.value("tracks").toArray());
+        searchResult.albums = fromJsonArray<Album>(jo.value("albums").toArray());
+        searchResult.artists = fromJsonArray<Artist>(jo.value("artists").toArray());
         return true;
     }
     return false;
 }
 
-bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, TlTrack &tlTrack)
+bool ModelTranslator::fromJson(const QJsonObject &jo, TlTrack &tlTrack)
 {
     if(jo.value("__model__").toString() == "TlTrack")
     {
         tlTrack.tlid  = jo.value("tlid").toDouble();
-        parseSingleObject(jo.value("track").toObject(), tlTrack.track);
+        fromJson(jo.value("track").toObject(), tlTrack.track);
         return true;
     }
     return false;
 }
 
-bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Ref &ref)
+bool ModelTranslator::fromJson(const QJsonObject &jo, Ref &ref)
 {
     if(jo.value("__model__").toString() == "Ref")
     {
@@ -197,7 +197,7 @@ bool MopidyModelFactory::parseSingleObject(const QJsonObject &jo, Ref &ref)
     return false;
 }
 
-QDate MopidyModelFactory::getMopidyDate(const QString &strDate)
+QDate ModelTranslator::getMopidyDate(const QString &strDate)
 {
     if(strDate.isEmpty()) return QDate();
 
@@ -205,7 +205,7 @@ QDate MopidyModelFactory::getMopidyDate(const QString &strDate)
     return QDate::fromString(strDate, MOPIDY_LONG_DATE);
 }
 
-QString MopidyModelFactory::toMopidyDate(const QDate &date)
+QString ModelTranslator::toMopidyDate(const QDate &date)
 {
     if(!date.isValid()) return "";
     if(date.isNull()) return "";
@@ -213,7 +213,7 @@ QString MopidyModelFactory::toMopidyDate(const QDate &date)
     return date.toString(MOPIDY_LONG_DATE);
 }
 
-PlaybackState MopidyModelFactory::getState(const QString &stateStr)
+PlaybackState ModelTranslator::getState(const QString &stateStr)
 {
     if(stateStr.toLower() == "paused") return PlaybackState::Paused;
     if(stateStr.toLower() == "playing") return PlaybackState::Playing;
@@ -221,7 +221,7 @@ PlaybackState MopidyModelFactory::getState(const QString &stateStr)
     return PlaybackState::Stopped;
 }
 
-QJsonObject MopidyModelFactory::toJsonDict(const QHash<QString, QString> &d)
+QJsonObject ModelTranslator::toJsonDict(const QHash<QString, QString> &d)
 {
     QJsonObject jo;
 
@@ -231,7 +231,7 @@ QJsonObject MopidyModelFactory::toJsonDict(const QHash<QString, QString> &d)
     return jo;
 }
 
-RefType MopidyModelFactory::getRefType(const QString &typeStr)
+RefType ModelTranslator::getRefType(const QString &typeStr)
 {
     if(typeStr.toLower() == "album") return RefType::Album;
     if(typeStr.toLower() == "artist") return RefType::Artist;

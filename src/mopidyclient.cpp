@@ -1,7 +1,7 @@
 #include "mopidyclient.h"
 #include "mopidyclient_p.h"
 #include "jsonrpcmessage.h"
-#include "mopidymodelfactory.h"
+#include "modeltranslator.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -26,7 +26,6 @@ void MopidyClientPrivate::processEvent(const QJsonObject &eventObj)
     Q_Q(MopidyClient);
 
     QString evtName = eventObj.value("event").toString();
-    MopidyModelFactory mmf;
 
     if(evtName == "options_changed")
     {
@@ -36,12 +35,14 @@ void MopidyClientPrivate::processEvent(const QJsonObject &eventObj)
     {
         QString os = eventObj.value("old_state").toString();
         QString ns = eventObj.value("new_state").toString();
-        emit q->playbackStateChanged(mmf.getState(os), mmf.getState(ns));
+        emit q->playbackStateChanged(
+                    ModelTranslator::getState(os),
+                    ModelTranslator::getState(ns));
     }
     else if(evtName == "playlist_changed")
     {
         Mopidy::Playlist pl;
-        mmf.parseSingleObject(eventObj.value("playlist").toObject(), pl);
+        ModelTranslator::fromJson(eventObj.value("playlist").toObject(), pl);
         emit q->playlistChanged(pl);
     }
     else if(evtName == "playlists_loaded")
@@ -56,28 +57,28 @@ void MopidyClientPrivate::processEvent(const QJsonObject &eventObj)
     else if(evtName == "track_playback_ended")
     {
         Mopidy::TlTrack tlt;
-        mmf.parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        ModelTranslator::fromJson(eventObj.value("tl_track").toObject(), tlt);
         int tp = eventObj.value("time_position").toDouble();
         emit q->trackPlaybackEnded(tlt, tp);
     }
     else if(evtName == "track_playback_paused")
     {
         Mopidy::TlTrack tlt;
-        mmf.parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        ModelTranslator::fromJson(eventObj.value("tl_track").toObject(), tlt);
         int tp = eventObj.value("time_position").toDouble();
         emit q->trackPlaybackPaused(tlt, tp);
     }
     else if(evtName == "track_playback_resumed")
     {
         Mopidy::TlTrack tlt;
-        mmf.parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        ModelTranslator::fromJson(eventObj.value("tl_track").toObject(), tlt);
         int tp = eventObj.value("time_position").toDouble();
         emit q->trackPlaybackResumed(tlt, tp);
     }
     else if(evtName == "track_playback_started")
     {
         Mopidy::TlTrack tlt;
-        mmf.parseSingleObject(eventObj.value("tl_track").toObject(), tlt);
+        ModelTranslator::fromJson(eventObj.value("tl_track").toObject(), tlt);
         emit q->trackPlaybackStarted(tlt);
     }
     else if(evtName == "tracklist_changed")
@@ -213,11 +214,6 @@ QString MopidyClient::clientVersion() const
 
 //    //
 //    return id;
-//}
-
-//void RemoteClient::onSocketError(QAbstractSocket::SocketError error)
-//{
-//    emit connectionError(error, m_webSocket->errorString());
 //}
 
 //void RemoteClient::parseResponse(const QString &id, const QJsonValue &responseValue)

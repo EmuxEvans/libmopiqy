@@ -1,10 +1,8 @@
 #ifndef MOPIDYMODELS_H
 #define MOPIDYMODELS_H
 
-#include <QtCore/QDate>
-#include <QtCore/QList>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QDate>
+#include <QStringList>
 
 #include "libmopiqy_export.h"
 
