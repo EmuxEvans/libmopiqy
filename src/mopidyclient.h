@@ -6,6 +6,8 @@
 #include "libmopiqy_export.h"
 #include "mopidymodels.h"
 
+class CoreController;
+
 class MopidyClientPrivate;
 class LIBMOPIQY_EXPORT MopidyClient : public QObject
 {
@@ -19,6 +21,8 @@ public:
     void disconnectFromServer();
 
     QString clientVersion() const;
+
+    QSharedPointer<CoreController> coreController();
 
 signals:
     // connections signals

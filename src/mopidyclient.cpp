@@ -5,12 +5,12 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QUuid>
 
 
 MopidyClientPrivate::MopidyClientPrivate(MopidyClient *parent)
-    : QObject(parent), q_ptr(parent)
+    : QObject(parent), q_ptr(parent), coreController(new CoreControllerImpl(this))
 {
+    m_lastRequestID = 0;
     webSocket = new QWebSocket(QString("libmopiqy-%1").arg(GIT_VERSION));
     connect(webSocket, &QWebSocket::textMessageReceived, this, &MopidyClientPrivate::onTextMessageReceived);
     connect(webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
@@ -19,6 +19,21 @@ MopidyClientPrivate::MopidyClientPrivate(MopidyClient *parent)
 MopidyClientPrivate::~MopidyClientPrivate()
 {
     delete webSocket;
+}
+
+void MopidyClientPrivate::sendRequest(std::function<void(QJsonValue)> processFx, const QString &method, const QJsonObject &params)
+{
+    JsonRpcMessage message = JsonRpcMessage::build_request(method, ++m_lastRequestID, params);
+    requestsPool.insert(m_lastRequestID, processFx);
+    QByteArray data = message.toJson();
+    webSocket->sendTextMessage(data);
+}
+
+void MopidyClientPrivate::sendNotification(const QString &method, const QJsonObject &params)
+{
+    JsonRpcMessage message = JsonRpcMessage::build_notification(method, params);
+    QByteArray data = message.toJson();
+    webSocket->sendTextMessage(data);
 }
 
 void MopidyClientPrivate::processEvent(const QJsonObject &eventObj)
@@ -134,7 +149,10 @@ void MopidyClientPrivate::onTextMessageReceived(const QString &message)
             return;
         }
 
-        // TODO : implement the most important !
+        // Process response
+        int rid = jrm.id();
+        if(requestsPool.contains(rid))
+                requestsPool.take(rid)(jrm.result());
     }
 }
 
@@ -183,44 +201,8 @@ QString MopidyClient::clientVersion() const
     return QString(GIT_VERSION);
 }
 
-//QString RemoteClient::sendRequest(QJsonObject request, const bool &isNotification, Mopiqy::ControllerInterface *ci)
-//{
-//    QString id("");
-
-//    // controller check
-//    if(!ci) return id;
-
-//    // update to JsonRpc
-//    request.insert("jsonrpc", QString("2.0"));
-
-//    if(!isNotification)
-//    {
-//        id = generateRandomString();
-//        request.insert("id", id);
-
-//        // append to queries list
-//        m_mapMsg.insert(id, ci);
-//    }
-
-//    /*
-//     * Send to socket
-//     */
-//    QJsonDocument jsDoc(request);
-//    QString st2Send = jsDoc.toJson(QJsonDocument::Compact);
-
-//    m_webSocket->sendTextMessage(st2Send);
-
-//    // TODO: Check what have been sent
-
-//    //
-//    return id;
-//}
-
-//void RemoteClient::parseResponse(const QString &id, const QJsonValue &responseValue)
-//{
-//    if(m_mapMsg.contains(id))
-//    {
-//        ControllerInterface *ci = m_mapMsg.take(id);
-//        ci->processResponse(id, responseValue);
-//    }
-//}
+QSharedPointer<CoreController> MopidyClient::coreController()
+{
+    Q_D(MopidyClient);
+    return d->coreController;
+}

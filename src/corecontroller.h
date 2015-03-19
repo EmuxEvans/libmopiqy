@@ -1,23 +1,27 @@
+#ifndef CORECONTROLLER_H
+#define CORECONTROLLER_H
 
+#include <QObject>
 
 class CoreController : public QObject
 {
     Q_OBJECT
 
 public:
-    CoreController(RemoteClient *remoteClient);
     ~CoreController();
 
 public slots:
-    /*
-     * functions from Core API
-     */
-    void describe();
-    void get_uri_schemes();
-    void get_version();
+    virtual void describe();
+    virtual void getUriSchemes();
+    virtual void getVersion();
 
 signals:
-    void describe(const QJsonObject &desc);
-    void onVersion(const QString &version);
-    void onUriSchemes(const QStringList &uris);
+    void describeReceived(const QJsonObject &desc);
+    void uriSchemesReceived(const QStringList &uris);
+    void versionReceived(const QString &version);
+
+protected:
+    CoreController(QObject *parent = 0);
 };
+
+#endif //CORECONTROLLER_H

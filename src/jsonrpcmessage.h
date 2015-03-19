@@ -30,6 +30,8 @@ public:
         Error
     };
 
+    // ctor
+    JsonRpcMessage();
     // copy constructor
     JsonRpcMessage(const JsonRpcMessage &other);
     JsonRpcMessage& operator=(const JsonRpcMessage &other);
@@ -37,7 +39,7 @@ public:
     ~JsonRpcMessage();
 
     // builders
-    static JsonRpcMessage build_request(const QString &method, const QString &id, const QJsonObject &params = QJsonObject());
+    static JsonRpcMessage build_request(const QString &method, const int &id, const QJsonObject &params = QJsonObject());
     static JsonRpcMessage build_notification(const QString &method, const QJsonObject &params = QJsonObject());
 
     // information about this message
@@ -45,7 +47,7 @@ public:
     bool isValid() const;
 
     // request + response + error
-    QString id() const;
+    int id() const;
 
     // request + notification
     QString method() const;
@@ -64,9 +66,6 @@ public:
     static JsonRpcMessage fromJson(const QJsonObject &jsonObj);
 
 private:
-    // ctor
-    JsonRpcMessage();
-    //
     QJsonObject m_jsObject;
     MessageType m_msgType;
 };

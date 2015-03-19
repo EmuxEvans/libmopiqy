@@ -36,12 +36,12 @@ JsonRpcMessage &JsonRpcMessage::operator=(const JsonRpcMessage &other)
 JsonRpcMessage::~JsonRpcMessage()
 { }
 
-JsonRpcMessage JsonRpcMessage::build_request(const QString &method, const QString &id, const QJsonObject &params)
+JsonRpcMessage JsonRpcMessage::build_request(const QString &method, const int &id, const QJsonObject &params)
 {
     JsonRpcMessage request;
 
     // sanity checks
-    if(method.isEmpty() || id.isEmpty())
+    if(method.isEmpty())
         return request;
 
     // create object
@@ -81,15 +81,15 @@ bool JsonRpcMessage::isValid() const
     return (m_msgType != MessageType::Invalid);
 }
 
-QString JsonRpcMessage::id() const
+int JsonRpcMessage::id() const
 {
     if(m_msgType == MessageType::Notification)
-        return QString();
+        return -1;
 
     const QJsonValue &jvId = m_jsObject.value(CSK_ID);
     if(jvId.isDouble())
-        return QString::number(jvId.toDouble());
-    return jvId.toString();
+        return jvId.toDouble();
+    return jvId.toString().toInt();
 }
 
 QString JsonRpcMessage::method() const
