@@ -7,6 +7,7 @@
 #include "mopidymodels.h"
 
 class CoreController;
+class LibraryController;
 
 class MopidyClientPrivate;
 class LIBMOPIQY_EXPORT MopidyClient : public QObject

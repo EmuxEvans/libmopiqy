@@ -6,14 +6,10 @@
 
 CoreControllerImpl::CoreControllerImpl(MopidyClientPrivate *parent)
     : CoreController(), m_mcp(parent)
-{
-
-}
+{ }
 
 CoreControllerImpl::~CoreControllerImpl()
-{
-
-}
+{ }
 
 void CoreControllerImpl::pr_describe(const QJsonValue &response)
 {
@@ -73,34 +69,3 @@ void CoreController::getUriSchemes()
 
 void CoreController::getVersion()
 { }
-
-//void CoreController::processJsonResponse(const int &idt, const QJsonValue &jv)
-//{
-//    switch(idt)
-//    {
-//    case CC_DESCRIBE:
-//    {
-//        emit onDescribe(jv.toObject());
-//    }
-//        break;
-
-//    case CC_URI_SCHEMES:
-//    {
-//        QStringList uris;
-//        foreach(QJsonValue jv, jv.toArray())
-//            uris << jv.toString();
-//        emit onUriSchemes(uris);
-//    }
-//        break;
-
-//    case CC_VERSION:
-//    {
-//        emit onVersion(jv.toString());
-//    }
-//        break;
-
-//    default:
-//        qDebug() << "[CoreController]" << idt << jv;
-//        break;
-//    }
-//}

@@ -1,5 +1,5 @@
-#ifndef CORECONTROLLERIMPL_H
-#define CORECONTROLLERIMPL_H
+#ifndef CORECONTROLLERIMPL_P_H
+#define CORECONTROLLERIMPL_P_H
 
 #include "corecontroller.h"
 
@@ -10,7 +10,7 @@ class CoreControllerImpl : public CoreController
     Q_OBJECT
 
 public:
-    CoreControllerImpl(MopidyClientPrivate *parent = 0);
+    CoreControllerImpl(MopidyClientPrivate *parent);
     ~CoreControllerImpl();
 
     // process responses
@@ -27,4 +27,4 @@ private:
     MopidyClientPrivate *m_mcp;
 };
 
-#endif //CORECONTROLLER_H
+#endif //CORECONTROLLER_P_H

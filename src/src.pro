@@ -13,20 +13,23 @@ SOURCES = \
     mopidyclient.cpp \
     jsonrpcmessage.cpp \
     modeltranslator.cpp \
-    corecontroller.cpp
+    corecontroller.cpp \
+    librarycontroller.cpp
 
 LIBMOPIQY_HEADERS = \
     libmopiqy_export.h \
     mopidymodels.h \
     mopidyclient.h \
-    corecontroller.h
+    corecontroller.h \
+    librarycontroller.h
 
 HEADERS = \
     $$LIBMOPIQY_HEADERS \
     mopidyclient_p.h \
     jsonrpcmessage.h \
     modeltranslator.h \
-    corecontrollerimpl.h
+    corecontrollerimpl.h \
+    librarycontrollerimpl.h
 
 #
 # Install

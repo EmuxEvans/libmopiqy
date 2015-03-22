@@ -2,8 +2,9 @@
 #define CORECONTROLLER_H
 
 #include <QObject>
+#include "libmopiqy_export.h"
 
-class CoreController : public QObject
+class LIBMOPIQY_EXPORT CoreController : public QObject
 {
     Q_OBJECT
 
