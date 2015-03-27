@@ -17,13 +17,6 @@ void LibraryControllerImpl::pr_browse(const QJsonValue &response)
     emit browseResult(refs);
 }
 
-void LibraryControllerImpl::pr_findExact(const QJsonValue &response)
-{
-    Mopidy::SearchResult sr;
-    ModelTranslator::fromJson(response.toObject(), sr);
-    emit findResult(sr);
-}
-
 void LibraryControllerImpl::pr_lookup(const QJsonValue &response)
 {
     Mopidy::Tracks tracks = ModelTranslator::fromJsonArray<Mopidy::Track>(response.toArray());
@@ -48,15 +41,10 @@ void LibraryControllerImpl::browse(const QString &uri)
                 "core.library.browse", params);
 }
 
-void LibraryControllerImpl::findExact(const QHash<QString, QString> &query, const QStringList &uris)
-{
-//"core.library.find_exact"
-}
-
-void LibraryControllerImpl::lookup(const QString &uri)
+void LibraryControllerImpl::lookup(const QStringList &uris)
 {
     QJsonObject params;
-    if(!uri.isEmpty()) params.insert("uri", uri);
+    if(!uris.isEmpty()) params.insert("uris", QJsonArray::fromStringList(uris));
 
     m_mcp->sendRequest(
                 std::bind(&LibraryControllerImpl::pr_lookup, this, std::placeholders::_1),
@@ -71,47 +59,12 @@ void LibraryControllerImpl::refresh(const QString &uri)
     m_mcp->sendNotification("core.library.refresh", params);
 }
 
-void LibraryControllerImpl::search(const QHash<QString, QString> &query, const QStringList &uris)
+void LibraryControllerImpl::search(const QHash<QString, QString> &query, const QStringList &uris, bool exact)
 {
-    // QJsonObject params;
-    // params.insert(query, )
 
-    // m_mcp->sendRequest(
-    //             std::bind(&CoreControllerImpl::pr_getVersion, this, std::placeholders::_1),
-    //             "core.library.search");
 }
 
-
-
-LibraryController::LibraryController(QObject *parent) : QObject(parent)
-{ }
-
-LibraryController::~LibraryController()
-{ }
-
-void LibraryController::browse(const QString &uri)
+void LibraryControllerImpl::getImages(const QStringList &uris)
 {
-    Q_UNUSED(uri)
-}
 
-void LibraryController::findExact(const QHash<QString, QString> &query, const QStringList &uris)
-{
-    Q_UNUSED(query)
-    Q_UNUSED(uris)
-}
-
-void LibraryController::lookup(const QString &uri)
-{
-    Q_UNUSED(uri)
-}
-
-void LibraryController::refresh(const QString &uri)
-{
-    Q_UNUSED(uri)
-}
-
-void LibraryController::search(const QHash<QString, QString> &query, const QStringList &uris)
-{
-    Q_UNUSED(query)
-    Q_UNUSED(uris)
 }

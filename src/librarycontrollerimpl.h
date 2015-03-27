@@ -21,10 +21,10 @@ public:
 
 public slots:
     void browse(const QString &uri = "");
-    void findExact(const QHash<QString, QString> &query, const QStringList &uris = QStringList());
-    void lookup(const QString &uri);
+    void lookup(const QStringList &uris);
     void refresh(const QString &uri = "");
-    void search(const QHash<QString, QString> &query, const QStringList &uris = QStringList());
+    void search(const QHash<QString, QString> &query, const QStringList &uris, bool exact);
+    void getImages(const QStringList &uris);
 
 private:
     MopidyClientPrivate *m_mcp;

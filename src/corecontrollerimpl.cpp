@@ -1,4 +1,3 @@
-#include "corecontroller.h"
 #include "corecontrollerimpl.h"
 #include "mopidyclient_p.h"
 
@@ -49,23 +48,3 @@ void CoreControllerImpl::getVersion()
                 std::bind(&CoreControllerImpl::pr_getVersion, this, std::placeholders::_1),
                 "core.get_version");
 }
-
-/*
- *
- *
- *
- */
-CoreController::CoreController(QObject *parent) : QObject(parent)
-{ }
-
-CoreController::~CoreController()
-{ }
-
-void CoreController::describe()
-{ }
-
-void CoreController::getUriSchemes()
-{ }
-
-void CoreController::getVersion()
-{ }

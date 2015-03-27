@@ -8,7 +8,9 @@
 
 
 MopidyClientPrivate::MopidyClientPrivate(MopidyClient *parent)
-    : QObject(parent), q_ptr(parent), coreController(new CoreControllerImpl(this))
+    : QObject(parent), q_ptr(parent),
+      coreController(new CoreControllerImpl(this)),
+      libraryController(new LibraryControllerImpl(this))
 {
     m_lastRequestID = 0;
     webSocket = new QWebSocket(QString("libmopiqy-%1").arg(GIT_VERSION));

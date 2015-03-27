@@ -97,6 +97,17 @@ namespace Mopidy {
         RefType type;
     };
     typedef QList<Ref> Refs;
+
+    /*
+     * New since 1.0
+     */
+    struct LIBMOPIQY_EXPORT Image
+    {
+        QString uri;
+        int width;
+        int height;
+    };
+    typedef QList<Image> Images;
 }
 
 #endif // MOPIDYMODELS_H

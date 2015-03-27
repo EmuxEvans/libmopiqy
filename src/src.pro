@@ -7,24 +7,30 @@ CONFIG  += C++11
 include(../version.pri)
 
 #
+# Public headers
+#
+LIBMOPIQY_INCDIR  = ../include/libmopiqy
+LIBMOPIQY_HEADERS = \
+    $${LIBMOPIQY_INCDIR}/libmopiqy_export.h \
+    $${LIBMOPIQY_INCDIR}/mopidymodels.h \
+    $${LIBMOPIQY_INCDIR}/mopidyclient.h \
+    $${LIBMOPIQY_INCDIR}/corecontroller.h \
+    $${LIBMOPIQY_INCDIR}/librarycontroller.h
+
+INCLUDEPATH += $${LIBMOPIQY_INCDIR}
+
+#
 # Sources
 #
 SOURCES = \
     mopidyclient.cpp \
     jsonrpcmessage.cpp \
     modeltranslator.cpp \
-    corecontroller.cpp \
-    librarycontroller.cpp
-
-LIBMOPIQY_HEADERS = \
-    libmopiqy_export.h \
-    mopidymodels.h \
-    mopidyclient.h \
-    corecontroller.h \
-    librarycontroller.h
+    corecontrollerimpl.cpp \
+    librarycontrollerimpl.cpp
 
 HEADERS = \
-    $$LIBMOPIQY_HEADERS \
+    $${LIBMOPIQY_HEADERS} \
     mopidyclient_p.h \
     jsonrpcmessage.h \
     modeltranslator.h \
