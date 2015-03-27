@@ -3,6 +3,9 @@
 
 #include <QJsonArray>
 
+CoreController::CoreController(QObject *parent) : QObject(parent)
+{ }
+
 CoreControllerImpl::CoreControllerImpl(MopidyClientPrivate *parent)
     : CoreController(), m_mcp(parent)
 { }

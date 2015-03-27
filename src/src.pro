@@ -30,7 +30,8 @@ SOURCES = \
     jsonrpcmessage.cpp \
     modeltranslator.cpp \
     corecontrollerimpl.cpp \
-    librarycontrollerimpl.cpp
+    librarycontrollerimpl.cpp \
+    mixercontrollerimpl.cpp
 
 HEADERS = \
     $${LIBMOPIQY_HEADERS} \
@@ -38,7 +39,8 @@ HEADERS = \
     jsonrpcmessage.h \
     modeltranslator.h \
     corecontrollerimpl.h \
-    librarycontrollerimpl.h
+    librarycontrollerimpl.h \
+    mixercontrollerimpl.h
 
 #
 # Install
