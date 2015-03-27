@@ -1,7 +1,7 @@
 #ifndef CORECONTROLLERIMPL_P_H
 #define CORECONTROLLERIMPL_P_H
 
-#include "corecontroller.h"
+#include "libmopiqy/corecontroller.h"
 
 class MopidyClientPrivate;
 

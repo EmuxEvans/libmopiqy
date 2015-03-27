@@ -2,8 +2,7 @@
 #define LIBRARYCONTROLLER_H
 
 #include <QObject>
-#include "libmopiqy_export.h"
-#include "mopidymodels.h"
+#include <libmopiqy/mopidymodels.h>
 
 class LIBMOPIQY_EXPORT LibraryController : public QObject
 {

@@ -9,13 +9,14 @@ include(../version.pri)
 #
 # Public headers
 #
-LIBMOPIQY_INCDIR  = ../include/libmopiqy
+LIBMOPIQY_INCDIR  = ../include
 LIBMOPIQY_HEADERS = \
-    $${LIBMOPIQY_INCDIR}/libmopiqy_export.h \
-    $${LIBMOPIQY_INCDIR}/mopidymodels.h \
-    $${LIBMOPIQY_INCDIR}/mopidyclient.h \
-    $${LIBMOPIQY_INCDIR}/corecontroller.h \
-    $${LIBMOPIQY_INCDIR}/librarycontroller.h
+    $${LIBMOPIQY_INCDIR}/libmopiqy/libmopiqy_export.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/mopidymodels.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/mopidyclient.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/corecontroller.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/librarycontroller.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/playlistcontroller.h
 
 INCLUDEPATH += $${LIBMOPIQY_INCDIR}
 

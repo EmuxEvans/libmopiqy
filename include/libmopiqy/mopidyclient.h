@@ -3,8 +3,7 @@
 
 #include <QObject>
 
-#include "libmopiqy_export.h"
-#include "mopidymodels.h"
+#include <libmopiqy/mopidymodels.h>
 
 class CoreController;
 class LibraryController;

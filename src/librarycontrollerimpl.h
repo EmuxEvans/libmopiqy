@@ -1,7 +1,7 @@
 #ifndef LIBRARYCONTROLLERIMPL_P_H
 #define LIBRARYCONTROLLERIMPL_P_H
 
-#include "librarycontroller.h"
+#include "libmopiqy/librarycontroller.h"
 
 class MopidyClientPrivate;
 

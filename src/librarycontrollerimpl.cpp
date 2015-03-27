@@ -1,4 +1,3 @@
-#include "librarycontroller.h"
 #include "librarycontrollerimpl.h"
 #include "mopidyclient_p.h"
 #include "modeltranslator.h"

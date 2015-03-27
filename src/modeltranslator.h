@@ -5,7 +5,7 @@
 #include <QJsonObject>
 #include <QStringList>
 
-#include "mopidymodels.h"
+#include "libmopiqy/mopidymodels.h"
 
 class ModelTranslator
 {

@@ -4,7 +4,7 @@
 #include <QDate>
 #include <QStringList>
 
-#include "libmopiqy_export.h"
+#include <libmopiqy/libmopiqy_export.h>
 
 namespace Mopidy {
 

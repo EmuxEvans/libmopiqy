@@ -1,4 +1,4 @@
-#include "mopidyclient.h"
+#include "libmopiqy/mopidyclient.h"
 #include "mopidyclient_p.h"
 #include "jsonrpcmessage.h"
 #include "modeltranslator.h"
