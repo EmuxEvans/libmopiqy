@@ -5,8 +5,14 @@
 
 #include <libmopiqy/mopidymodels.h>
 
+// All available controllers since Mopidy 1.0.0
 class CoreController;
+class HistoryController;
 class LibraryController;
+class MixerController;
+class PlaybackController;
+class PlaylistsController;
+class TracklistController;
 
 class MopidyClientPrivate;
 class LIBMOPIQY_EXPORT MopidyClient : public QObject
@@ -23,6 +29,7 @@ public:
     QString clientVersion() const;
 
     QSharedPointer<CoreController> coreController();
+    QSharedPointer<LibraryController> libraryController();
 
 signals:
     // connections signals

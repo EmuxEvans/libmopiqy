@@ -208,3 +208,9 @@ QSharedPointer<CoreController> MopidyClient::coreController()
     Q_D(MopidyClient);
     return d->coreController;
 }
+
+QSharedPointer<LibraryController> MopidyClient::libraryController()
+{
+    Q_D(MopidyClient);
+    return d->libraryController;
+}

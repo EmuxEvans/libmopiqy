@@ -16,7 +16,9 @@ LIBMOPIQY_HEADERS = \
     $${LIBMOPIQY_INCDIR}/libmopiqy/mopidyclient.h \
     $${LIBMOPIQY_INCDIR}/libmopiqy/corecontroller.h \
     $${LIBMOPIQY_INCDIR}/libmopiqy/librarycontroller.h \
-    $${LIBMOPIQY_INCDIR}/libmopiqy/playlistcontroller.h
+    $${LIBMOPIQY_INCDIR}/libmopiqy/playlistcontroller.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/historycontroller.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/mixercontroller.h
 
 INCLUDEPATH += $${LIBMOPIQY_INCDIR}
 
