@@ -27,33 +27,26 @@
       <widget class="QLineEdit" name="leGetVersion"/>
      </item>
      <item row="1" column="0">
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="btGetUriSchemes">
        <property name="text">
-        <string>PushButton</string>
+        <string>GetUriSchemes</string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="btDescribe">
        <property name="text">
-        <string>PushButton</string>
+        <string>Describe</string>
        </property>
       </widget>
      </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="leGetUriSchemes"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPlainTextEdit" name="pteDescribe"/>
+     </item>
     </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>135</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

@@ -3,6 +3,7 @@
 #include "jsonrpcmessage.h"
 #include "modeltranslator.h"
 
+#include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -25,6 +26,13 @@ MopidyClientPrivate::~MopidyClientPrivate()
 
 void MopidyClientPrivate::sendRequest(std::function<void(QJsonValue)> processFx, const QString &method, const QJsonObject &params)
 {
+    Q_Q(MopidyClient);
+    if(webSocket->state() != QAbstractSocket::ConnectedState)
+    {
+        emit q->connectionError(-1, "Client is not connected to Mopidy");
+        return;
+    }
+
     JsonRpcMessage message = JsonRpcMessage::build_request(method, ++m_lastRequestID, params);
     requestsPool.insert(m_lastRequestID, processFx);
     QByteArray data = message.toJson();
@@ -163,7 +171,6 @@ void MopidyClientPrivate::onError(QAbstractSocket::SocketError socketError)
     Q_Q(MopidyClient);
     emit q->connectionError(socketError, webSocket->errorString());
 }
-
 
 MopidyClient::MopidyClient(QObject *parent)
     : QObject(parent), d_ptr(new MopidyClientPrivate(this))

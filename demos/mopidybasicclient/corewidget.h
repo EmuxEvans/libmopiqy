@@ -20,7 +20,11 @@ public:
 
 private slots:
     void on_btGetVersion_clicked();
+    void on_btGetUriSchemes_clicked();
+    void on_btDescribe_clicked();
     void onGetVersionReceived(const QString &version);
+    void onGetUriSchemesReceived(const QStringList &schemes);
+    void onDescribeReceived(const QString &desc);
 
 private:
     Ui::CoreWidget *m_ui;

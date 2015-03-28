@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_client = new MopidyClient(this);
     connect(m_client, &MopidyClient::clientConnected, this, &MainWindow::onClientConnected);
     connect(m_client, &MopidyClient::clientDisconnected, this, &MainWindow::onClientDisconnected);
+    connect(m_client, &MopidyClient::protocolError, this, &MainWindow::onClientError);
+    connect(m_client, &MopidyClient::connectionError, this, &MainWindow::onClientError);
 
     //
     CoreWidget *coreWidget = new CoreWidget(this);
@@ -29,12 +31,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::onClientConnected()
 {
-    qDebug() << "connected" << m_client->clientVersion();
+    onClientError(0, QString("Connected with libmopidy %1").arg(m_client->clientVersion()));
 }
 
 void MainWindow::onClientDisconnected()
 {
-    qDebug() << "Disconnected";
+    onClientError(0, "Disconnected");
+}
+
+void MainWindow::onClientError(int code, QString message)
+{
+    m_ui->lwError->addItem(QString("[%1] %2: %3")
+                           .arg(QDateTime::currentDateTime().toString())
+                           .arg(code)
+                           .arg(message));
 }
 
 void MainWindow::on_btConnect_clicked()

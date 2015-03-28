@@ -2,7 +2,7 @@ TEMPLATE = lib
 QT       = core websockets
 TARGET   = $$qtLibraryTarget(mopiqy)
 DEFINES += LIBMOPIQY_SHARED
-CONFIG  += C++11
+CONFIG  += c++11
 
 include(../version.pri)
 

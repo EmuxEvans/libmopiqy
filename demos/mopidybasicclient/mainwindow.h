@@ -20,6 +20,7 @@ public:
 private slots:
     void onClientConnected();
     void onClientDisconnected();
+    void onClientError(int code, QString message);
     void on_btConnect_clicked();
     void on_btDisconnect_clicked();
 

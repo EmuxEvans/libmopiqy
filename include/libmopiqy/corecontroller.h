@@ -14,7 +14,7 @@ public slots:
     virtual void getVersion() = 0;
 
 signals:
-    void describeReceived(const QJsonObject &desc);
+    void describeReceived(const QString &desc);
     void uriSchemesReceived(const QStringList &uris);
     void versionReceived(const QString &version);
 

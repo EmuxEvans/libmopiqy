@@ -2,6 +2,7 @@
 #include "mopidyclient_p.h"
 
 #include <QJsonArray>
+#include <QJsonDocument>
 
 CoreController::CoreController(QObject *parent) : QObject(parent)
 { }
@@ -15,7 +16,8 @@ CoreControllerImpl::~CoreControllerImpl()
 
 void CoreControllerImpl::pr_describe(const QJsonValue &response)
 {
-    emit describeReceived(response.toObject());
+    QJsonDocument jdoc(response.toObject());
+    emit describeReceived(jdoc.toJson());
 }
 
 void CoreControllerImpl::pr_getUriSchemes(const QJsonValue &response)

@@ -1,20 +1,16 @@
 # Base version number
 VERSION = 0.0.0
 
-# Need to discard STDERR so get path to NULL device
-NULL_DEVICE = /dev/null
-win32: NULL_DEVICE = NUL # Windows doesn't have /dev/null but has NUL
-
 # Need to call git with manually specified paths to repository
 BASE_GIT_COMMAND = git --work-tree $$PWD
 
 # Trying to get version from git tag / revision
-GIT_VERSION = $$system($$BASE_GIT_COMMAND describe --always --tags 2> $$NULL_DEVICE)
+GIT_VERSION = $$system($$BASE_GIT_COMMAND describe --always --tags)
 
 # Check if we have a valid version
 VERSION_FOUND = $$find(GIT_VERSION,\d+\.\d+\.\d+)
 isEmpty(VERSION_FOUND) {
-    GIT_COMMIT_COUNT = $$system($$BASE_GIT_COMMAND rev-list HEAD --count 2> $$NULL_DEVICE)
+    GIT_COMMIT_COUNT = $$system($$BASE_GIT_COMMAND rev-list HEAD --count)
     GIT_VERSION = $$VERSION-$$GIT_COMMIT_COUNT
 }
 
