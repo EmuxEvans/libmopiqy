@@ -8,6 +8,7 @@
 
 #include "corecontrollerimpl.h"
 #include "librarycontrollerimpl.h"
+#include "mixercontrollerimpl.h"
 
 class MopidyClient;
 class MopidyClientPrivate : public QObject
@@ -25,6 +26,7 @@ public:
     QWebSocket *webSocket;
     QSharedPointer<CoreControllerImpl> coreController;
     QSharedPointer<LibraryControllerImpl> libraryController;
+    QSharedPointer<MixerControllerImpl> mixerController;
 
     //
     int m_lastRequestID;

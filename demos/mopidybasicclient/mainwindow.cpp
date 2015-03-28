@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 #include "corewidget.h"
+#include "mixerwidget.h"
 
 #include "libmopiqy/corecontroller.h"
 
@@ -21,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
     CoreWidget *coreWidget = new CoreWidget(this);
     coreWidget->setCoreController(m_client->coreController());
     m_ui->tabWidget->addTab(coreWidget, "Core");
+    MixerWidget *mixerWidget = new MixerWidget(this);
+    mixerWidget->setMixerController(m_client->mixerController());
+    m_ui->tabWidget->addTab(mixerWidget, "Mixer");
 }
 
 MainWindow::~MainWindow()

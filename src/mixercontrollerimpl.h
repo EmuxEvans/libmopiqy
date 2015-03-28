@@ -13,6 +13,12 @@ public:
     MixerControllerImpl(MopidyClientPrivate *parent);
     ~MixerControllerImpl();
 
+    // process responses
+    void pr_getMute(const QJsonValue &response);
+    void pr_setMute(const QJsonValue &response);
+    void pr_getVolume(const QJsonValue &response);
+    void pr_setVolume(const QJsonValue &response);
+
 public slots:
     void getMute();
     void setMute(bool);

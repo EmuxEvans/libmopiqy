@@ -11,7 +11,8 @@
 MopidyClientPrivate::MopidyClientPrivate(MopidyClient *parent)
     : QObject(parent), q_ptr(parent),
       coreController(new CoreControllerImpl(this)),
-      libraryController(new LibraryControllerImpl(this))
+      libraryController(new LibraryControllerImpl(this)),
+      mixerController(new MixerControllerImpl(this))
 {
     m_lastRequestID = 0;
     webSocket = new QWebSocket(QString("libmopiqy-%1").arg(GIT_VERSION));
@@ -220,4 +221,10 @@ QSharedPointer<LibraryController> MopidyClient::libraryController()
 {
     Q_D(MopidyClient);
     return d->libraryController;
+}
+
+QSharedPointer<MixerController> MopidyClient::mixerController()
+{
+    Q_D(MopidyClient);
+    return d->mixerController;
 }

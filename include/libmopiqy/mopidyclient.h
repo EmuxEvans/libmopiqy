@@ -30,6 +30,7 @@ public:
 
     QSharedPointer<CoreController> coreController();
     QSharedPointer<LibraryController> libraryController();
+    QSharedPointer<MixerController> mixerController();
 
 signals:
     // connections signals
