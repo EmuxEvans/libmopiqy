@@ -15,10 +15,12 @@ LIBMOPIQY_HEADERS = \
     $${LIBMOPIQY_INCDIR}/libmopiqy/mopidymodels.h \
     $${LIBMOPIQY_INCDIR}/libmopiqy/mopidyclient.h \
     $${LIBMOPIQY_INCDIR}/libmopiqy/corecontroller.h \
-    $${LIBMOPIQY_INCDIR}/libmopiqy/librarycontroller.h \
-    $${LIBMOPIQY_INCDIR}/libmopiqy/playlistcontroller.h \
     $${LIBMOPIQY_INCDIR}/libmopiqy/historycontroller.h \
-    $${LIBMOPIQY_INCDIR}/libmopiqy/mixercontroller.h
+    $${LIBMOPIQY_INCDIR}/libmopiqy/librarycontroller.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/mixercontroller.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/playbackcontroller.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/playlistscontroller.h \
+    $${LIBMOPIQY_INCDIR}/libmopiqy/tracklistcontroller.h
 
 INCLUDEPATH += $${LIBMOPIQY_INCDIR}
 
@@ -30,8 +32,12 @@ SOURCES = \
     jsonrpcmessage.cpp \
     modeltranslator.cpp \
     corecontrollerimpl.cpp \
+    historycontrollerimpl.cpp \
     librarycontrollerimpl.cpp \
-    mixercontrollerimpl.cpp
+    mixercontrollerimpl.cpp \
+    playbackcontrollerimpl.cpp \
+    playlistscontrollerimpl.cpp \
+    tracklistcontrollerimpl.cpp
 
 HEADERS = \
     $${LIBMOPIQY_HEADERS} \
@@ -39,8 +45,12 @@ HEADERS = \
     jsonrpcmessage.h \
     modeltranslator.h \
     corecontrollerimpl.h \
+    historycontrollerimpl.h \
     librarycontrollerimpl.h \
-    mixercontrollerimpl.h
+    mixercontrollerimpl.h \
+    playbackcontrollerimpl.h \
+    playlistscontrollerimpl.h \
+    tracklistcontrollerimpl.h
 
 #
 # Install

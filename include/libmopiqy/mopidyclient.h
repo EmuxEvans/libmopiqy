@@ -29,8 +29,12 @@ public:
     QString clientVersion() const;
 
     QSharedPointer<CoreController> coreController();
+    QSharedPointer<HistoryController> historyController();
     QSharedPointer<LibraryController> libraryController();
     QSharedPointer<MixerController> mixerController();
+    QSharedPointer<PlaybackController> playbackController();
+    QSharedPointer<PlaylistsController> playlistsController();
+    QSharedPointer<TracklistController> tracklistController();
 
 signals:
     // connections signals

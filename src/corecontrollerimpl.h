@@ -1,5 +1,5 @@
-#ifndef CORECONTROLLERIMPL_P_H
-#define CORECONTROLLERIMPL_P_H
+#ifndef CORECONTROLLERIMPL_H
+#define CORECONTROLLERIMPL_H
 
 #include "libmopiqy/corecontroller.h"
 
@@ -27,4 +27,4 @@ private:
     MopidyClientPrivate *m_mcp;
 };
 
-#endif //CORECONTROLLER_P_H
+#endif //CORECONTROLLERIMPL_H

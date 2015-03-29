@@ -11,8 +11,12 @@
 MopidyClientPrivate::MopidyClientPrivate(MopidyClient *parent)
     : QObject(parent), q_ptr(parent),
       coreController(new CoreControllerImpl(this)),
+      historyController(new HistoryControllerImpl(this)),
       libraryController(new LibraryControllerImpl(this)),
-      mixerController(new MixerControllerImpl(this))
+      mixerController(new MixerControllerImpl(this)),
+      playbackController(new PlaybackControllerImpl(this)),
+      playlistsController(new PlaylistsControllerImpl(this)),
+      tracklistController(new TracklistControllerImpl(this))
 {
     m_lastRequestID = 0;
     webSocket = new QWebSocket(QString("libmopiqy-%1").arg(GIT_VERSION));
@@ -217,6 +221,12 @@ QSharedPointer<CoreController> MopidyClient::coreController()
     return d->coreController;
 }
 
+QSharedPointer<HistoryController> MopidyClient::historyController()
+{
+    Q_D(MopidyClient);
+    return d->historyController;
+}
+
 QSharedPointer<LibraryController> MopidyClient::libraryController()
 {
     Q_D(MopidyClient);
@@ -227,4 +237,22 @@ QSharedPointer<MixerController> MopidyClient::mixerController()
 {
     Q_D(MopidyClient);
     return d->mixerController;
+}
+
+QSharedPointer<PlaybackController> MopidyClient::playbackController()
+{
+    Q_D(MopidyClient);
+    return d->playbackController;
+}
+
+QSharedPointer<PlaylistsController> MopidyClient::playlistsController()
+{
+    Q_D(MopidyClient);
+    return d->playlistsController;
+}
+
+QSharedPointer<TracklistController> MopidyClient::tracklistController()
+{
+    Q_D(MopidyClient);
+    return d->tracklistController;
 }

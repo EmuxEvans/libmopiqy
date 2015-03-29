@@ -7,8 +7,12 @@
 #include <functional>
 
 #include "corecontrollerimpl.h"
+#include "historycontrollerimpl.h"
 #include "librarycontrollerimpl.h"
 #include "mixercontrollerimpl.h"
+#include "playbackcontrollerimpl.h"
+#include "playlistscontrollerimpl.h"
+#include "tracklistcontrollerimpl.h"
 
 class MopidyClient;
 class MopidyClientPrivate : public QObject
@@ -24,9 +28,14 @@ public:
     void processEvent(const QJsonObject &eventObj);
 
     QWebSocket *webSocket;
-    QSharedPointer<CoreControllerImpl> coreController;
-    QSharedPointer<LibraryControllerImpl> libraryController;
-    QSharedPointer<MixerControllerImpl> mixerController;
+
+    QSharedPointer<CoreController> coreController;
+    QSharedPointer<HistoryController> historyController;
+    QSharedPointer<LibraryController> libraryController;
+    QSharedPointer<MixerController> mixerController;
+    QSharedPointer<PlaybackController> playbackController;
+    QSharedPointer<PlaylistsController> playlistsController;
+    QSharedPointer<TracklistController> tracklistController;
 
     //
     int m_lastRequestID;
