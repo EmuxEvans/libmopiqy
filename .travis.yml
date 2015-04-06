@@ -2,17 +2,28 @@ language: cpp
 compiler: gcc
 
 before_install:
+  - wget -O - http://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
+  - sudo wget -O /etc/apt/sources.list.d/mopidy.list http://apt.mopidy.com/mopidy.list
   - sudo add-apt-repository ppa:beineri/opt-qt541 -y
   - sudo apt-get update -qq
+  - sudo pip install cpp-coveralls
+  - sudo pip ins
 
 install:
+  - sudo apt-get install mopidy
   - sudo apt-get install qt54base qt54websockets
 
 script:
   - source /opt/qt54/bin/qt54-env.sh
-  - qmake
+  - qmake CONFIG+=debug
   - make
+  - screen -d -m mopidy
+  - ./tests/tests
+
+after_success:
+  - cd $TRAVIS_BUILD_DIR/src && rm moc_*.gc* && gcov -r *.gcda -lp
+  - cd $TRAVIS_BUILD_DIR && coveralls -r src/ -b src/ -n
 
 env:
   global:
-    - LD_LIBRARY_PATH=/opt/qt54/lib
+    - LD_LIBRARY_PATH=/opt/qt54/lib:$TRAVIS_BUILD_DIR/src
