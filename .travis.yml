@@ -20,7 +20,7 @@ script:
   - ./tests/tests
 
 after_success:
-  - coveralls --build-root src/ --exclude tests --exclude demos --gcov-options '\-lpr'
+  - coveralls --build-root src/ --exclude tests --exclude demos --gcov-options '\-lp'
 
 env:
   global:
