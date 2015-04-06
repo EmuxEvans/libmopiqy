@@ -11,14 +11,17 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     corewidget.cpp \
-    mixerwidget.cpp
+    mixerwidget.cpp \
+    historywidget.cpp
 
 HEADERS += \
     mainwindow.h \
     corewidget.h \
-    mixerwidget.h
+    mixerwidget.h \
+    historywidget.h
 
 FORMS += \
     mainwindow.ui \
     corewidget.ui \
-    mixerwidget.ui
+    mixerwidget.ui \
+    historywidget.ui

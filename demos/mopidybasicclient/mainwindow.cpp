@@ -3,6 +3,7 @@
 
 #include "corewidget.h"
 #include "mixerwidget.h"
+#include "historywidget.h"
 
 #include "libmopiqy/corecontroller.h"
 
@@ -26,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
     MixerWidget *mixerWidget = new MixerWidget(this);
     mixerWidget->setMixerController(m_client->mixerController());
     m_ui->tabWidget->addTab(mixerWidget, "Mixer");
+    HistoryWidget *historyWidget = new HistoryWidget(this);
+    historyWidget->setHistoryController(m_client->historyController());
+    m_ui->tabWidget->addTab(historyWidget, "History");
 }
 
 MainWindow::~MainWindow()
