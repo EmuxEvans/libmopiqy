@@ -160,7 +160,30 @@ void MopidyClientPrivate::onTextMessageReceived(const QString &message)
         }
         if(jrm.type() == JsonRpcMessage::MessageType::Error)
         {
-            emit q->protocolError(static_cast<int>(jrm.errorCode()), jrm.errorMessage());
+            QString errorMessage = jrm.errorMessage();
+            const QJsonValue &errorData = jrm.errrorData();
+            if(!errorData.isNull())
+            {
+                switch(errorData.type())
+                {
+                case QJsonValue::Bool:
+                case QJsonValue::Double:
+                    errorMessage += ": " + QString::number(errorData.toInt());
+                    break;
+                case QJsonValue::String:
+                    errorMessage += ": " + errorData.toString();
+                    break;
+                case QJsonValue::Object:
+                {
+                    QJsonDocument jDocErr(errorData.toObject());
+                    errorMessage += ": " + jDocErr.toJson(QJsonDocument::Compact);
+                }
+                    break;
+
+                default:break;
+                }
+            }
+            emit q->protocolError(static_cast<int>(jrm.errorCode()), errorMessage);
             return;
         }
 
