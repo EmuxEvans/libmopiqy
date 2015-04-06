@@ -16,12 +16,12 @@ script:
   - source /opt/qt54/bin/qt54-env.sh
   - qmake CONFIG+=debug
   - make
-  - screen -d -m mopidy
+  - screen -dmS mopidy
   - ./tests/tests
+  - screen -X -S mopidy quit
 
 after_success:
-  - cd $TRAVIS_BUILD_DIR/src && rm moc_*.gc* && gcov -r *.gcda -lp
-  - cd $TRAVIS_BUILD_DIR && coveralls -r src/ -b src/ -n
+  - coveralls --build-root src/ --exclude tests --exclude demos --gcov-options '\-lpr'
 
 env:
   global:
