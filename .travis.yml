@@ -9,7 +9,7 @@ before_install:
   - sudo pip install cpp-coveralls
 
 install:
-  - sudo apt-get install mopidy
+  - sudo apt-get install mopidy screen
   - sudo apt-get install qt54base qt54websockets
 
 script:
