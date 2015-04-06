@@ -1,4 +1,9 @@
 language: cpp
-compiler:
-  - gcc
-script: qmake && make
+compiler: gcc
+
+before_install:
+  - sudo apt-get update -qq
+install:
+  - sudo apt-get install qt5-default
+script:
+  - qmake && make
