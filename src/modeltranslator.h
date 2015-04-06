@@ -38,6 +38,8 @@ public:
     static bool fromJson(const QJsonObject &jo, Mopidy::SearchResult &searchResult);
     static bool fromJson(const QJsonObject &jo, Mopidy::TlTrack &tlTrack);
     static bool fromJson(const QJsonObject &jo, Mopidy::Ref &ref);
+    static bool fromJson(const QJsonObject &jo, Mopidy::PlaybackState &state);
+    static bool fromJson(const QJsonObject &jo, Mopidy::Image &image);
 
     template<class T>
     static QList<T> fromJsonArray(const QJsonArray &ja)

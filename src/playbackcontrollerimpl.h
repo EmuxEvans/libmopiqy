@@ -18,6 +18,7 @@ public:
     void pr_getState(const QJsonValue &response);
     void pr_getStreamTitle(const QJsonValue &response);
     void pr_getTimePosition(const QJsonValue &response);
+    void pr_seek(const QJsonValue &response);
 
     // PlaybackController interface
 public slots:

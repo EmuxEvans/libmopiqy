@@ -10,29 +10,6 @@
 
 using namespace Mopidy;
 
-/*
- * Encoder
- */
-//QJsonObject Parser::searchLikeEncode(const QString &method, const QHash<QString, QString> &query, const QStringList &uris)
-//{
-//    QJsonObject jso;
-//    jso.insert("method", method);
-
-//    if(query.isEmpty() && uris.isEmpty())
-//    {
-//        return jso;
-//    }
-//    else
-//    {
-//        QJsonObject jsoParams;
-//        if(!query.isEmpty()) jsoParams.insert("query", toJsonDict(query));
-//        if(!uris.isEmpty()) jsoParams.insert("uris", QJsonArray::fromStringList(uris));
-//        jso.insert("params", jsoParams);
-
-//        return jso;
-//    }
-//}
-
 QJsonObject ModelTranslator::toJson(const Artist &artist)
 {
     QJsonObject jo;
@@ -192,6 +169,23 @@ bool ModelTranslator::fromJson(const QJsonObject &jo, Ref &ref)
         ref.uri = jo.value("uri").toString();
         ref.name = jo.value("name").toString();
         ref.type = getRefType(jo.value("type").toString());
+        return true;
+    }
+    return false;
+}
+
+bool ModelTranslator::fromJson(const QJsonObject &jo, PlaybackState &state)
+{
+    return false;
+}
+
+bool ModelTranslator::fromJson(const QJsonObject &jo, Image &image)
+{
+    if(jo.value("__model__").toString() == "Image")
+    {
+        image.uri = jo.value("uri").toString();
+        image.width = jo.value("width").toInt();
+        image.height = jo.value("height").toInt();
         return true;
     }
     return false;

@@ -17,6 +17,7 @@ public:
     void pr_findExact(const QJsonValue &response);
     void pr_lookup(const QJsonValue &response);
     void pr_search(const QJsonValue &response);
+    void pr_getImages(const QJsonValue &response);
 
 public slots:
     void browse(const QString &uri = "");

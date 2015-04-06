@@ -28,6 +28,12 @@ void LibraryControllerImpl::pr_search(const QJsonValue &response)
     emit searchResult(sr);
 }
 
+void LibraryControllerImpl::pr_getImages(const QJsonValue &response)
+{
+    Mopidy::Images images = ModelTranslator::fromJsonArray<Mopidy::Image>(response.toArray());
+    emit imagesResult(images);
+}
+
 void LibraryControllerImpl::browse(const QString &uri)
 {
     QJsonObject params;
@@ -63,5 +69,9 @@ void LibraryControllerImpl::search(const QHash<QString, QString> &query, const Q
 
 void LibraryControllerImpl::getImages(const QStringList &uris)
 {
+    QJsonObject params;
+    params.insert("uris", QJsonArray::fromStringList(uris));
 
+    sendRequest(std::bind(&LibraryControllerImpl::pr_getImages, this, std::placeholders::_1),
+                "core.library.get_images", params);
 }

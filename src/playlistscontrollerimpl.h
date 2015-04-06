@@ -15,10 +15,8 @@ public:
     // process responses
     void pr_asList(const QJsonValue &response);
     void pr_create(const QJsonValue &response);
-    void pr_deletePlaylist(const QJsonValue &response);
     void pr_getItems(const QJsonValue &response);
     void pr_lookup(const QJsonValue &response);
-    void pr_refresh(const QJsonValue &response);
     void pr_save(const QJsonValue &response);
 
 public slots:

@@ -29,6 +29,7 @@ signals:
     void stateReceived(const Mopidy::PlaybackState &state);
     void streamTitleReceived(const QString &streamTitle);
     void timePositionReceived(const int &timePosition);
+    void seekReceived(const bool &ack);
 };
 
 #endif //PLAYBACKCONTROLLER_H
