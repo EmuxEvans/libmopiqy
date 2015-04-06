@@ -32,14 +32,21 @@ MopidyClientPrivate::~MopidyClientPrivate()
 void MopidyClientPrivate::registerMopidyTypes()
 {
     qRegisterMetaType<Mopidy::Album>("Mopidy::Album");
+    qRegisterMetaType<Mopidy::Albums>("Mopidy::Albums");
     qRegisterMetaType<Mopidy::Artist>("Mopidy::Artist");
+    qRegisterMetaType<Mopidy::Artists>("Mopidy::Artists");
     qRegisterMetaType<Mopidy::History>("Mopidy::History");
     qRegisterMetaType<Mopidy::Image>("Mopidy::Image");
+    qRegisterMetaType<Mopidy::Images>("Mopidy::Images");
     qRegisterMetaType<Mopidy::Playlist>("Mopidy::Playlist");
+    qRegisterMetaType<Mopidy::Playlists>("Mopidy::Playlists");
     qRegisterMetaType<Mopidy::Ref>("Mopidy::Ref");
+    qRegisterMetaType<Mopidy::Refs>("Mopidy::Refs");
     qRegisterMetaType<Mopidy::SearchResult>("Mopidy::SearchResult");
     qRegisterMetaType<Mopidy::TlTrack>("Mopidy::TlTrack");
+    qRegisterMetaType<Mopidy::TlTracks>("Mopidy::TlTracks");
     qRegisterMetaType<Mopidy::Track>("Mopidy::Track");
+    qRegisterMetaType<Mopidy::Tracks>("Mopidy::Tracks");
 }
 
 void MopidyClientPrivate::sendRequest(std::function<void(QJsonValue)> processFx, const QString &method, const QJsonObject &params)

@@ -27,6 +27,8 @@ void TestMixerController::tstSetMute()
     controller->setMute(true);
 
     QVERIFY(spy.wait(500));
+    QList<QVariant> parameters = spy.takeFirst();
+    QVERIFY(parameters.at(0).toBool());
 }
 
 void TestMixerController::tstGetVolume()
@@ -51,6 +53,8 @@ void TestMixerController::tstSetVolume()
     controller->setVolume(45);
 
     QVERIFY(spy.wait(500));
+    QList<QVariant> parameters = spy.takeFirst();
+    QVERIFY(parameters.at(0).toBool());
 }
 
 void TestMixerController::cleanupTestCase()

@@ -10,7 +10,7 @@ class LIBMOPIQY_EXPORT LibraryController : public QObject
 
 public slots:
     virtual void browse(const QString &uri = "") = 0;
-    virtual void lookup(const QStringList &uris) = 0;
+    virtual void lookup(const QStringList &uris = QStringList()) = 0;
     virtual void refresh(const QString &uri = "") = 0;
     virtual void search(const QHash<QString, QString> &query, const QStringList &uris = QStringList(), bool exact = false) = 0;
     virtual void getImages(const QStringList &uris) = 0;

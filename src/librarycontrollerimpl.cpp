@@ -42,6 +42,7 @@ void LibraryControllerImpl::lookup(const QStringList &uris)
 {
     QJsonObject params;
     if(!uris.isEmpty()) params.insert("uris", QJsonArray::fromStringList(uris));
+    else params.insert("uris", QJsonValue::Null);
 
     sendRequest(std::bind(&LibraryControllerImpl::pr_lookup, this, std::placeholders::_1),
                 "core.library.lookup", params);

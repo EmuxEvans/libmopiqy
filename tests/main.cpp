@@ -5,6 +5,7 @@
 #include "testcorecontroller.h"
 #include "testhistorycontroller.h"
 #include "testmixercontroller.h"
+#include "testlibrarycontroller.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,4 +24,7 @@ int main(int argc, char *argv[])
 
     TestMixerController tMixerController;
     QTest::qExec(&tMixerController);
+
+    TestLibraryController tLibraryController;
+    QTest::qExec(&tLibraryController);
 }

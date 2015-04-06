@@ -12,10 +12,12 @@ SOURCES += \
     testmopidyclient.cpp \
     testcorecontroller.cpp \
     testhistorycontroller.cpp \
-    testmixercontroller.cpp
+    testmixercontroller.cpp \
+    testlibrarycontroller.cpp
 
 HEADERS += \
     testmopidyclient.h \
     testcorecontroller.h \
     testhistorycontroller.h \
-    testmixercontroller.h
+    testmixercontroller.h \
+    testlibrarycontroller.h
