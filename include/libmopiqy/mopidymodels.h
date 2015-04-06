@@ -108,6 +108,19 @@ namespace Mopidy {
         int height;
     };
     typedef QList<Image> Images;
+
+    typedef QMap<unsigned long, Mopidy::Ref> History;
 }
+
+//
+Q_DECLARE_METATYPE(Mopidy::Album)
+Q_DECLARE_METATYPE(Mopidy::Artist)
+Q_DECLARE_METATYPE(Mopidy::Image)
+Q_DECLARE_METATYPE(Mopidy::Playlist)
+Q_DECLARE_METATYPE(Mopidy::Ref)
+Q_DECLARE_METATYPE(Mopidy::SearchResult)
+Q_DECLARE_METATYPE(Mopidy::TlTrack)
+Q_DECLARE_METATYPE(Mopidy::Track)
+//Q_DECLARE_METATYPE(Mopidy::History)
 
 #endif // MOPIDYMODELS_H

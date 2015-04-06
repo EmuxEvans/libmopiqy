@@ -13,7 +13,7 @@ public slots:
     virtual void getLength() = 0;
 
 signals:
-    void historyReceived(const QMap<unsigned long, Mopidy::Ref> &);
+    void historyReceived(const Mopidy::History &history);
     void lengthReceived(const int &);
 };
 

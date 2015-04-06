@@ -3,6 +3,8 @@
 
 #include "testmopidyclient.h"
 #include "testcorecontroller.h"
+#include "testhistorycontroller.h"
+#include "testmixercontroller.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,4 +17,10 @@ int main(int argc, char *argv[])
 
     TestCoreController tCoreController;
     QTest::qExec(&tCoreController);
+
+    TestHistoryController tHistoryController;
+    QTest::qExec(&tHistoryController);
+
+    TestMixerController tMixerController;
+    QTest::qExec(&tMixerController);
 }

@@ -29,6 +29,19 @@ MopidyClientPrivate::~MopidyClientPrivate()
     delete webSocket;
 }
 
+void MopidyClientPrivate::registerMopidyTypes()
+{
+    qRegisterMetaType<Mopidy::Album>("Mopidy::Album");
+    qRegisterMetaType<Mopidy::Artist>("Mopidy::Artist");
+    qRegisterMetaType<Mopidy::History>("Mopidy::History");
+    qRegisterMetaType<Mopidy::Image>("Mopidy::Image");
+    qRegisterMetaType<Mopidy::Playlist>("Mopidy::Playlist");
+    qRegisterMetaType<Mopidy::Ref>("Mopidy::Ref");
+    qRegisterMetaType<Mopidy::SearchResult>("Mopidy::SearchResult");
+    qRegisterMetaType<Mopidy::TlTrack>("Mopidy::TlTrack");
+    qRegisterMetaType<Mopidy::Track>("Mopidy::Track");
+}
+
 void MopidyClientPrivate::sendRequest(std::function<void(QJsonValue)> processFx, const QString &method, const QJsonObject &params)
 {
     Q_Q(MopidyClient);
@@ -205,6 +218,8 @@ MopidyClient::MopidyClient(QObject *parent)
 {
     connect(d_ptr->webSocket, &QWebSocket::connected, this, &MopidyClient::clientConnected);
     connect(d_ptr->webSocket, &QWebSocket::disconnected, this, &MopidyClient::clientDisconnected);
+
+    d_ptr->registerMopidyTypes();
 }
 
 MopidyClient::~MopidyClient()

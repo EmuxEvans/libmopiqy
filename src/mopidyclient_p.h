@@ -23,6 +23,8 @@ public:
     MopidyClientPrivate(MopidyClient * parent);
     ~MopidyClientPrivate();
 
+    void registerMopidyTypes();
+
     void sendRequest(std::function<void(QJsonValue)> processFx, const QString &method, const QJsonObject &params = QJsonObject());
     void sendNotification(const QString &method, const QJsonObject &params = QJsonObject());
     void processEvent(const QJsonObject &eventObj);

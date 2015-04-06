@@ -10,8 +10,12 @@ LIBS += -L$$OUT_PWD/../src -l$$qtLibraryTarget(mopiqy)
 SOURCES += \
     main.cpp \
     testmopidyclient.cpp \
-    testcorecontroller.cpp
+    testcorecontroller.cpp \
+    testhistorycontroller.cpp \
+    testmixercontroller.cpp
 
 HEADERS += \
     testmopidyclient.h \
-    testcorecontroller.h
+    testcorecontroller.h \
+    testhistorycontroller.h \
+    testmixercontroller.h
