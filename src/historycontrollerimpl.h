@@ -2,10 +2,9 @@
 #define HISTORYCONTROLLERIMPL_H
 
 #include "libmopiqy/historycontroller.h"
+#include "basecontrollerimpl.h"
 
-class MopidyClientPrivate;
-
-class HistoryControllerImpl : public HistoryController
+class HistoryControllerImpl : public HistoryController, public BaseControllerImpl
 {
     Q_OBJECT
 
@@ -20,9 +19,6 @@ public:
 public slots:
     void getHistory();
     void getLength();
-
-private:
-    MopidyClientPrivate *m_mcp;
 };
 
 #endif //HISTORYCONTROLLERIMPL_H

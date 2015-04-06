@@ -2,10 +2,9 @@
 #define PLAYLISTSCONTROLLERIMPL_H
 
 #include "libmopiqy/playlistscontroller.h"
+#include "basecontrollerimpl.h"
 
-class MopidyClientPrivate;
-
-class PlaylistsControllerImpl : public PlaylistsController
+class PlaylistsControllerImpl : public PlaylistsController, public BaseControllerImpl
 {
     Q_OBJECT
 
@@ -30,9 +29,6 @@ public slots:
     void lookup(const QString &uri);
     void refresh(const QString &uri_scheme);
     void save(const Mopidy::Playlist &pl);
-
-private:
-    MopidyClientPrivate *m_mcp;
 };
 
 #endif //PLAYLISTSCONTROLLERIMPL_H

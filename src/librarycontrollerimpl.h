@@ -2,10 +2,9 @@
 #define LIBRARYCONTROLLERIMPL_P_H
 
 #include "libmopiqy/librarycontroller.h"
+#include "basecontrollerimpl.h"
 
-class MopidyClientPrivate;
-
-class LibraryControllerImpl : public LibraryController
+class LibraryControllerImpl : public LibraryController, public BaseControllerImpl
 {
     Q_OBJECT
 
@@ -25,9 +24,6 @@ public slots:
     void refresh(const QString &uri = "");
     void search(const QHash<QString, QString> &query, const QStringList &uris, bool exact);
     void getImages(const QStringList &uris);
-
-private:
-    MopidyClientPrivate *m_mcp;
 };
 
 #endif //LIBRARYCONTROLLER_P_H

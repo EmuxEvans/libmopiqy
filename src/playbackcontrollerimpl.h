@@ -2,10 +2,9 @@
 #define PLAYBACKCONTROLLERIMPL_H
 
 #include "libmopiqy/playbackcontroller.h"
+#include "basecontrollerimpl.h"
 
-class MopidyClientPrivate;
-
-class PlaybackControllerImpl : public PlaybackController
+class PlaybackControllerImpl : public PlaybackController, public BaseControllerImpl
 {
     Q_OBJECT
 
@@ -34,9 +33,6 @@ public slots:
     void resume();
     void seek(const int &timePosition);
     void stop();
-
-private:
-    MopidyClientPrivate *m_mcp;
 };
 
 #endif //PLAYBACKCONTROLLERIMPL_H

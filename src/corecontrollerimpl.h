@@ -2,10 +2,9 @@
 #define CORECONTROLLERIMPL_H
 
 #include "libmopiqy/corecontroller.h"
+#include "basecontrollerimpl.h"
 
-class MopidyClientPrivate;
-
-class CoreControllerImpl : public CoreController
+class CoreControllerImpl : public CoreController, public BaseControllerImpl
 {
     Q_OBJECT
 
@@ -22,9 +21,6 @@ public slots:
     void describe();
     void getUriSchemes();
     void getVersion();
-
-private:
-    MopidyClientPrivate *m_mcp;
 };
 
 #endif //CORECONTROLLERIMPL_H

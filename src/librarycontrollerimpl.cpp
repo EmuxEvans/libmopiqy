@@ -1,10 +1,9 @@
 #include "librarycontrollerimpl.h"
-#include "mopidyclient_p.h"
 #include "modeltranslator.h"
 
 
 LibraryControllerImpl::LibraryControllerImpl(MopidyClientPrivate *parent)
-    : LibraryController(), m_mcp(parent)
+    : LibraryController(), BaseControllerImpl(parent)
 { }
 
 LibraryControllerImpl::~LibraryControllerImpl()
@@ -35,8 +34,7 @@ void LibraryControllerImpl::browse(const QString &uri)
     if(!uri.isEmpty()) params.insert("uri", uri);
     else params.insert("uri", QJsonValue::Null);
 
-    m_mcp->sendRequest(
-                std::bind(&LibraryControllerImpl::pr_browse, this, std::placeholders::_1),
+    sendRequest(std::bind(&LibraryControllerImpl::pr_browse, this, std::placeholders::_1),
                 "core.library.browse", params);
 }
 
@@ -45,8 +43,7 @@ void LibraryControllerImpl::lookup(const QStringList &uris)
     QJsonObject params;
     if(!uris.isEmpty()) params.insert("uris", QJsonArray::fromStringList(uris));
 
-    m_mcp->sendRequest(
-                std::bind(&LibraryControllerImpl::pr_lookup, this, std::placeholders::_1),
+    sendRequest(std::bind(&LibraryControllerImpl::pr_lookup, this, std::placeholders::_1),
                 "core.library.lookup", params);
 }
 
@@ -55,7 +52,7 @@ void LibraryControllerImpl::refresh(const QString &uri)
     QJsonObject params;
     if(!uri.isEmpty()) params.insert("uri", uri);
 
-    m_mcp->sendNotification("core.library.refresh", params);
+    sendNotification("core.library.refresh", params);
 }
 
 void LibraryControllerImpl::search(const QHash<QString, QString> &query, const QStringList &uris, bool exact)

@@ -2,7 +2,7 @@
 
 
 PlaybackControllerImpl::PlaybackControllerImpl(MopidyClientPrivate *parent)
-    : PlaybackController(), m_mcp(parent)
+    : PlaybackController(), BaseControllerImpl(parent)
 { }
 
 PlaybackControllerImpl::~PlaybackControllerImpl()

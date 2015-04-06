@@ -2,10 +2,9 @@
 #define TRACKLISTCONTROLLERIMPL_H
 
 #include "libmopiqy/tracklistcontroller.h"
+#include "basecontrollerimpl.h"
 
-class MopidyClientPrivate;
-
-class TracklistControllerImpl : public TracklistController
+class TracklistControllerImpl : public TracklistController, public BaseControllerImpl
 {
     Q_OBJECT
 
@@ -54,9 +53,6 @@ public slots:
     void setSingle(const bool &single);
     void shuffle(const int &start, const int &stop);
     void slice(const int &start, const int &stop);
-
-private:
-    MopidyClientPrivate *m_mcp;
 };
 
 #endif //TRACKLISTCONTROLLERIMPL_H

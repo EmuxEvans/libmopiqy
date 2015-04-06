@@ -1,7 +1,7 @@
 #include "tracklistcontrollerimpl.h"
 
 TracklistControllerImpl::TracklistControllerImpl(MopidyClientPrivate *parent)
-    : TracklistController(), m_mcp(parent)
+    : TracklistController(), BaseControllerImpl(parent)
 { }
 
 TracklistControllerImpl::~TracklistControllerImpl()

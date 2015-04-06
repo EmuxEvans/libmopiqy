@@ -1,7 +1,7 @@
 #include "playlistscontrollerimpl.h"
 
 PlaylistsControllerImpl::PlaylistsControllerImpl(MopidyClientPrivate *parent)
-    : PlaylistsController(), m_mcp(parent)
+    : PlaylistsController(), BaseControllerImpl(parent)
 { }
 
 PlaylistsControllerImpl::~PlaylistsControllerImpl()

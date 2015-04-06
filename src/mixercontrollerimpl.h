@@ -2,10 +2,9 @@
 #define MIXERCONTROLLERIMPL_H
 
 #include "libmopiqy/mixercontroller.h"
+#include "basecontrollerimpl.h"
 
-class MopidyClientPrivate;
-
-class MixerControllerImpl : public MixerController
+class MixerControllerImpl : public MixerController, public BaseControllerImpl
 {
     Q_OBJECT
 
@@ -24,9 +23,6 @@ public slots:
     void setMute(bool);
     void getVolume();
     void setVolume(int);
-
-private:
-    MopidyClientPrivate *m_mcp;
 };
 
 #endif //MIXERCONTROLLER_H

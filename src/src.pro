@@ -31,6 +31,7 @@ SOURCES = \
     mopidyclient.cpp \
     jsonrpcmessage.cpp \
     modeltranslator.cpp \
+    basecontrollerimpl.cpp \
     corecontrollerimpl.cpp \
     historycontrollerimpl.cpp \
     librarycontrollerimpl.cpp \
@@ -44,6 +45,7 @@ HEADERS = \
     mopidyclient_p.h \
     jsonrpcmessage.h \
     modeltranslator.h \
+    basecontrollerimpl.h \
     corecontrollerimpl.h \
     historycontrollerimpl.h \
     librarycontrollerimpl.h \
