@@ -1,5 +1,7 @@
 # libmopiqy : Qt client library for Mopidy #
 
+[![Build Status](https://travis-ci.org/AlexandrePTJ/libmopiqy.svg)](https://travis-ci.org/AlexandrePTJ/libmopiqy)
+
 [Mopidy](http://www.mopidy.com/) is a music server which can play music both from multiple sources, like your local hard drive, radio streams, and from Spotify and SoundCloud.
 
 This library handle connection to mopidy server through websocket and implement its core API functions.
@@ -20,6 +22,6 @@ Libmopiqy is a simple Qt5 project, so it can be build easily using command line 
 
 ## Documentation ##
 
-An exampled called [PlaylistsPlayer](https://github.com/AlexandrePTJ/libmopiqy/tree/master/demos/playlistsplayer) is available to show how the library works.
+An exampled called [MopidyBasicClient](https://github.com/AlexandrePTJ/libmopiqy/tree/master/demos/mopidybasicclient) is available to show how the library works.
 
 The straight idea is to implement 'as is' [API Models](http://docs.mopidy.com/en/latest/api/models/) and [API Core](http://docs.mopidy.com/en/latest/api/core/)
