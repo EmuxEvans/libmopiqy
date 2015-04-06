@@ -16,9 +16,8 @@ script:
   - source /opt/qt54/bin/qt54-env.sh
   - qmake CONFIG+=debug
   - make
-  - screen -dmS mopidy
+  - screen -d -m mopidy
   - ./tests/tests
-  - screen -X -S mopidy quit
 
 after_success:
   - coveralls --build-root src/ --exclude tests --exclude demos --gcov-options '\-lpr'
