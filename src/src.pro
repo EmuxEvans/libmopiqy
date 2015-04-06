@@ -7,6 +7,14 @@ CONFIG  += c++11
 include(../version.pri)
 
 #
+# Test coverage
+#
+unix: CONFIG(debug, debug|release) {
+    QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
+    LIBS += -lgcov
+}
+
+#
 # Public headers
 #
 LIBMOPIQY_INCDIR  = ../include
