@@ -7,7 +7,6 @@ before_install:
   - sudo add-apt-repository ppa:beineri/opt-qt541 -y
   - sudo apt-get update -qq
   - sudo pip install cpp-coveralls
-  - sudo pip ins
 
 install:
   - sudo apt-get install mopidy
