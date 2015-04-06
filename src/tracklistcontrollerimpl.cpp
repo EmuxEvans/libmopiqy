@@ -23,6 +23,8 @@ void TracklistControllerImpl::pr_eotTrack(const QJsonValue &response)
 
 void TracklistControllerImpl::pr_filter(const QJsonValue &response)
 {
+    Mopidy::TlTracks tracks = ModelTranslator::fromJsonArray<Mopidy::TlTrack>(response.toArray());
+    emit filterDone(tracks);
 }
 
 void TracklistControllerImpl::pr_consume(const QJsonValue &response)
@@ -125,6 +127,19 @@ void TracklistControllerImpl::eotTrack(const Mopidy::TlTrack &tltrack)
                 "core.tracklist.eot_track", params);
 }
 
+void TracklistControllerImpl::filter(const QMap<QString, QVariantList> &criteria)
+{
+    QJsonObject params;
+    for(auto itCriteria = criteria.cbegin(); itCriteria != criteria.cend(); ++itCriteria)
+    {
+        QJsonArray criteriaValues = QJsonArray::fromVariantList(itCriteria.value());
+        params.insert(itCriteria.key(), criteriaValues);
+    }
+
+    sendRequest(std::bind(&TracklistControllerImpl::pr_filter, this, std::placeholders::_1),
+                "core.tracklist.filter", params);
+}
+
 void TracklistControllerImpl::getConsume()
 {
     sendRequest(std::bind(&TracklistControllerImpl::pr_consume, this, std::placeholders::_1),
@@ -214,6 +229,19 @@ void TracklistControllerImpl::previousTrack(const Mopidy::TlTrack &tltrack)
 
     sendRequest(std::bind(&TracklistControllerImpl::pr_previousTrack, this, std::placeholders::_1),
                 "core.tracklist.previous_track", params);
+}
+
+void TracklistControllerImpl::remove(const QMap<QString, QVariantList> &criteria)
+{
+    QJsonObject params;
+    for(auto itCriteria = criteria.cbegin(); itCriteria != criteria.cend(); ++itCriteria)
+    {
+        QJsonArray criteriaValues = QJsonArray::fromVariantList(itCriteria.value());
+        params.insert(itCriteria.key(), criteriaValues);
+    }
+
+    sendRequest(std::bind(&TracklistControllerImpl::pr_remove, this, std::placeholders::_1),
+                "core.tracklist.remove", params);
 }
 
 void TracklistControllerImpl::setConsume(const bool &consume)

@@ -62,9 +62,21 @@ void LibraryControllerImpl::refresh(const QString &uri)
     sendNotification("core.library.refresh", params);
 }
 
-void LibraryControllerImpl::search(const QHash<QString, QString> &query, const QStringList &uris, bool exact)
+void LibraryControllerImpl::search(const QHash<QString, QStringList> &query, const QStringList &uris, bool exact)
 {
+    QJsonObject params;
 
+    QJsonObject joQuery;
+    for(auto it = query.cbegin(); it != query.cend(); ++it)
+        joQuery.insert(it.key(), QJsonArray::fromStringList(it.value()));
+
+    params.insert("query", joQuery);
+    if(uris.isEmpty()) params.insert("uris", QJsonValue::Null);
+    else params.insert("uris", QJsonArray::fromStringList(uris));
+    params.insert("exact", exact);
+
+    sendRequest(std::bind(&LibraryControllerImpl::pr_search, this, std::placeholders::_1),
+                "core.library.search", params);
 }
 
 void LibraryControllerImpl::getImages(const QStringList &uris)

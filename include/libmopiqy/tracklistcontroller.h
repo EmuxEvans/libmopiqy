@@ -13,7 +13,7 @@ public slots:
     virtual void add(const QStringList &uris, const int &atPosition = -1) = 0;
     virtual void clear() = 0;
     virtual void eotTrack(const Mopidy::TlTrack &tltrack) = 0;
-    //virtual void filter(const QMap<QString, List> &criteria) = 0;
+    virtual void filter(const QMap<QString, QVariantList> &criteria) = 0;
     virtual void getConsume() = 0;
     virtual void getLength() = 0;
     virtual void getRandom() = 0;
@@ -26,7 +26,7 @@ public slots:
     virtual void move(const int &start, const int &end, const int &toPosition) = 0;
     virtual void nextTrack(const Mopidy::TlTrack &tltrack = Mopidy::TlTrack()) = 0;
     virtual void previousTrack(const Mopidy::TlTrack &tltrack = Mopidy::TlTrack()) = 0;
-    //virtual void remove(const QMap<QString, List> &criteria) = 0;
+    virtual void remove(const QMap<QString, QVariantList> &criteria) = 0;
     virtual void setConsume(const bool &consume) = 0;
     virtual void setRandom(const bool &random) = 0;
     virtual void setRepeat(const bool &repeat) = 0;

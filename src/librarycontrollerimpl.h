@@ -23,7 +23,7 @@ public slots:
     void browse(const QString &uri = "");
     void lookup(const QStringList &uris = QStringList());
     void refresh(const QString &uri = "");
-    void search(const QHash<QString, QString> &query, const QStringList &uris, bool exact);
+    void search(const QHash<QString, QStringList> &query, const QStringList &uris, bool exact);
     void getImages(const QStringList &uris);
 };
 

@@ -35,6 +35,7 @@ public slots:
     void add(const QStringList &uris, const int &atPosition);
     void clear();
     void eotTrack(const Mopidy::TlTrack &tltrack);
+    void filter(const QMap<QString, QVariantList> &criteria);
     void getConsume();
     void getLength();
     void getRandom();
@@ -47,6 +48,7 @@ public slots:
     void move(const int &start, const int &end, const int &toPosition);
     void nextTrack(const Mopidy::TlTrack &tltrack);
     void previousTrack(const Mopidy::TlTrack &tltrack);
+    void remove(const QMap<QString, QVariantList> &criteria);
     void setConsume(const bool &consume);
     void setRandom(const bool &random);
     void setRepeat(const bool &repeat);
