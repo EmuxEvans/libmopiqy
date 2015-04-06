@@ -1,11 +1,17 @@
-QT = core testlib
+TEMPLATE = app
+QT       = core testlib
+CONFIG  += c++11
 
+# libmopiqy
+INCLUDEPATH += ../include/
+LIBS += -L$$OUT_PWD/../src -l$$qtLibraryTarget(mopiqy)
+
+# tests
 SOURCES += \
     main.cpp \
-    testmopidyclient.cpp
+    testmopidyclient.cpp \
+    testcorecontroller.cpp
 
 HEADERS += \
-    testmopidyclient.h
-
-include(../libmopiqy.pri)
-LIBS += -L$${OUT_PWD}/../src
+    testmopidyclient.h \
+    testcorecontroller.h

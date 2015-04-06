@@ -1,32 +1,32 @@
 #include "testmopidyclient.h"
-#include "../src/mopiqy.h"
+#include "libmopiqy/mopidyclient.h"
 
 void TestMopidyClient::initTestCase()
 {
-    m_host = "192.168.1.88";
+    m_host = "127.0.0.1";
     m_port = 6680;
     m_path = "/mopidy/ws";
 }
 
 void TestMopidyClient::tstConnectionOk()
 {
-    Mopiqy::RemoteClient mc;
-    QSignalSpy spy(&mc, SIGNAL(clientConnected()));
+    MopidyClient client;
+    QSignalSpy spy(&client, &MopidyClient::clientConnected);
 
-    mc.connectTo(m_host, m_port, m_path);
+    client.connectToServer(m_host, m_port, m_path);
     QVERIFY(spy.wait(1000));
 }
 
 void TestMopidyClient::tstDeconnection()
 {
-    Mopiqy::RemoteClient mc;
-    QSignalSpy spyConnected(&mc, SIGNAL(clientConnected()));
-    QSignalSpy spyDisconnected(&mc, SIGNAL(clientDisconnected()));
+    MopidyClient client;
+    QSignalSpy spyConnected(&client, &MopidyClient::clientConnected);
+    QSignalSpy spyDisconnected(&client, &MopidyClient::clientDisconnected);
 
-    mc.connectTo(m_host, m_port, m_path);
+    client.connectToServer(m_host, m_port, m_path);
     if(spyConnected.wait(1000))
     {
-        mc.disconnectClient();
+        client.disconnectFromServer();
         QVERIFY(spyDisconnected.wait(1000));
     }
     else
@@ -37,11 +37,11 @@ void TestMopidyClient::tstDeconnection()
 
 void TestMopidyClient::tstConnectionFail()
 {
-    Mopiqy::RemoteClient mc;
-    QSignalSpy spy(&mc, SIGNAL(clientConnected()));
+    MopidyClient client;
+    QSignalSpy spy(&client, &MopidyClient::clientConnected);
 
-    mc.connectTo(m_host, m_port, "");
-    QVERIFY(spy.wait(1000) == false);
+    client.connectToServer(m_host, m_port, "");
+    QVERIFY(spy.wait(500) == false);
 }
 
 void TestMopidyClient::cleanupTestCase()
