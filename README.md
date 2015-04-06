@@ -1,6 +1,7 @@
 # libmopiqy : Qt client library for Mopidy #
 
 [![Build Status](https://travis-ci.org/AlexandrePTJ/libmopiqy.svg)](https://travis-ci.org/AlexandrePTJ/libmopiqy)
+[![Coverage Status](https://coveralls.io/repos/AlexandrePTJ/libmopiqy/badge.svg)](https://coveralls.io/r/AlexandrePTJ/libmopiqy)
 
 [Mopidy](http://www.mopidy.com/) is a music server which can play music both from multiple sources, like your local hard drive, radio streams, and from Spotify and SoundCloud.
 
