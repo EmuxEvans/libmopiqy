@@ -11,6 +11,11 @@ class TestPlaylistsController : public QObject
 
 private slots:
     void initTestCase();
+    void tstAsListResponse();
+    void tstCreateResponse();
+    void tstGetItemsResponse();
+    void tstLookupResponse();
+    void tstSaveResponse();
     void cleanupTestCase();
 
 private:
