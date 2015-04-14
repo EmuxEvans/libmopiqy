@@ -9,7 +9,7 @@ void TestPlaylistsController::initTestCase()
     QVERIFY(spy.wait(1000));
 }
 
-void TestPlaylistsController::tstAsListResponse()
+void TestPlaylistsController::tstAsList()
 {
     QSharedPointer<PlaylistsController> controller = client.playlistsController();
     QSignalSpy spy(controller.data(), &PlaylistsController::asListResponse);
@@ -18,7 +18,7 @@ void TestPlaylistsController::tstAsListResponse()
     QVERIFY(spy.wait(500));
 }
 
-void TestPlaylistsController::tstCreateResponse()
+void TestPlaylistsController::tstCreate()
 {
     QSharedPointer<PlaylistsController> controller = client.playlistsController();
     QSignalSpy spy(controller.data(), &PlaylistsController::createResponse);
@@ -31,7 +31,7 @@ void TestPlaylistsController::tstCreateResponse()
     QCOMPARE(mplaylist.name, QString("tst_create_playlist"));
 }
 
-void TestPlaylistsController::tstGetItemsResponse()
+void TestPlaylistsController::tstGetItems()
 {
     QSharedPointer<PlaylistsController> controller = client.playlistsController();
     QSignalSpy spy(controller.data(), &PlaylistsController::getItemsResponse);
@@ -40,7 +40,7 @@ void TestPlaylistsController::tstGetItemsResponse()
     QVERIFY(spy.wait(500));
 }
 
-void TestPlaylistsController::tstLookupResponse()
+void TestPlaylistsController::tstLookup()
 {
     QSharedPointer<PlaylistsController> controller = client.playlistsController();
     QSignalSpy spy(controller.data(), &PlaylistsController::lookupResponse);
@@ -53,14 +53,20 @@ void TestPlaylistsController::tstLookupResponse()
     QCOMPARE(mplaylist.name, QString("tst_create_playlist"));
 }
 
-void TestPlaylistsController::tstSaveResponse()
+void TestPlaylistsController::tstRefresh()
+{
+    QSharedPointer<PlaylistsController> controller = client.playlistsController();
+    controller->refresh();
+}
+
+void TestPlaylistsController::tstSave()
 {
     QSharedPointer<PlaylistsController> controller = client.playlistsController();
     QSignalSpy spy(controller.data(), &PlaylistsController::saveResponse);
 
     Mopidy::Playlist pl;
-    pl.name = "tst_save_playlist";
-    pl.uri = "m3u:tst_save_playlist.m3u";
+    pl.name = "tst_create_playlist";
+    pl.uri = "m3u:tst_create_playlist.m3u";
 
     controller->save(pl);
     QVERIFY(spy.wait(500));
@@ -71,6 +77,11 @@ void TestPlaylistsController::tstSaveResponse()
     QCOMPARE(mplaylist.uri, pl.uri);
 }
 
+void TestPlaylistsController::tstDelete()
+{
+    QSharedPointer<PlaylistsController> controller = client.playlistsController();
+    controller->deletePlaylist("m3u:tst_create_playlist.m3u");
+}
 
 void TestPlaylistsController::cleanupTestCase()
 {
