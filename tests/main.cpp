@@ -6,6 +6,9 @@
 #include "testhistorycontroller.h"
 #include "testmixercontroller.h"
 #include "testlibrarycontroller.h"
+#include "testtracklistcontroller.h"
+#include "testplaybackcontroller.h"
+#include "testplaylistscontroller.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,4 +30,13 @@ int main(int argc, char *argv[])
 
     TestLibraryController tLibraryController;
     QTest::qExec(&tLibraryController);
+
+    TestPlaylistsController tTestPlaylistsController;
+    QTest::qExec(&tTestPlaylistsController);
+
+    TestPlaybackController tTestPlaybackController;
+    QTest::qExec(&tTestPlaybackController);
+
+    TestTracklistController tTestTracklistController;
+    QTest::qExec(&tTestTracklistController);
 }

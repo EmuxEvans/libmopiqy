@@ -13,11 +13,17 @@ SOURCES += \
     testcorecontroller.cpp \
     testhistorycontroller.cpp \
     testmixercontroller.cpp \
-    testlibrarycontroller.cpp
+    testlibrarycontroller.cpp \
+    testplaybackcontroller.cpp \
+    testtracklistcontroller.cpp \
+    testplaylistscontroller.cpp
 
 HEADERS += \
     testmopidyclient.h \
     testcorecontroller.h \
     testhistorycontroller.h \
     testmixercontroller.h \
-    testlibrarycontroller.h
+    testlibrarycontroller.h \
+    testplaybackcontroller.h \
+    testtracklistcontroller.h \
+    testplaylistscontroller.h
