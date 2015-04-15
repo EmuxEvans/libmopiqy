@@ -11,6 +11,12 @@ class TestPlaybackController : public QObject
 
 private slots:
     void initTestCase();
+    void tstCurrentTlTrack();
+    void tstCurrentTrack();
+    void tstState();
+    void tstStreamTitle();
+    void tstTimePosition();
+    void tstSeek();
     void cleanupTestCase();
 
 private:

@@ -31,6 +31,8 @@ MopidyClientPrivate::~MopidyClientPrivate()
 
 void MopidyClientPrivate::registerMopidyTypes()
 {
+    qRegisterMetaType<Mopidy::PlaybackState>("Mopidy::PlaybackState");
+    qRegisterMetaType<Mopidy::RefType>("Mopidy::RefType");
     qRegisterMetaType<Mopidy::Album>("Mopidy::Album");
     qRegisterMetaType<Mopidy::Albums>("Mopidy::Albums");
     qRegisterMetaType<Mopidy::Artist>("Mopidy::Artist");
