@@ -1,10 +1,10 @@
 TEMPLATE = app
 QT       = core gui widgets
 CONFIG  += c++11
-
+DESTDIR  = $${OUT_PWD}/../../bin
 #
 INCLUDEPATH += $$PWD/../../include/
-LIBS += -L$$OUT_PWD/../../src -l$$qtLibraryTarget(mopiqy)
+LIBS += -L$$OUT_PWD/../../bin -l$$qtLibraryTarget(mopiqy)
 
 
 SOURCES += \
