@@ -12,5 +12,4 @@ install:
 build_script:
   - qmake -r
   - mingw32-make
-  - bin\tests.exe
   
