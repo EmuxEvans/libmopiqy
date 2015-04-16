@@ -11,5 +11,5 @@ install:
   - set PATH=%PATH%;%QTDIR%\bin;%MINGW%\bin;C:\Qt\Tools\QtCreator\bin
 
 build_script:
-  - %QTDIR%\bin\qmake -r
-  - %MINGW%\bin\mingw32-make
+  - qmake -r
+  - mingw32-make
