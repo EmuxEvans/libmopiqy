@@ -17,11 +17,11 @@ script:
   - qmake CONFIG+=debug
   - make
   - screen -d -m mopidy
-  - ./tests/tests
+  - ./bin/tests
 
 after_success:
-  - coveralls --build-root src/ --exclude tests --exclude demos --gcov-options '\-lp'
+  - coveralls --build-root src/ --exclude tests --exclude demos --exclude bin --gcov-options '\-lp'
 
 env:
   global:
-    - LD_LIBRARY_PATH=/opt/qt54/lib:$TRAVIS_BUILD_DIR/src
+    - LD_LIBRARY_PATH=/opt/qt54/lib:$TRAVIS_BUILD_DIR/bin

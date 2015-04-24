@@ -3,6 +3,7 @@ QT       = core websockets
 TARGET   = $$qtLibraryTarget(mopiqy)
 DEFINES += LIBMOPIQY_SHARED
 CONFIG  += c++11
+DESTDIR  = $${OUT_PWD}/../bin
 
 include(../version.pri)
 

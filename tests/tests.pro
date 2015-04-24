@@ -1,10 +1,11 @@
 TEMPLATE = app
 QT       = core testlib
 CONFIG  += c++11
+DESTDIR  = $${OUT_PWD}/../bin
 
 # libmopiqy
 INCLUDEPATH += ../include/
-LIBS += -L$$OUT_PWD/../src -l$$qtLibraryTarget(mopiqy)
+LIBS += -L$$OUT_PWD/../bin -l$$qtLibraryTarget(mopiqy)
 
 # tests
 SOURCES += \
