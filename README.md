@@ -1,6 +1,6 @@
 # libmopiqy : Qt client library for Mopidy #
 
-[![Travis Status](https://img.shields.io/travis/AlexandrePTJ/mopidy-somafm/develop.svg?style=flat-square)](https://travis-ci.org/AlexandrePTJ/libmopiqy)
+[![Travis Status](https://img.shields.io/travis/AlexandrePTJ/libmopiqy/develop.svg?style=flat-square)](https://travis-ci.org/AlexandrePTJ/libmopiqy)
 [![AppVeyor Status](https://img.shields.io/appveyor/ci/AlexandrePTJ/libmopiqy/develop.svg?style=flat-square)](https://ci.appveyor.com/project/AlexandrePTJ/libmopiqy)
 [![Coverage Status](https://img.shields.io/coveralls/AlexandrePTJ/libmopiqy/develop.svg?style=flat-square)](https://coveralls.io/r/AlexandrePTJ/libmopiqy?branch=develop)
 
