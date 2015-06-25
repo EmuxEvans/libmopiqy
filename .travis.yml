@@ -4,7 +4,7 @@ compiler: gcc
 before_install:
   - wget -O - http://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
   - sudo wget -O /etc/apt/sources.list.d/mopidy.list http://apt.mopidy.com/mopidy.list
-  - sudo add-apt-repository ppa:beineri/opt-qt541 -y
+  - sudo add-apt-repository ppa:beineri/opt-qt542 -y
   - sudo apt-get update -qq
   - sudo pip install cpp-coveralls
 
