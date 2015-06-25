@@ -14,7 +14,7 @@ install:
 
 script:
   - source /opt/qt54/bin/qt54-env.sh
-  - qmake CONFIG+=debug
+  - qmake CONFIG+=release
   - make
   - screen -d -m mopidy
   - ./bin/tests
@@ -25,3 +25,14 @@ after_success:
 env:
   global:
     - LD_LIBRARY_PATH=/opt/qt54/lib:$TRAVIS_BUILD_DIR/bin
+    - secure: "QxZvIAM59XB6zgpzpo+3KiQa+2U6Rx9scRnl0ESCnsWL+i6tL3+2yELJg824kbUqtz5linFLN8JzV9PyMMifRrLaK7C6W/mL6R4OswyzrC9ZUKMGodglvVqlah6PSZoAp0MBJ3QMIByjHUFkJ7Uf9zV4rWDbImQwJE4eOQR6u1I="
+
+addons:
+  coverity_scan:
+    project:
+      name: "AlexandrePTJ/libmopiqy"
+      description: "Qt Core library for mopidy"
+    notification_email: alpetitjean@gmail.com
+    build_command_prepend: "qmake CONFIG+=release -r"
+    build_command: "make"
+    branch_pattern: coverity_scan
