@@ -1,5 +1,3 @@
-os: MinGW
-
 environment:
   QTDIR: C:\Qt\5.4\mingw491_32
   MINGW: C:\Qt\Tools\mingw491_32
@@ -12,4 +10,3 @@ install:
 build_script:
   - qmake -r
   - mingw32-make
-  
